@@ -53,7 +53,7 @@ public class CharacterFile {
 		}
 	}
 
-	public static CharacterFile[] listStreams(String directory) {
+	public static List<CharacterFile> listStreams(String directory) {
 		List<CharacterFile>	streams = new ArrayList<>();
 		
 		for (File file: new File(directory).listFiles()) {
@@ -62,7 +62,7 @@ public class CharacterFile {
 			}
 		}
 		
-		return streams.toArray(new CharacterFile[] {});
+		return streams;
 	}
 
 
