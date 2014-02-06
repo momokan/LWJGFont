@@ -6,6 +6,7 @@ import static javax.lang.model.type.TypeKind.NULL;
 import static javax.lang.model.type.TypeKind.VOID;
 import static javax.tools.Diagnostic.Kind.ERROR;
 
+import java.awt.FontFormatException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -42,7 +43,10 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.JavaFileObject;
 
+import ttfmap.FontMap;
 import ttfmap.FontStore;
+import ttfmap.MappedFont;
+import ttfmap.annotation.Ttfmap;
 import ttfmap.processor.exception.AptException;
 import ttfmap.processor.exception.IsNotInterfaceTargetException;
 
@@ -65,11 +69,13 @@ public class TtfmapProcessor extends AbstractProcessor {
 	
 	private Map<String, TypeMirror>		unboxedPrimitiveTypeMirrors;
 	
+	private int								maxCharacterRegistration = 500;
+	
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 //		prepareUnboxedPrimitiveTypeMirrors();
-		for (TypeElement a: annotations) {
-			for (TypeElement entityElement: ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(a))) {
+		for (TypeElement annotation: annotations) {
+			for (TypeElement entityElement: ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(annotation))) {
 				try {
 					
 					JavaFileObject			javaFile;
@@ -87,17 +93,18 @@ public class TtfmapProcessor extends AbstractProcessor {
 							pw.close();
 						}
 					}
-				} catch(IOException e) {
+				} catch(AptException e) {
 					String		message = (e.getMessage() == null)? e.getClass().getCanonicalName(): e.getMessage();
 
 					processingEnv.getMessager().printMessage(ERROR, message, entityElement);
-					throw AptException.as(e);
-				} catch(RuntimeException e) {
+
+					throw e;
+				} catch(Exception e) {
 					String		message = (e.getMessage() == null)? e.getClass().getCanonicalName(): e.getMessage();
 
 //					e.printStackTrace();
 					processingEnv.getMessager().printMessage(ERROR, message, entityElement);
-					throw e;
+					throw AptException.as(e);
 				}
 			}
 		}
@@ -117,11 +124,21 @@ public class TtfmapProcessor extends AbstractProcessor {
 	}
 	*/
 	
-	private SourceBuffer processClass(TypeElement entityElement) {
+	private SourceBuffer processClass(TypeElement entityElement) throws IOException, FontFormatException {
 		if (!entityElement.getKind().isInterface()) {
 			//	対象のクラスはインターフェースでなければならない
 			throw new IsNotInterfaceTargetException(entityElement.getQualifiedName() + " must be interface.");
 		}
+
+		Ttfmap			annotation = entityElement.getAnnotation(Ttfmap.class);
+		TtfPainter	ttfPainter = new TtfPainter();
+		
+		ttfPainter.setPadding(annotation.padding());
+		ttfPainter.setCharactersDir(annotation.charactersDir());
+		ttfPainter.setImageOutputDir(annotation.imageOutputDir());
+		
+		FontMap		fontMap = ttfPainter.paint(annotation.fontPath(), annotation.fontSize());
+
 		/*
 		boolean		isInterface = true;
 		
@@ -141,9 +158,23 @@ public class TtfmapProcessor extends AbstractProcessor {
 		
 		List<BinaryField>		fields = result.getValue1();
 		*/ 
-		SourceBuffer			source = new SourceBuffer(entityElement, CLASS_APPENDIX);
+
+
+
+		
+		SourceBuffer		source = new SourceBuffer(entityElement, CLASS_APPENDIX);
 
 		source.openClass(entityElement.getTypeParameters(), toTypeElement(FontStore.class.getCanonicalName()));
+		
+		printStaticFieldFontMap(source);
+		printPrepareFontMap(source, fontMap);
+		printMethodGetFontMap(source);
+		
+		//	DEV
+		source.importClass(toTypeElement(FontMap.class.getCanonicalName()));
+		source.openMethod("configMap", null, new HashMap<String, Class>(), "private", true);
+		source.closeMethod();
+
 		/*
 		printFields(source, fields);
 		printFieldAccessorMethods(source, fields);
@@ -159,6 +190,76 @@ public class TtfmapProcessor extends AbstractProcessor {
 		source.closeClass();
 		
 		return source;
+	}
+
+	private void printStaticFieldFontMap(SourceBuffer source) {
+		source.importClass(toTypeElement(FontMap.class.getCanonicalName()));
+		source.println(
+				"private static final %s map = new %s();",
+				FontMap.class.getSimpleName(),
+				FontMap.class.getSimpleName()
+		);
+		source.println();
+	}
+
+	private void printPrepareFontMap(SourceBuffer source, FontMap fontMap) {
+		source.println("static ");
+		source.openBrace();
+
+		//	ImageIndex と画像ファイルの対応を書き出す
+		for (int imageIndex: fontMap.listImageIndexes()) {
+			String		imageFile = fontMap.getImageFile(imageIndex);
+			
+			source.println("map.addImageFile(%d, \"%s\");", imageIndex, imageFile);
+		}
+		source.println();
+		
+		//	DEV
+		source.println("configMap();");
+		source.println();
+		
+		//	文字とフォント情報を書き出す
+		source.importClass(toTypeElement(MappedFont.class.getCanonicalName()));
+		int		count = 0;
+		for (char character: fontMap.listCharacters()) {
+			MappedFont	mappedFont = fontMap.getMappedFont(character);
+			String			escapedCharacter = String.valueOf(mappedFont.getCharacter());
+			
+			if (escapedCharacter.equals("'")) {
+				escapedCharacter = "\\'";
+			} else if (escapedCharacter.equals("\\")) {
+				escapedCharacter = "\\\\";
+			}
+			
+			source.println(
+					"map.addMappedFont(new %s('%s', %d, %d, %d, %d, %d, %d, %d));",
+					MappedFont.class.getSimpleName(),
+					escapedCharacter,
+					mappedFont.getImageIndex(),
+					mappedFont.getSrcX(),
+					mappedFont.getSrcY(),
+					mappedFont.getAscent(),
+					mappedFont.getDescent(),
+					mappedFont.getAdvance(),
+					mappedFont.getPadding()
+			);
+			
+			/*
+			if (maxCharacterRegistration < count) {
+				break;
+			}
+			*/
+			count++;
+		}
+		
+		source.closeBrace();
+	}
+	
+	private void printMethodGetFontMap(SourceBuffer source) {
+		source.importClass(toTypeElement(FontMap.class.getCanonicalName()));
+		source.openMethod("getFontMap", FontMap.class.getSimpleName(), new HashMap<String, Class>(), "protected", false);
+		source.println("return map;");
+		source.closeMethod();
 	}
 
 	/**
@@ -1074,4 +1175,5 @@ public class TtfmapProcessor extends AbstractProcessor {
 		}
 	}
 	*/
+
 }

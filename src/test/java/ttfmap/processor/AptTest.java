@@ -44,7 +44,7 @@ public abstract class AptTest {
 	protected static final CompileOption		MAIN_COMPILE_OPTION = new CompileOption("src/main/java/", TestResource.MAIN_BASE_DIR, "target/classes/");
 	protected static final CompileOption		TEST_COMPILE_OPTION = new CompileOption("src/test/java/", TestResource.TEST_BASE_DIR, "target/test-classes/");
 	
-	protected static final Charset				COMPILE_CHARSET_UTF8 = Charset.forName("utf-8");
+	protected static final Charset			COMPILE_CHARSET_UTF8 = Charset.forName("utf-8");
 	protected static final String				TEST_RESOURCE_BYTES_EXTENTION = ".bytes";
 //	protected static final String				COMPILE_SOURCE_MAIN_PATH = "src/main/java/";
 //	protected static final String				COMPILE_SOURCE_TEST_PATH = ;

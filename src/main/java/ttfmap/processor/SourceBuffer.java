@@ -48,10 +48,10 @@ public class SourceBuffer {
 		line.append("public class %s%s ", className, typeParametersString);
 		
 		line.append("extends %s ", superClass.getSimpleName());
-		importedElements.add(superClass);
+		importClass(superClass);
 		
 		line.append("implements %s ", interfaceElement.getSimpleName());
-		importedElements.add(interfaceElement);
+		importClass(interfaceElement);
 
 		/*
 		for (TypeElement interfaceElement: interfaceElements) {
@@ -81,11 +81,14 @@ public class SourceBuffer {
 	}
 
 	public void openMethod(String methodName, String retuenClass, Map<String, Class> args, boolean isStatic) {
+		openMethod(methodName, retuenClass, args, "public", isStatic);
+	}
+	public void openMethod(String methodName, String retuenClass, Map<String, Class> args, String scope, boolean isStatic) {
 		println();
 		
 		Line line = new Line();
 		
-		line.append("public ");
+		line.append(scope + " ");
 		if (isStatic) {
 			line.append("static ");
 		}
@@ -218,6 +221,21 @@ public class SourceBuffer {
 		variableCount++;
 		
 		return variable;
+	}
+	
+	public void openBrace() {
+		println("{");
+		indent++;
+	}
+	public void closeBrace() {
+		indent--;
+		println("}");
+	}
+	
+	public void importClass(TypeElement impoertedElement) {
+		if (!importedElements.contains(impoertedElement)) {
+			importedElements.add(impoertedElement);
+		}
 	}
 	
 	private StringBuilder getHeader() {

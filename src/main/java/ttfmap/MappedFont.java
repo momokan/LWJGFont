@@ -1,37 +1,56 @@
 package ttfmap;
 
 public class MappedFont {
+	private final char		character;
 	private final int		imageIndex;
-	private final int		x1;
-	private final int		y1;
-	private final int		x2;
-	private final int		y2;
+	private final int		srcX;
+	private final int		srcY;
+	private final int		ascent;
+	private final int		descent;
+	private final int		advance;
+	private final int		padding;
 
-	public MappedFont(int imageIndex, int x1, int y1, int x2, int y2) {
+	public MappedFont(char character, int imageIndex, int srcX, int srcY, int ascent, int descent, int advance, int padding) {
+		this.character = character;
 		this.imageIndex = imageIndex;
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+		this.srcX = srcX;
+		this.srcY = srcY;
+		this.ascent = ascent;
+		this.descent = descent;
+		this.advance = advance;
+		this.padding = padding;
+	}
+
+	public char getCharacter() {
+		return character;
 	}
 
 	public int getImageIndex() {
 		return imageIndex;
 	}
 
-	public int getX1() {
-		return x1;
+	public int getSrcX() {
+		return srcX;
 	}
 
-	public int getY1() {
-		return y1;
+	public int getSrcY() {
+		return srcY;
 	}
 
-	public int getX2() {
-		return x2;
+	public int getAscent() {
+		return ascent;
 	}
 
-	public int getY2() {
-		return y2;
+	public int getDescent() {
+		return descent;
 	}
+
+	public int getAdvance() {
+		return advance;
+	}
+
+	public int getPadding() {
+		return padding;
+	}
+
 }
