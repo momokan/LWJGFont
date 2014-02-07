@@ -29,17 +29,20 @@ import javax.imageio.ImageIO;
 
 import ttfmap.FontMap;
 import ttfmap.MappedFont;
+import ttfmap.processor.exception.CannotMakeImageOutputDirException;
+import ttfmap.processor.exception.ImageOutputDirIsInvalidException;
 
 public class TtfPainter {
 	private static final int		IMAGE_HEIGHT_DEFAULT_EXPONENT = 6;
 	private static final int		IMAGE_MAX_LENGTH = 4096;
 	public static final int			DEFAULT_PADDING = 5;
 	public static final String		DEFAULT_CHARACTERS_DIR = "characters";
-	public static final String		DEFAULT_IMAGE_OUTPUT_DIR = "";
+	public static final String		DEFAULT_RESOURCE_BASE_DIR = "src/main/resources";
 	
 	private int						padding = DEFAULT_PADDING;
 	private String					charactersDir = DEFAULT_CHARACTERS_DIR;
-	private String					imageOutputDir = DEFAULT_IMAGE_OUTPUT_DIR;
+	private String					resourceBaseDir = DEFAULT_RESOURCE_BASE_DIR;
+	private String					packageDirs = null;
 	private int						defaultImageHeightExponent = IMAGE_HEIGHT_DEFAULT_EXPONENT;
 	
 	//	paint 処理用。paint() の開始から終了までの間の一時データ
@@ -51,10 +54,6 @@ public class TtfPainter {
 	private int						width;
 	private BufferedImage			bufferedImage;
 	private Graphics2D				g;
-	
-	public TtfPainter() {
-		this.padding = 5;
-	}
 	
 	public FontMap paint(String fontPath, int fontSize) throws IOException, FontFormatException {
 		FontMap		fontMap = new FontMap();
@@ -78,6 +77,7 @@ public class TtfPainter {
 		 *	参考: http://docs.oracle.com/javase/tutorial/2d/text/measuringtext.html
 		 */
 		files = CharacterFile.listStreams(charactersDir);
+		files.add(new BuiltinCharacterFile());
 		imageHeightExponent = defaultImageHeightExponent;
 		bufferedImage = null;
 		g = null;
@@ -141,10 +141,15 @@ public class TtfPainter {
 	
 	private String writeFontMapImage(BufferedImage bufferedImage, String fontName, int imageIndex) throws IOException {
 		String		fileName = fontName.replace(' ', '_') + "_" + imageIndex + ".png";
-		
-		fileName = new File(imageOutputDir).getAbsolutePath() + File.separator + fileName;
+		File		dir = new File(resourceBaseDir + File.separator + packageDirs);
 
-//		ImageIO.write(bufferedImage, "png", new File(fileName));
+		if (dir.isFile()) {
+			throw new IOException("output directory is a file: " + dir.getAbsolutePath());
+		} else if ((!dir.exists()) && (!dir.mkdirs())) {
+			throw new IOException("cannot make output directory: " + dir.getAbsolutePath());
+		}
+		
+		ImageIO.write(bufferedImage, "png", new File(dir.getPath() + File.separator + fileName));
 		
 		return fileName;
 	}
@@ -244,8 +249,11 @@ public class TtfPainter {
 	public void setImageHeightExponent(int imageHeightExponent) {
 		this.imageHeightExponent = imageHeightExponent;
 	}
-	public void setImageOutputDir(String imageOutputDir) {
-		this.imageOutputDir = imageOutputDir;
+	public void setResourceBaseDir(String resourceBaseDir) {
+		this.resourceBaseDir = resourceBaseDir;
+	}
+	void setPackageDirs(String packageDirs) {
+		this.packageDirs = packageDirs;
 	}
 	public void setCharactersDir(String charactersDir) {
 		this.charactersDir = charactersDir;
