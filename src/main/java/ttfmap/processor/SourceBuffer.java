@@ -22,6 +22,16 @@ public class SourceBuffer {
 	private int					forCount;
 	private int					variableCount;
 
+	//	マージ専用のインスタンスを生成する
+	//	import() などは利用できない
+	public SourceBuffer() {
+		this.buff = new StringBuilder();
+		this.interfaceElement = null;
+		this.className = null;
+		this.importedElements = new ArrayList<TypeElement>();
+		this.indent = 0;
+		this.forCount = 0;
+	}
 	public SourceBuffer(TypeElement interfaceElement, String classAppendix) {
 		this.buff = new StringBuilder();
 		this.interfaceElement = interfaceElement;
@@ -295,6 +305,14 @@ public class SourceBuffer {
 			return "";
 		}
 		return className.substring(0, pos);
+	}
+	
+	public void merge(SourceBuffer sourceBuffer, int baseIndent) {
+		String[]	lines = sourceBuffer.toString().split("\n");
+
+		for (String line: lines) {
+			println(line);
+		}
 	}
 
 	class Line {

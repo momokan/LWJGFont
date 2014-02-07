@@ -5,9 +5,11 @@ import static javax.lang.model.type.TypeKind.NONE;
 import static javax.lang.model.type.TypeKind.NULL;
 import static javax.lang.model.type.TypeKind.VOID;
 import static javax.tools.Diagnostic.Kind.ERROR;
+import static ttfmap.processor.TtfPainter.DEFAULT_RESOURCE_BASE_DIR;
 
 import java.awt.FontFormatException;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -32,6 +34,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
@@ -41,19 +44,25 @@ import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 
+import sun.reflect.generics.tree.ClassTypeSignature;
 import ttfmap.FontMap;
 import ttfmap.FontStore;
 import ttfmap.MappedFont;
 import ttfmap.annotation.Ttfmap;
 import ttfmap.processor.exception.AptException;
+import ttfmap.processor.exception.CannotMakeImageOutputDirException;
+import ttfmap.processor.exception.ImageOutputDirIsInvalidException;
 import ttfmap.processor.exception.IsNotInterfaceTargetException;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 //@SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedAnnotationTypes("ttfmap.annotation.Ttfmap")
 public class TtfmapProcessor extends AbstractProcessor {
+	private static final String			RESOURCE_OUTPUT_DIR_PREFIX = "src/main/resources/";
+	
 	public static final String				CLASS_APPENDIX = "Store";
 	private static final Charset			UTF8 = Charset.forName("utf-8");
 	/*
@@ -77,10 +86,9 @@ public class TtfmapProcessor extends AbstractProcessor {
 		for (TypeElement annotation: annotations) {
 			for (TypeElement entityElement: ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(annotation))) {
 				try {
-					
-					JavaFileObject			javaFile;
-					PrintWriter				pw = null;
-					SourceBuffer				source = processClass(entityElement);
+					JavaFileObject	javaFile;
+					PrintWriter		pw = null;
+					SourceBuffer		source = processClass(entityElement);
 					
 					try {
 						javaFile = processingEnv.getFiler().createSourceFile(source.getClassName(), entityElement);
@@ -102,7 +110,7 @@ public class TtfmapProcessor extends AbstractProcessor {
 				} catch(Exception e) {
 					String		message = (e.getMessage() == null)? e.getClass().getCanonicalName(): e.getMessage();
 
-//					e.printStackTrace();
+					e.printStackTrace();
 					processingEnv.getMessager().printMessage(ERROR, message, entityElement);
 					throw AptException.as(e);
 				}
@@ -132,10 +140,15 @@ public class TtfmapProcessor extends AbstractProcessor {
 
 		Ttfmap			annotation = entityElement.getAnnotation(Ttfmap.class);
 		TtfPainter	ttfPainter = new TtfPainter();
-		
+
 		ttfPainter.setPadding(annotation.padding());
 		ttfPainter.setCharactersDir(annotation.charactersDir());
-		ttfPainter.setImageOutputDir(annotation.imageOutputDir());
+		ttfPainter.setResourceBaseDir(annotation.resourceBaseDir());
+		
+		String		packageDirs = processingEnv.getElementUtils().getPackageOf(entityElement).toString();
+		
+		packageDirs = packageDirs.replace('.', File.separatorChar);
+		ttfPainter.setPackageDirs(packageDirs);
 		
 		FontMap		fontMap = ttfPainter.paint(annotation.fontPath(), annotation.fontSize());
 
@@ -170,11 +183,6 @@ public class TtfmapProcessor extends AbstractProcessor {
 		printPrepareFontMap(source, fontMap);
 		printMethodGetFontMap(source);
 		
-		//	DEV
-		source.importClass(toTypeElement(FontMap.class.getCanonicalName()));
-		source.openMethod("configMap", null, new HashMap<String, Class>(), "private", true);
-		source.closeMethod();
-
 		/*
 		printFields(source, fields);
 		printFieldAccessorMethods(source, fields);
@@ -214,14 +222,29 @@ public class TtfmapProcessor extends AbstractProcessor {
 		}
 		source.println();
 		
-		//	DEV
-		source.println("configMap();");
-		source.println();
-		
 		//	文字とフォント情報を書き出す
+		List<SourceBuffer>	configMethodSources = new ArrayList<>();
+		SourceBuffer			configMethodSource = null;
+		Map<String, Class>	configMethodArguments = new HashMap<String, Class>();
+		int						configMethodIndex = 0;
+		int						count = 0;
+
+		configMethodArguments.put("map", FontMap.class);
+		
 		source.importClass(toTypeElement(MappedFont.class.getCanonicalName()));
-		int		count = 0;
 		for (char character: fontMap.listCharacters()) {
+			if ((configMethodSource == null) || (maxCharacterRegistration <= count)) {
+				if (configMethodSource != null) {
+					configMethodSource.closeMethod();
+					configMethodSources.add(configMethodSource);
+				}
+				configMethodSource = new SourceBuffer();
+				configMethodSource.openMethod("configMap" + configMethodIndex, null, configMethodArguments, "private", true);
+				source.println("configMap%d(map);", configMethodIndex);
+				configMethodIndex++;
+				count = 0;
+			}
+			
 			MappedFont	mappedFont = fontMap.getMappedFont(character);
 			String			escapedCharacter = String.valueOf(mappedFont.getCharacter());
 			
@@ -231,7 +254,7 @@ public class TtfmapProcessor extends AbstractProcessor {
 				escapedCharacter = "\\\\";
 			}
 			
-			source.println(
+			configMethodSource.println(
 					"map.addMappedFont(new %s('%s', %d, %d, %d, %d, %d, %d, %d));",
 					MappedFont.class.getSimpleName(),
 					escapedCharacter,
@@ -244,15 +267,22 @@ public class TtfmapProcessor extends AbstractProcessor {
 					mappedFont.getPadding()
 			);
 			
-			/*
-			if (maxCharacterRegistration < count) {
-				break;
-			}
-			*/
 			count++;
 		}
 		
+		if (configMethodSource != null) {
+			configMethodSource.closeMethod();
+			configMethodSources.add(configMethodSource);
+		}
+
 		source.closeBrace();
+		source.println();
+
+		for (SourceBuffer toMerge: configMethodSources) {
+			source.merge(toMerge, 1);
+			source.println();
+		}
+		
 	}
 	
 	private void printMethodGetFontMap(SourceBuffer source) {
