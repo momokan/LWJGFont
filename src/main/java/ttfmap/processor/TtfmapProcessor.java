@@ -53,8 +53,6 @@ import ttfmap.FontStore;
 import ttfmap.MappedFont;
 import ttfmap.annotation.Ttfmap;
 import ttfmap.processor.exception.AptException;
-import ttfmap.processor.exception.CannotMakeImageOutputDirException;
-import ttfmap.processor.exception.ImageOutputDirIsInvalidException;
 import ttfmap.processor.exception.IsNotInterfaceTargetException;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)

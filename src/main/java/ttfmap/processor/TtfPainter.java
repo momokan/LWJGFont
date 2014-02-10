@@ -29,8 +29,6 @@ import javax.imageio.ImageIO;
 
 import ttfmap.FontMap;
 import ttfmap.MappedFont;
-import ttfmap.processor.exception.CannotMakeImageOutputDirException;
-import ttfmap.processor.exception.ImageOutputDirIsInvalidException;
 
 public class TtfPainter {
 	private static final int		IMAGE_HEIGHT_DEFAULT_EXPONENT = 6;
