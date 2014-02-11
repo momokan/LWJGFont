@@ -1,4 +1,4 @@
-package ttfmap;
+package lwjgfont;
 
 public class MappedFont {
 	private final char		character;

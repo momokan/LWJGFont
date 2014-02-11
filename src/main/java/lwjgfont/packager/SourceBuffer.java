@@ -1,7 +1,8 @@
-package ttfmap.processor;
+package lwjgfont.packager;
 
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,38 +15,31 @@ import javax.lang.model.element.VariableElement;
 
 public class SourceBuffer {
 	private StringBuilder		buff;
-	private TypeElement			interfaceElement;
-//	private String				classAppendix;
+	private String				packageName;
 	private String				className;
-	private List<TypeElement>	importedElements;
+//	private String				classAppendix;
+	private List<String>		importedClasses;
 	private int					indent;
 	private int					forCount;
 	private int					variableCount;
 
-	//	マージ専用のインスタンスを生成する
-	//	import() などは利用できない
 	public SourceBuffer() {
-		this.buff = new StringBuilder();
-		this.interfaceElement = null;
-		this.className = null;
-		this.importedElements = new ArrayList<TypeElement>();
-		this.indent = 0;
-		this.forCount = 0;
+		this(null);
 	}
-	public SourceBuffer(TypeElement interfaceElement, String classAppendix) {
+	public SourceBuffer(String packageName) {
+		this.packageName = packageName;
+		this.className = null;
 		this.buff = new StringBuilder();
-		this.interfaceElement = interfaceElement;
-		this.className = interfaceElement.getSimpleName() + classAppendix;
-		this.importedElements = new ArrayList<TypeElement>();
+		this.importedClasses = new ArrayList<String>();
 		this.indent = 0;
 		this.forCount = 0;
 	}
 	
-	public void openClass(List<? extends TypeParameterElement> typeParameters, TypeElement superClass /*, TypeElement... interfaceElements*/) {
+	public void openClass(String className, List<? extends TypeParameterElement> typeParameters, Object superClass, Object ...interfaceClasses) {
 		Line		line = new Line();
 		String		typeParametersString = "";
 		
-		if (0 < typeParameters.size()) {
+		if ((typeParameters != null) && (0 < typeParameters.size())) {
 			for (TypeParameterElement typeParameter: typeParameters) {
 				if (0 < typeParametersString.length()) {
 					typeParametersString += ", ";
@@ -56,13 +50,35 @@ public class SourceBuffer {
 		}
 
 		line.append("public class %s%s ", className, typeParametersString);
+		if (this.className == null) {
+			this.className = className;
+		}
 		
-		line.append("extends %s ", superClass.getSimpleName());
-		importClass(superClass);
+		if (superClass != null) {
+			String		superClassName = toClassName(superClass);
+			
+			line.append("extends %s ", superClassName);
+			importClass(superClassName);
+		}
 		
-		line.append("implements %s ", interfaceElement.getSimpleName());
-		importClass(interfaceElement);
-
+		boolean isImplement = false;
+		
+		for (Object interfaceClass: interfaceClasses) {
+			if (interfaceClass != null) {
+				if (isImplement) {
+					line.append(", ");
+				} else {
+					line.append("implements ");
+					isImplement = true;
+				}
+				
+				String		interfaceName = toClassName(interfaceClass);
+				
+				line.append(interfaceName);
+				importClass(interfaceName);
+			}
+		}
+		
 		/*
 		for (TypeElement interfaceElement: interfaceElements) {
 			line.append(", %s", interfaceElement.getSimpleName());
@@ -72,6 +88,14 @@ public class SourceBuffer {
 		line.append(" {");
 		println(line);
 		indent++;
+	}
+	
+	private String toClassName(Object object) {
+		if (object instanceof Class) {
+			return ((Class)object).getCanonicalName();
+		} else {
+			return object.toString();
+		}
 	}
 	
 	public void closeClass() {
@@ -241,21 +265,24 @@ public class SourceBuffer {
 		indent--;
 		println("}");
 	}
-	
-	public void importClass(TypeElement impoertedElement) {
-		if (!importedElements.contains(impoertedElement)) {
-			importedElements.add(impoertedElement);
+
+	public void importClass(Class importedClass) {
+		importClass(importedClass.getCanonicalName());
+	}
+	public void importClass(String importedClass) {
+		if (!importedClasses.contains(importedClass)) {
+			importedClasses.add(importedClass);
 		}
 	}
 	
 	private StringBuilder getHeader() {
 		StringBuilder		buff = new StringBuilder();
 		
-		buff.append(String.format("package %s;\n", getPackage(interfaceElement)));
+		buff.append(String.format("package %s;\n", packageName));
 		buff.append("\n");
 
-		for (TypeElement impoertedElement: importedElements) {
-			buff.append(String.format("import %s;\n", impoertedElement.getQualifiedName().toString()));
+		for (String importedClass: importedClasses) {
+			buff.append(String.format("import %s;\n", importedClass));
 		}
 
 		buff.append("\n");
@@ -284,14 +311,6 @@ public class SourceBuffer {
 		println(String.format(lineFormat, args));
 	}
 
-	public String getSimpleClassName() {
-		return className;
-	}
-
-	public String getClassName() {
-		return getPackage(interfaceElement) + "." + className;
-	}
-	
 	@Override
 	public String toString() {
 		return buff.toString();
@@ -313,6 +332,20 @@ public class SourceBuffer {
 		for (String line: lines) {
 			println(line);
 		}
+	}
+	
+	public File getFile(String baseDir) {
+		if ((this.className != null) && (this.packageName != null)) {
+			return new File(baseDir + File.separator + packageName.replace(".", File.separator) + File.separator + className + ".java");
+		}
+		throw new UnsupportedOperationException("not contain class.");
+	}
+
+	public String getCannonicalClassName() {
+		if ((this.className != null) && (this.packageName != null)) {
+			return packageName + "." + className;
+		}
+		throw new UnsupportedOperationException("not contain class.");
 	}
 
 	class Line {

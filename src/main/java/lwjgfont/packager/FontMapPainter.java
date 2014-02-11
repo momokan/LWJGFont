@@ -1,4 +1,4 @@
-package ttfmap.processor;
+package lwjgfont.packager;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -25,28 +25,30 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import static lwjgfont.packager.LwjgFont.DEFAULT_TEMP_DIR;
+
 import javax.imageio.ImageIO;
 
-import ttfmap.FontMap;
-import ttfmap.MappedFont;
+import lwjgfont.FontMap;
+import lwjgfont.MappedFont;
 
-public class TtfPainter {
+public class FontMapPainter {
 	private static final int		IMAGE_HEIGHT_DEFAULT_EXPONENT = 6;
 	private static final int		IMAGE_MAX_LENGTH = 4096;
 	public static final int			DEFAULT_PADDING = 5;
 	public static final String		DEFAULT_CHARACTERS_DIR = "characters";
-	public static final String		DEFAULT_RESOURCE_BASE_DIR = "src/main/resources";
-	
+
 	private int						padding = DEFAULT_PADDING;
 	private String					charactersDir = DEFAULT_CHARACTERS_DIR;
-	private String					resourceBaseDir = DEFAULT_RESOURCE_BASE_DIR;
+	private String					resourceBaseDir = DEFAULT_TEMP_DIR;
 	private String					packageDirs = null;
 	private int						defaultImageHeightExponent = IMAGE_HEIGHT_DEFAULT_EXPONENT;
+	private boolean					isWriteImage = true;
 	
 	//	paint 処理用。paint() の開始から終了までの間の一時データ
 	private CharacterFile			file;
-	private List<CharacterFile>	files;
-	private Font						font;
+	private List<CharacterFile>		files;
+	private Font					font;
 	private int						imageHeightExponent;
 	private int						height;
 	private int						width;
@@ -54,7 +56,7 @@ public class TtfPainter {
 	private Graphics2D				g;
 	
 	public FontMap paint(String fontPath, int fontSize) throws IOException, FontFormatException {
-		FontMap		fontMap = new FontMap();
+		FontMap			fontMap = new FontMap();
 		int				x = 0;
 		int				y = 0;
 		int				srcX;
@@ -139,15 +141,11 @@ public class TtfPainter {
 	
 	private String writeFontMapImage(BufferedImage bufferedImage, String fontName, int imageIndex) throws IOException {
 		String		fileName = fontName.replace(' ', '_') + "_" + imageIndex + ".png";
-		File		dir = new File(resourceBaseDir + File.separator + packageDirs);
-
-		if (dir.isFile()) {
-			throw new IOException("output directory is a file: " + dir.getAbsolutePath());
-		} else if ((!dir.exists()) && (!dir.mkdirs())) {
-			throw new IOException("cannot make output directory: " + dir.getAbsolutePath());
-		}
+		File		dir = LwjgFontUtil.prepareDirectory(resourceBaseDir, packageDirs);
 		
-		ImageIO.write(bufferedImage, "png", new File(dir.getPath() + File.separator + fileName));
+		if (isWriteImage) {		
+			ImageIO.write(bufferedImage, "png", new File(dir.getPath() + File.separator + fileName));
+		}
 		
 		return fileName;
 	}
@@ -229,7 +227,7 @@ public class TtfPainter {
 			return false;
 		}
 
-		Graphics2D		oldG = g;
+		Graphics2D			oldG = g;
 		BufferedImage		oldBufferedImage = bufferedImage; 
 		
 		prepareImageBuffer();
@@ -256,8 +254,12 @@ public class TtfPainter {
 	public void setCharactersDir(String charactersDir) {
 		this.charactersDir = charactersDir;
 	}
+	public void setWriteImage(boolean isWriteImage) {
+		this.isWriteImage = isWriteImage;
+	}
 
 	public static void main(String[] args) throws IOException, FontFormatException {
-		new TtfPainter().paint("sample/migu-1p-regular.ttf", 40);
+		new FontMapPainter().paint("sample/migu-1p-regular.ttf", 40);
 	}
+
 }

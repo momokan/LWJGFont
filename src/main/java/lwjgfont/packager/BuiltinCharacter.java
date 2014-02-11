@@ -1,4 +1,4 @@
-package ttfmap;
+package lwjgfont.packager;
 
 public enum BuiltinCharacter {
 	Space(' '),

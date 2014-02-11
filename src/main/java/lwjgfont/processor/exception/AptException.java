@@ -1,4 +1,4 @@
-package ttfmap.processor.exception;
+package lwjgfont.processor.exception;
 
 
 public class AptException extends RuntimeException {
