@@ -1,4 +1,4 @@
-package ttfmap.processor;
+package lwjgfont.packager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
+import lwjgfont.processor.exception.CharactersDirectoryIsEmptyException;
 
 public class CharacterFile {
 	private final String	filePath;
@@ -55,8 +57,14 @@ public class CharacterFile {
 
 	public static List<CharacterFile> listStreams(String directory) {
 		List<CharacterFile>	streams = new ArrayList<>();
+		File				fileDir = new File(directory);
+		File[]				files = fileDir.listFiles();
 		
-		for (File file: new File(directory).listFiles()) {
+		if ((files == null) || (files.length <= 0)) {
+			throw new CharactersDirectoryIsEmptyException(fileDir);
+		}
+		
+		for (File file: files) {
 			if (file.getName().endsWith(".txt")) {
 				streams.add(new CharacterFile(file.getAbsolutePath()));
 			}

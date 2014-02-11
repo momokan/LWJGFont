@@ -1,4 +1,4 @@
-package ttfmap;
+package lwjgfont;
 
 import java.util.ArrayList;
 import java.util.HashMap;

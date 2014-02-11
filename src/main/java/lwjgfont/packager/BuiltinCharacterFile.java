@@ -1,10 +1,10 @@
-package ttfmap.processor;
+package lwjgfont.packager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import ttfmap.BuiltinCharacter;
+
 
 public class BuiltinCharacterFile extends CharacterFile {
 	private int	position;
