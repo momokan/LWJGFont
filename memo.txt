@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DgroupId=lwjgfont -DartifactId=myfont -Dversion=1.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true

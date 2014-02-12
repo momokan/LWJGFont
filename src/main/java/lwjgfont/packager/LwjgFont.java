@@ -39,6 +39,7 @@ public class LwjgFont {
 		String			baseDir = properties.getAsString(RESOURCE_BASE_DIR);
 		String			srcDir = LwjgFontUtil.prepareDirectory(baseDir, SOURCE_DIR).getPath();
 		String			resourceDir = LwjgFontUtil.prepareDirectory(baseDir, RESOURCE_DIR).getPath();
+		String			targetDir = LwjgFontUtil.prepareDirectory(baseDir, COMPILES_DIR).getPath();
 		SourceBuffer	sourceBuffer = processClass(fontPath, fontSize, baseDir);
 		
 		writeJavaSource(sourceBuffer, srcDir);
@@ -47,7 +48,7 @@ public class LwjgFont {
 		
 		sourceCompiler.setSourceDir(srcDir);
 		sourceCompiler.setResourceDir(resourceDir);
-		sourceCompiler.setTargetDir(LwjgFontUtil.prepareDirectory(baseDir, COMPILES_DIR).getPath());
+		sourceCompiler.setTargetDir(targetDir);
 		sourceCompiler.compile(sourceBuffer.getCannonicalClassName());
 		
 		PackagedResources	packagedResource = new PackagedResources();
@@ -55,6 +56,14 @@ public class LwjgFont {
 		packagedResource.addReplacePatterns(properties, ARTIFACT_NAME, ARTIFACT_VERSION);
 		packagedResource.setResourcesDir(resourceDir);
 		packagedResource.copy();
+		
+		Packager		packager = new Packager();
+		String			packageName = properties.getAsString(ARTIFACT_NAME) + "-" + properties.getAsString(ARTIFACT_VERSION) + ".jar";
+
+		packager.setResourceDir(resourceDir);
+		packager.setTargetDir(targetDir);
+		
+		packager.process(packageName);
 	}
 
 	private SourceBuffer processClass(String fontPath, int fontSize, String baseDir) throws IOException, FontFormatException {
