@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>lwjgfont</groupId>
-  <artifactId>lwjgfont</artifactId>
-  <version>0.1</version>
+  <artifactId>%artifactName%</artifactId>
+  <version>%artifactVersion%</version>
   <packaging>jar</packaging>
 
   <name>lwjgfont</name>

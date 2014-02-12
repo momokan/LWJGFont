@@ -18,6 +18,8 @@ import static javax.tools.StandardLocation.SOURCE_PATH;
 import static lwjgfont.packager.LwjgFontPropertyKey.CHARACTER_FILE_DIR;
 import static lwjgfont.packager.LwjgFontPropertyKey.IMAGE_CHARACTER_PADDING;
 import static lwjgfont.packager.LwjgFontPropertyKey.RESOURCE_BASE_DIR;
+import static lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_NAME;
+import static lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_VERSION;
 
 public class LwjgFont {
 	public static final String			DEFAULT_TEMP_DIR = "temp/";
@@ -50,6 +52,7 @@ public class LwjgFont {
 		
 		PackagedResources	packagedResource = new PackagedResources();
 		
+		packagedResource.addReplacePatterns(properties, ARTIFACT_NAME, ARTIFACT_VERSION);
 		packagedResource.setResourcesDir(resourceDir);
 		packagedResource.copy();
 	}

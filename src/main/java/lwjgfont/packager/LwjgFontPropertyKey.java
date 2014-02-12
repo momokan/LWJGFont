@@ -8,8 +8,8 @@ public enum LwjgFontPropertyKey {
 	IMAGE_CHARACTER_PADDING(DEFAULT_PADDING),
 	CHARACTER_FILE_DIR("characters"),
 	RESOURCE_BASE_DIR(DEFAULT_TEMP_DIR),
-	JAR_NAME("myfont"),	//	TODO あれこれ置換する
-	JAR_VERSION("alpha");
+	ARTIFACT_NAME("myfont"),	//	TODO あれこれ置換する
+	ARTIFACT_VERSION("1.0-SNAPSHOT");
 
 	private final String	defaultValue;
 	
@@ -25,6 +25,20 @@ public enum LwjgFontPropertyKey {
 
 	public String getDefaultValue() {
 		return defaultValue;
+	}
+	
+	public static String toResourceReplacePattern(LwjgFontPropertyKey key) {
+		String[]	tokens = key.name().toLowerCase().split("_");
+		String		pattern = "";
+		
+		for (String token: tokens) {
+			pattern += LwjgFontUtil.capitalize(token);
+		}
+
+		pattern = pattern.substring(0, 1).toLowerCase() + pattern.substring(1);
+		pattern = '%' + pattern + '%';
+		
+		return pattern;
 	}
 
 	@Override
