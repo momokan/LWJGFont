@@ -10,6 +10,7 @@ import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,48 +28,42 @@ import javax.tools.JavaCompiler.CompilationTask;
 import lwjgfont.processor.exception.AptException;
 
 public class SourceCompiler {
-	
-	protected static final Charset			COMPILE_CHARSET_UTF8 = Charset.forName("utf-8");
-	protected static final JavaCompiler		COMPILER = ToolProvider.getSystemJavaCompiler();
-//	protected static final CompileOption	MAIN_COMPILE_OPTION = new CompileOption("src/main/java/", TestResource.MAIN_BASE_DIR, "target/classes/");
-//	protected static final CompileOption	TEST_COMPILE_OPTION = new CompileOption("src/test/java/", TestResource.TEST_BASE_DIR, "target/test-classes/");
+	protected static final Charset	COMPILE_CHARSET_UTF8 = Charset.forName("utf-8");
 	
 	private String	srcDir = "";
 	private String	resourceDir = "";
 	private String	targetDir = "";
 
 	public void compile(String classCanonicalName) throws IOException {
-		LwjgFontUtil.prepareDirectory(targetDir);
+		JavaCompiler					compiler = ToolProvider.getSystemJavaCompiler();
+		StandardJavaFileManager		fileManager = compiler.getStandardFileManager(null, Locale.getDefault(), COMPILE_CHARSET_UTF8);
+		List<File>					classPaths = getClassPathAsFileList(fileManager);
 		
-		CompileOption			compileOption = new CompileOption(srcDir, resourceDir, targetDir);
-		List<JavaFileObject>	javaFiles = new ArrayList<>();
-
-		javaFiles.add(compileOption.fileManager.getJavaFileForInput(SOURCE_PATH, classCanonicalName, SOURCE));
-
-		compile(compileOption, javaFiles);
-	}
-
-	private boolean compile(CompileOption compileOption, List<JavaFileObject> javaFiles) throws IOException {
-		/*
-		JavaCompiler			compiler = ToolProvider.getSystemJavaCompiler();
-		StandardJavaFileManager	fileManager = compiler.getStandardFileManager(null, null, null);
-		
-		fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(compileOption.comiledClassPath)));
-		*/
-
-		CompilationTask		task = COMPILER.getTask(null, null, new DiagnosticsReporter(), compileOption.compileOptions, null, javaFiles);
+		fileManager.setLocation(StandardLocation.SOURCE_PATH, Arrays.asList(new File(srcDir)));
+		fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
+		fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(targetDir)));
 
 		try {
-			return task.call();
-		} catch(RuntimeException e){
-			if (e.getCause() instanceof AptException) {
-				throw (AptException)e.getCause();
-			} else {
-				throw e;
-			}
+			JavaFileObject			file = fileManager.getJavaFileForInput(SOURCE_PATH, classCanonicalName, SOURCE);
+
+			compiler.getTask(null, fileManager, new DiagnosticsReporter(), null, null, Arrays.asList(file)).call();
+		} finally {
+			fileManager.close();
 		}
 	}
-	
+
+	private List<File> getClassPathAsFileList(StandardJavaFileManager fileManager) {
+		List<File>					classPaths = new ArrayList<>();
+		Iterator<? extends File>	iterator = fileManager.getLocation(StandardLocation.CLASS_PATH).iterator();
+
+		classPaths.add(new File(resourceDir));
+		while (iterator.hasNext()) {
+			classPaths.add(iterator.next());
+		}
+
+		return classPaths;
+	}
+
 	public void setSourceDir(String srcDir) {
 		this.srcDir = srcDir;
 	}
@@ -98,44 +93,5 @@ public class SourceCompiler {
 		}
 		
 	}
-	
-	private static JavaFileManager prepareFileManager(String sourcePath) {
-		StandardJavaFileManager			standardJavaFileManager = COMPILER.getStandardFileManager(null, Locale.JAPAN, COMPILE_CHARSET_UTF8);
-		
-		try {
-			standardJavaFileManager.setLocation(StandardLocation.SOURCE_PATH, Arrays.asList(new File(sourcePath)));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		
-		return standardJavaFileManager;
-	}
-	
-	private static ClassLoader prepareClassLoader(String compiledClassPath) {
-		try {
-			return URLClassLoader.newInstance(new URL[] {new File(compiledClassPath).toURI().toURL()});
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	public static class CompileOption {
-		public final String			sourcePath;
-		public final String			resourcePath;
-		public final String			comiledClassPath;
-		public final List<String>	compileOptions;
-		
-		private final JavaFileManager	fileManager;
-		private final ClassLoader		classLoader;
 
-		public CompileOption(String sourcePath, String resourcePath, String comiledClassPath) {
-			this.sourcePath = sourcePath;
-			this.resourcePath = resourcePath;
-			this.comiledClassPath = comiledClassPath;
-			
-			this.compileOptions = Arrays.asList("-classpath", System.getProperty("java.class.path"), "-d", comiledClassPath);
-			this.fileManager = prepareFileManager(sourcePath);
-			this.classLoader = prepareClassLoader(comiledClassPath);
-		}
-	}
 }
