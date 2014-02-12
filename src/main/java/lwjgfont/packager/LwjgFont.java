@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import lwjgfont.FontMap;
-import lwjgfont.FontStore;
+import lwjgfont.AbstractFont;
 import lwjgfont.MappedFont;
 
 import static javax.tools.JavaFileObject.Kind.SOURCE;
@@ -69,7 +69,7 @@ public class LwjgFont {
 	private SourceBuffer processClass(String fontPath, int fontSize, String baseDir) throws IOException, FontFormatException {
 		FontMapPainter	fontMapPainter = new FontMapPainter();
 		File			fontFile = new File(fontPath);
-		String			packageName = FontStore.class.getPackage().getName();
+		String			packageName = AbstractFont.class.getPackage().getName();
 		String			packageDirs = packageName.replace('.', File.separatorChar);
 
 		fontMapPainter.setWriteImage(false);
@@ -81,9 +81,9 @@ public class LwjgFont {
 		FontMap			fontMap = fontMapPainter.paint(fontPath, fontSize);
 		SourceBuffer	source = new SourceBuffer(packageName);
 
-		source.openClass(toFontClassName(fontFile.getName()), null, FontStore.class);
+		source.openClass(toFontClassName(fontFile.getName()), null, AbstractFont.class);
 
-		printStaticFieldFontMap(source);
+//		printStaticFieldFontMap(source);
 		printPrepareFontMap(source, fontMap);
 		printMethodGetFontMap(source);
 		

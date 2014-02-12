@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -42,8 +44,20 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.PixelFormat;
 
 public class TextureLoader {
-	
-	public Texture loadTexture(String imagePath) throws IOException {
+	private static final Map<String, Texture>	texturesMap = new HashMap<>();
+
+	public static Texture loadTexture(String imagePath) throws IOException {
+		Texture		texture = texturesMap.get(imagePath);
+		
+		if (texture == null) {
+			texture = makeTexture(imagePath);
+			texturesMap.put(imagePath, texture);
+		}
+		
+		return texture;
+	}
+
+	private static Texture makeTexture(String imagePath) throws IOException {
 		BufferedImage	srcImage;
 		int				srcImageType;
 
@@ -150,6 +164,13 @@ public class TextureLoader {
 		return texture;
 	}
 	
+	public static void dispose() {
+		for (Texture texture: texturesMap.values()) {
+			texture.dispose();
+		}
+		texturesMap.clear();
+	}
+	
 	interface Pixel {
 		public ByteBuffer toBuffer(BufferedImage srcImage);
 
@@ -162,7 +183,7 @@ public class TextureLoader {
 	}
 
 	//	1 ピクセルあたりのビット深度 64 の画像フォーマットの変換用クラス
-	class Pixel8ByteABGR implements Pixel {
+	static class Pixel8ByteABGR implements Pixel {
 		private int[]	buffer = new int[8];
 
 		@Override
@@ -204,7 +225,7 @@ public class TextureLoader {
 	}
 	
 	//	1 ピクセルあたりのビット深度 32 の画像フォーマットの変換用クラス
-	class Pixel4ByteABGR implements Pixel {
+	static class Pixel4ByteABGR implements Pixel {
 		private int[]	buffer = new int[4];
 
 		@Override
@@ -241,7 +262,7 @@ public class TextureLoader {
 		}
 	}
 
-	class Pixel3ByteBGR implements Pixel {
+	static class Pixel3ByteBGR implements Pixel {
 		private int[]	buffer = new int[3];
 
 		@Override
