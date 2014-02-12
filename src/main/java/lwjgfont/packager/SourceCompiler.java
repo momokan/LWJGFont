@@ -28,7 +28,11 @@ import javax.tools.JavaCompiler.CompilationTask;
 import lwjgfont.processor.exception.AptException;
 
 public class SourceCompiler {
-	protected static final Charset	COMPILE_CHARSET_UTF8 = Charset.forName("utf-8");
+	
+	protected static final Charset			COMPILE_CHARSET_UTF8 = Charset.forName("utf-8");
+	protected static final JavaCompiler		COMPILER = ToolProvider.getSystemJavaCompiler();
+//	protected static final CompileOption	MAIN_COMPILE_OPTION = new CompileOption("src/main/java/", TestResource.MAIN_BASE_DIR, "target/classes/");
+//	protected static final CompileOption	TEST_COMPILE_OPTION = new CompileOption("src/test/java/", TestResource.TEST_BASE_DIR, "target/test-classes/");
 	
 	private String	srcDir = "";
 	private String	resourceDir = "";
@@ -93,5 +97,4 @@ public class SourceCompiler {
 		}
 		
 	}
-
 }

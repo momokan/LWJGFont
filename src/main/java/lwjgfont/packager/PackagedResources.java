@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class PackagedResources {
-	private static final List<String>		resources = new ArrayList<String>();
+	private static final List<String>	resources = new ArrayList<String>();
 	private static final String			resourcePathMask = "packagedResources/";
 	static {
 		resources.add("packagedResources/META-INF/maven/lwjgfont/lwjgfont/pom.properties");
@@ -39,7 +39,7 @@ public class PackagedResources {
 	private void copyResource(String resource, String dstPath) throws IOException {
 		BufferedReader		br = null;
 		PrintWriter			pw = null;
-		String					line;
+		String				line;
 
 		try {
 			br = new BufferedReader(new InputStreamReader(PackagedResources.class.getResourceAsStream(resource)));
