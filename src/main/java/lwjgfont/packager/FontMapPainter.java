@@ -40,7 +40,7 @@ public class FontMapPainter {
 
 	private int						padding = DEFAULT_PADDING;
 	private String					charactersDir = DEFAULT_CHARACTERS_DIR;
-	private String					resourceBaseDir = DEFAULT_TEMP_DIR;
+	private String					resourceDir = DEFAULT_TEMP_DIR;
 	private String					packageDirs = null;
 	private int						defaultImageHeightExponent = IMAGE_HEIGHT_DEFAULT_EXPONENT;
 	private boolean					isWriteImage = true;
@@ -141,7 +141,7 @@ public class FontMapPainter {
 	
 	private String writeFontMapImage(BufferedImage bufferedImage, String fontName, int imageIndex) throws IOException {
 		String		fileName = fontName.replace(' ', '_') + "_" + imageIndex + ".png";
-		File		dir = LwjgFontUtil.prepareDirectory(resourceBaseDir, packageDirs);
+		File		dir = LwjgFontUtil.prepareDirectory(resourceDir, packageDirs);
 		
 		if (isWriteImage) {		
 			ImageIO.write(bufferedImage, "png", new File(dir.getPath() + File.separator + fileName));
@@ -245,8 +245,8 @@ public class FontMapPainter {
 	public void setImageHeightExponent(int imageHeightExponent) {
 		this.imageHeightExponent = imageHeightExponent;
 	}
-	public void setResourceBaseDir(String resourceBaseDir) {
-		this.resourceBaseDir = resourceBaseDir;
+	public void setResourceDir(String resourceDir) {
+		this.resourceDir = resourceDir;
 	}
 	void setPackageDirs(String packageDirs) {
 		this.packageDirs = packageDirs;

@@ -46,22 +46,22 @@ import org.lwjgl.opengl.PixelFormat;
 public class TextureLoader {
 	private static final Map<String, Texture>	texturesMap = new HashMap<>();
 
-	public static Texture loadTexture(String imagePath) throws IOException {
+	public static Texture loadTexture(Class clazz, String imagePath) throws IOException {
 		Texture		texture = texturesMap.get(imagePath);
 		
 		if (texture == null) {
-			texture = makeTexture(imagePath);
+			texture = makeTexture(clazz, imagePath);
 			texturesMap.put(imagePath, texture);
 		}
 		
 		return texture;
 	}
 
-	private static Texture makeTexture(String imagePath) throws IOException {
+	private static Texture makeTexture(Class clazz, String imagePath) throws IOException {
 		BufferedImage	srcImage;
 		int				srcImageType;
 
-		srcImage = ImageIO.read(new File(imagePath));
+		srcImage = ImageIO.read(clazz.getResourceAsStream(imagePath));
 		srcImageType = srcImage.getType();
 		
 		

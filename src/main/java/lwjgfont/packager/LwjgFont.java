@@ -40,7 +40,7 @@ public class LwjgFont {
 		String			srcDir = LwjgFontUtil.prepareDirectory(baseDir, SOURCE_DIR).getPath();
 		String			resourceDir = LwjgFontUtil.prepareDirectory(baseDir, RESOURCE_DIR).getPath();
 		String			targetDir = LwjgFontUtil.prepareDirectory(baseDir, COMPILES_DIR).getPath();
-		SourceBuffer	sourceBuffer = processClass(fontPath, fontSize, baseDir);
+		SourceBuffer	sourceBuffer = processClass(fontPath, fontSize, resourceDir);
 		
 		writeJavaSource(sourceBuffer, srcDir);
 		
@@ -66,16 +66,16 @@ public class LwjgFont {
 		packager.process(packageName);
 	}
 
-	private SourceBuffer processClass(String fontPath, int fontSize, String baseDir) throws IOException, FontFormatException {
+	private SourceBuffer processClass(String fontPath, int fontSize, String resourceDir) throws IOException, FontFormatException {
 		FontMapPainter	fontMapPainter = new FontMapPainter();
 		File			fontFile = new File(fontPath);
 		String			packageName = AbstractFont.class.getPackage().getName();
 		String			packageDirs = packageName.replace('.', File.separatorChar);
 
-		fontMapPainter.setWriteImage(false);
+//		fontMapPainter.setWriteImage(false);
 		fontMapPainter.setPadding(properties.getAsInt(IMAGE_CHARACTER_PADDING));
 		fontMapPainter.setCharactersDir(properties.getAsString(CHARACTER_FILE_DIR));
-		fontMapPainter.setResourceBaseDir(baseDir);
+		fontMapPainter.setResourceDir(resourceDir);
 		fontMapPainter.setPackageDirs(packageDirs);
 		
 		FontMap			fontMap = fontMapPainter.paint(fontPath, fontSize);

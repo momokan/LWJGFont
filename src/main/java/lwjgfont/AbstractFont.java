@@ -38,7 +38,7 @@ public abstract class AbstractFont {
 		float	srcY2 = font.getSrcY() + font.getDescent();
 		
 		String		imagePath = getImagePath(font.getImageIndex());
-		Texture	texture = TextureLoader.loadTexture(imagePath);
+		Texture	texture = TextureLoader.loadTexture(this.getClass(), imagePath);
 		
 		texture.draw(dstX1, dstY1, dstX2, dstY2, srcX1, srcY1, srcX2, srcY2);
 		
