@@ -1,4 +1,4 @@
-# LWJGFont - Lightweight Java Game Font library
+# Lightweight Java Game Font library
 
 The Lightweight Java Game Font library (LWJGFont) is a solution for use any true type fonts on LWJGL.
 LWJGFont makes images which any characters of the true type font was drawn on,
@@ -8,9 +8,9 @@ and packages into jar which contains these images and classes to use the charact
 
 ### Generate jar file to use any font on LWJGL
 
-$ mvn clean package
-$ java -jar target/lwjgfont-0.1.jar -x
-$ java -jar target/lwjgfont-0.1.jar sample/migu-1p-regular.ttf:35
+$ mvn clean package  
+$ java -jar target/lwjgfont-0.1.jar -x  
+$ java -jar target/lwjgfont-0.1.jar sample/migu-1p-regular.ttf:35  
 
 ### Install generated jar to local repository
 
