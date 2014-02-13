@@ -132,7 +132,7 @@ public class TestLwjgFontUtil_deleteFile {
 		assertDirectoryExists(file.getPath());
 		
 		File	actual = LwjgFontUtil.deleteFile(file);
-		
+
 		assertFilePath(TEST_BASE_DIR + File.separator + "dir01" + File.separator + "dir02", actual);
 	}
 	

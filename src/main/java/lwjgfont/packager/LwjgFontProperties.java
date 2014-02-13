@@ -31,6 +31,9 @@ public class LwjgFontProperties {
 	public int getAsInt(LwjgFontPropertyKey key) {
 		return get(key, new IntConverter());
 	}
+	public boolean getAsBoolean(LwjgFontPropertyKey key) {
+		return get(key, new BooleanConverter());
+	}
 
 	private <T> T get(LwjgFontPropertyKey key, ValueConverter<T> converter) {
 		String	value = properties.getProperty(key.toString());
@@ -73,6 +76,23 @@ public class LwjgFontProperties {
 				return Integer.parseInt(value);
 			} catch(Exception e) {
 				throw new IllegalArgumentException("not integer.", e);
+			}
+		}
+		
+	}
+	
+	class BooleanConverter implements ValueConverter<Boolean> {
+
+		@Override
+		public Boolean convert(String value) {
+			if (value == null) {
+				throw new IllegalArgumentException("not boolean.");
+			}
+			
+			try {
+				return Boolean.parseBoolean(value);
+			} catch(Exception e) {
+				throw new IllegalArgumentException("not boolean.", e);
 			}
 		}
 		

@@ -13,11 +13,10 @@ import lwjgfont.FontMap;
 import lwjgfont.AbstractFont;
 import lwjgfont.MappedFont;
 
-import static javax.tools.JavaFileObject.Kind.SOURCE;
-import static javax.tools.StandardLocation.SOURCE_PATH;
+import static lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW;
 import static lwjgfont.packager.LwjgFontPropertyKey.CHARACTER_FILE_DIR;
 import static lwjgfont.packager.LwjgFontPropertyKey.IMAGE_CHARACTER_PADDING;
-import static lwjgfont.packager.LwjgFontPropertyKey.RESOURCE_BASE_DIR;
+import static lwjgfont.packager.LwjgFontPropertyKey.TEMP_DIR;
 import static lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_NAME;
 import static lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_VERSION;
 
@@ -36,7 +35,7 @@ public class LwjgFont {
 	}
 	
 	public void process(String fontPath, int fontSize) throws IOException, FontFormatException {
-		String			baseDir = properties.getAsString(RESOURCE_BASE_DIR);
+		String			baseDir = properties.getAsString(TEMP_DIR);
 		String			srcDir = LwjgFontUtil.prepareDirectory(baseDir, SOURCE_DIR).getPath();
 		String			resourceDir = LwjgFontUtil.prepareDirectory(baseDir, RESOURCE_DIR).getPath();
 		String			targetDir = LwjgFontUtil.prepareDirectory(baseDir, COMPILES_DIR).getPath();
@@ -72,7 +71,7 @@ public class LwjgFont {
 		String			packageName = AbstractFont.class.getPackage().getName();
 		String			packageDirs = packageName.replace('.', File.separatorChar);
 
-//		fontMapPainter.setWriteImage(false);
+		fontMapPainter.setWriteImage(properties.getAsBoolean(IMAGE_DRAW));
 		fontMapPainter.setPadding(properties.getAsInt(IMAGE_CHARACTER_PADDING));
 		fontMapPainter.setCharactersDir(properties.getAsString(CHARACTER_FILE_DIR));
 		fontMapPainter.setResourceDir(resourceDir);
@@ -83,23 +82,12 @@ public class LwjgFont {
 
 		source.openClass(toFontClassName(fontFile.getName()), null, AbstractFont.class);
 
-//		printStaticFieldFontMap(source);
 		printPrepareFontMap(source, fontMap);
 		printMethodGetFontMap(source);
 		
 		source.closeClass();
 		
 		return source;
-	}
-
-	private void printStaticFieldFontMap(SourceBuffer source) {
-		source.importClass(FontMap.class);
-		source.println(
-				"private static final %s map = new %s();",
-				FontMap.class.getSimpleName(),
-				FontMap.class.getSimpleName()
-		);
-		source.println();
 	}
 
 	private void printPrepareFontMap(SourceBuffer source, FontMap fontMap) {

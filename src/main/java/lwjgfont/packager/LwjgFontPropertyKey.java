@@ -5,16 +5,20 @@ import static lwjgfont.packager.FontMapPainter.DEFAULT_PADDING;
 import static lwjgfont.packager.LwjgFont.DEFAULT_TEMP_DIR;
 
 public enum LwjgFontPropertyKey {
+	IMAGE_DRAW(true),
 	IMAGE_CHARACTER_PADDING(DEFAULT_PADDING),
 	CHARACTER_FILE_DIR("characters"),
-	RESOURCE_BASE_DIR(DEFAULT_TEMP_DIR),
+	TEMP_DIR(DEFAULT_TEMP_DIR),
 	ARTIFACT_NAME("myfont"),	//	TODO あれこれ置換する
 	ARTIFACT_VERSION("1.0-SNAPSHOT");
 
 	private final String	defaultValue;
-	
+
 	private LwjgFontPropertyKey() {
 		this("");
+	}
+	private LwjgFontPropertyKey(boolean defaultValue) {
+		this(String.valueOf(defaultValue));
 	}
 	private LwjgFontPropertyKey(int defaultValue) {
 		this(String.valueOf(defaultValue));
