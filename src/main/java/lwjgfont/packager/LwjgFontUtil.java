@@ -43,6 +43,9 @@ public class LwjgFontUtil {
 		String		fullDirPath = "";
 		
 		for (String dirPath: dirPaths) {
+			if (dirPath == null) {
+				continue;
+			}
 			if (!LwjgFontUtil.isEmpty(fullDirPath)) {
 				fullDirPath += File.separator;
 			}

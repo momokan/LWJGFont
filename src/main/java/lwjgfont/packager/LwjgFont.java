@@ -234,7 +234,8 @@ public class LwjgFont {
 
 	//	TODO リファクタ
 	public void extractCharacterFiles() throws IOException, URISyntaxException {
-		URL		urlCharacters = this.getClass().getClassLoader().getResource(this.getClass().getPackage().getName().replaceAll("\\.", "/") + "/characters/");
+		String		charactersDir = LwjgFontUtil.prepareDirectory("characters").getPath();
+		URL			urlCharacters = this.getClass().getClassLoader().getResource(this.getClass().getPackage().getName().replaceAll("\\.", "/") + "/characters/");
 
 		if (urlCharacters.toURI().getScheme().equals("file")) {
 			extractCharacterFilesFromDir(urlCharacters);
@@ -246,10 +247,16 @@ public class LwjgFont {
 	//	TODO リファクタ
 	private void extractCharacterFilesFromDir(URL urlCharacters) throws URISyntaxException, IOException {
 		File					dir = new File(urlCharacters.toURI());
+		String					pathMask = urlCharacters.getPath();
 		ResourceExtractor	resourceExtractor = new ResourceExtractor();
 
 		for (File nextFile: dir.listFiles()) {
-			resourceExtractor.addResourcePath(nextFile.getPath(), nextFile.getName());
+			String				filePath = nextFile.getPath();
+			
+			filePath = filePath.substring(pathMask.length());
+			filePath = "characters/" + filePath;
+			
+			resourceExtractor.addResourcePath(filePath, nextFile.getName());
 		}
 
 		resourceExtractor.setResourcesDir("characters");
@@ -289,7 +296,9 @@ public class LwjgFont {
 						in.closeEntry();
 					} catch (IOException e2) {}
 					try {
-						out.close();
+						if (out != null) {
+							out.close();
+						}
 					} catch (IOException e2) {}
 				}
 			}
