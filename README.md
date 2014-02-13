@@ -14,6 +14,7 @@ $ java -jar target/lwjgfont-0.1.jar sample/migu-1p-regular.ttf:35
 
 ### Install generated jar to local repository
 
-$ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DgroupId=lwjgfont -DartifactId=myfont -Dversion=1.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
+$ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DgroupId=lwjgfont -DartifactId=myfont  
+  -Dversion=1.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
 
 
