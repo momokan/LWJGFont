@@ -47,14 +47,22 @@ public class CliArgumentParser {
 	}
 
 	private boolean isArgument(String arg, List<String> arguments) {
-		for (CliArgument argument: CliArgument.values()) {
-			if (argument.toArgument().equals(arg)) {
-				parsedArguments.put(argument, arguments.remove(0));
+		for (CliArgument cliArgument: CliArgument.values()) {
+			if (cliArgument.toArgument().equals(arg)) {
+				if (cliArgument.hasValue()) {
+					parsedArguments.put(cliArgument, arguments.remove(0));
+				} else {
+					parsedArguments.put(cliArgument, null);
+				}
 				return true;
 			}
 		}
 
 		return false;
+	}
+	
+	public boolean hasArgument(CliArgument argument) {
+		return (parsedArguments.containsKey(argument));
 	}
 
 	public String get(CliArgument argument) {

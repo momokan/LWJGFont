@@ -2,12 +2,24 @@ package lwjgfont.packager;
 
 import java.awt.FontFormatException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.JarURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import lwjgfont.FontMap;
 import lwjgfont.AbstractFont;
@@ -219,5 +231,77 @@ public class LwjgFont {
 		resourceExtractor.setResourcesDir(resourceDir);
 		resourceExtractor.copy();
 	}
+
+	//	TODO リファクタ
+	public void extractCharacterFiles() throws IOException, URISyntaxException {
+		URL		urlCharacters = this.getClass().getClassLoader().getResource(this.getClass().getPackage().getName().replaceAll("\\.", "/") + "/characters/");
+
+		if (urlCharacters.toURI().getScheme().equals("file")) {
+			extractCharacterFilesFromDir(urlCharacters);
+		} else {
+			extractCharacterFilesFromJar(urlCharacters);
+		}
+	}
+
+	//	TODO リファクタ
+	private void extractCharacterFilesFromDir(URL urlCharacters) throws URISyntaxException, IOException {
+		File					dir = new File(urlCharacters.toURI());
+		ResourceExtractor	resourceExtractor = new ResourceExtractor();
+
+		for (File nextFile: dir.listFiles()) {
+			resourceExtractor.addResourcePath(nextFile.getPath(), nextFile.getName());
+		}
+
+		resourceExtractor.setResourcesDir("characters");
+		resourceExtractor.copy();
+	}
+
+	//	TODO リファクタ
+	private void extractCharacterFilesFromJar(URL urlCharacters) throws IOException {
+		JarURLConnection		connection = (JarURLConnection)urlCharacters.openConnection();
+		ZipInputStream		in = null;
+		ZipEntry				zipEntry = null;
+		String					basePath = connection.getJarEntry().getName();
+		byte[]					buff = new byte[1024 * 1024];
+		int						size;
+		
+		try {
+			in = new ZipInputStream(new FileInputStream(connection.getJarFile().getName()));
+			
+			while ((zipEntry = in.getNextEntry()) != null) {
+				if ((!zipEntry.getName().startsWith(basePath)) || (zipEntry.getName().length() <= basePath.length())) {
+					continue;
+				}
+				
+				FileOutputStream		out = null;
+				String					fileName = zipEntry.getName().substring(basePath.length());
+				
+				try {
+					out = new FileOutputStream("characters/" + fileName);
+					
+					while (0 < (size = in.read(buff))) {
+						out.write(buff, 0, size);
+					}
+				} catch (Exception e) {
+					continue;
+				} finally {
+					try {
+						in.closeEntry();
+					} catch (IOException e2) {}
+					try {
+						out.close();
+					} catch (IOException e2) {}
+				}
+			}
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {}
+			}
+		}
+
+	}
+	
 
 }

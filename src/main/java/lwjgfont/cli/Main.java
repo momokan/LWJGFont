@@ -2,20 +2,29 @@ package lwjgfont.cli;
 
 import java.awt.FontFormatException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import lwjgfont.packager.LwjgFont;
 
+import static lwjgfont.cli.CliArgument._p;
+import static lwjgfont.cli.CliArgument._x;
+
 public class Main {
 
-	public static void main(String[] args) throws IOException, FontFormatException {
+	public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
 		CliArgumentParser	parser = new CliArgumentParser(args);	
-		LwjgFont				lwjgFont = new LwjgFont(parser.get(CliArgument._p));
+		LwjgFont				lwjgFont = new LwjgFont(parser.get(_p));
 		
-		for (String fontPath: parser.listFontPaths()) {
-			Integer			fontSize = parser.getFontSize(fontPath);
-			
-			lwjgFont.process(fontPath, fontSize);
-//			lwjgFont.process("sample/migu-1p-regular.ttf", 30);
+		if (parser.hasArgument(_x)) {
+			//	キャラクターファイルを展開する
+			lwjgFont.extractCharacterFiles();
+		} else {
+			//	フォントマップを作成する
+			for (String fontPath: parser.listFontPaths()) {
+				Integer			fontSize = parser.getFontSize(fontPath);
+				
+				lwjgFont.process(fontPath, fontSize);
+			}
 		}
 	}
 }
