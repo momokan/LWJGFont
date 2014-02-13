@@ -6,30 +6,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.Map;
 
-public class PackagedResources {
-	private static final List<String>	resources = new ArrayList<String>();
-	private static final String			resourcePathMask = "packagedResources/";
-	static {
-		resources.add("packagedResources/META-INF/maven/lwjgfont/lwjgfont/pom.properties");
-		resources.add("packagedResources/META-INF/maven/lwjgfont/lwjgfont/pom.xml");
-		resources.add("packagedResources/META-INF/MANIFEST.MF");
-	}
+public class ResourceExtractor {
 
+	private final Map<String, String>			resourcePaths;
 	private LinkedHashMap<String, String>	resourceReplaces;
 	private String								resourcesDir;
 
-	public PackagedResources() {
+	public ResourceExtractor() {
+		resourcePaths = new LinkedHashMap<>();
 		resourceReplaces = new LinkedHashMap<>();
 		resourcesDir = "";
 	}
 	
 	public void copy() throws IOException {
-		for (String resource: resources) {
-			File	file = new File(resource.replace(resourcePathMask, ""));
+		for (String resource: resourcePaths.keySet()) {
+			File	file = new File(resourcePaths.get(resource));
 			File	dstDir = LwjgFontUtil.prepareDirectory(resourcesDir, file.getParent());
 				
 			copyResource(resource, dstDir.getPath() + File.separator + file.getName());
@@ -42,7 +36,7 @@ public class PackagedResources {
 		String				line;
 
 		try {
-			br = new BufferedReader(new InputStreamReader(PackagedResources.class.getResourceAsStream(resource)));
+			br = new BufferedReader(new InputStreamReader(ResourceExtractor.class.getResourceAsStream(resource)));
 			pw = new PrintWriter(new FileOutputStream(dstPath));
 			
 			while ((line = br.readLine()) != null) {
@@ -66,9 +60,12 @@ public class PackagedResources {
 		}
 		
 		// TODO Auto-generated method stub
-		
 	}
 
+	public void addResourcePath(String srcResourcePath, String dstResourcePath) {
+		this.resourcePaths.put(srcResourcePath, dstResourcePath);
+	}
+	
 	public void addReplacePattern(LwjgFontProperties properties, LwjgFontPropertyKey key) {
 		String		pattern = LwjgFontPropertyKey.toResourceReplacePattern(key);
 		String		replacement = properties.getAsString(key);

@@ -53,25 +53,21 @@ public class LwjgFont {
 		sourceCompiler.setTargetDir(targetDir);
 		sourceCompiler.compile(sourceBuffer.getCannonicalClassName());
 		
-		PackagedResources	packagedResource = new PackagedResources();
-		
-		packagedResource.addReplacePatterns(properties, ARTIFACT_NAME, ARTIFACT_VERSION);
-		packagedResource.setResourcesDir(resourceDir);
-		packagedResource.copy();
+		extractStaticResources(resourceDir);
 		
 		Packager		packager = new Packager();
 		String			packageName = properties.getAsString(ARTIFACT_NAME) + "-" + properties.getAsString(ARTIFACT_VERSION) + ".jar";
 
 		packager.setResourceDir(resourceDir);
 		packager.setTargetDir(targetDir);
-		
 		packager.process(packageName);
 	}
 
 	private SourceBuffer processClass(String fontPath, int fontSize, String resourceDir) throws IOException, FontFormatException {
 		FontMapPainter	fontMapPainter = new FontMapPainter();
 		File			fontFile = new File(fontPath);
-		String			packageName = AbstractFont.class.getPackage().getName();
+		String			artifactName = properties.getAsString(ARTIFACT_NAME);
+		String			packageName = AbstractFont.class.getPackage().getName() + "." + artifactName;
 		String			packageDirs = packageName.replace('.', File.separatorChar);
 
 		fontMapPainter.setWriteImage(properties.getAsBoolean(IMAGE_DRAW));
@@ -205,15 +201,23 @@ public class LwjgFont {
 		return className;
 	}
 
-	public static void main(String[] args) throws IOException, FontFormatException {
-		String		propertiesPath = null;
-		
-		if ((args != null) && (1 <= args.length)) {
-			propertiesPath = args[0];
-		}
-		
-		LwjgFont	lwjgFont = new LwjgFont(propertiesPath);
-		
-		lwjgFont.process("sample/migu-1p-regular.ttf", 30);
+	private void extractStaticResources(String resourceDir) throws IOException {
+		ResourceExtractor	resourceExtractor = new ResourceExtractor();
+		String					artifactName = properties.getAsString(ARTIFACT_NAME);
+
+		resourceExtractor.addResourcePath(
+				"packagedResources/META-INF/maven/lwjgfont/lwjgfont/pom.properties",
+				"META-INF/maven/lwjgfont/" + artifactName + "/pom.properties");
+		resourceExtractor.addResourcePath(
+				"packagedResources/META-INF/maven/lwjgfont/lwjgfont/pom.xml",
+				"META-INF/maven/lwjgfont/" + artifactName + "/pom.xml");
+		resourceExtractor.addResourcePath(
+				"packagedResources/META-INF/MANIFEST.MF",
+				"META-INF/MANIFEST.MF");
+
+		resourceExtractor.addReplacePatterns(properties, ARTIFACT_NAME, ARTIFACT_VERSION);
+		resourceExtractor.setResourcesDir(resourceDir);
+		resourceExtractor.copy();
 	}
+
 }

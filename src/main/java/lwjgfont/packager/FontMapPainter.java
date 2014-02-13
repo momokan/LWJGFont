@@ -1,31 +1,18 @@
 package lwjgfont.packager;
 
-import java.awt.AlphaComposite;
+import static lwjgfont.packager.LwjgFont.DEFAULT_TEMP_DIR;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ComponentColorModel;
-import java.awt.image.DataBuffer;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-
-import static lwjgfont.packager.LwjgFont.DEFAULT_TEMP_DIR;
 
 import javax.imageio.ImageIO;
 
@@ -44,7 +31,7 @@ public class FontMapPainter {
 	private String					packageDirs = null;
 	private int						defaultImageHeightExponent = IMAGE_HEIGHT_DEFAULT_EXPONENT;
 	private boolean					isWriteImage = true;
-	
+
 	//	paint 処理用。paint() の開始から終了までの間の一時データ
 	private CharacterFile			file;
 	private List<CharacterFile>		files;
@@ -197,7 +184,7 @@ public class FontMapPainter {
 	private void prepareImageBuffer() {
 		height = (int)Math.pow(2, imageHeightExponent);
 		width = IMAGE_MAX_LENGTH;
-		
+
 		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
 		g = bufferedImage.createGraphics();
 
