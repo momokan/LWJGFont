@@ -35,10 +35,13 @@ public class LwjgFont {
 	}
 	
 	public void process(String fontPath, int fontSize) throws IOException, FontFormatException {
-		String			baseDir = properties.getAsString(TEMP_DIR);
-		String			srcDir = LwjgFontUtil.prepareDirectory(baseDir, SOURCE_DIR).getPath();
-		String			resourceDir = LwjgFontUtil.prepareDirectory(baseDir, RESOURCE_DIR).getPath();
-		String			targetDir = LwjgFontUtil.prepareDirectory(baseDir, COMPILES_DIR).getPath();
+		String			tempDir = properties.getAsString(TEMP_DIR);
+
+		LwjgFontUtil.deleteFile(tempDir);
+
+		String			srcDir = LwjgFontUtil.prepareDirectory(tempDir, SOURCE_DIR).getPath();
+		String			resourceDir = LwjgFontUtil.prepareDirectory(tempDir, RESOURCE_DIR).getPath();
+		String			targetDir = LwjgFontUtil.prepareDirectory(tempDir, COMPILES_DIR).getPath();
 		SourceBuffer	sourceBuffer = processClass(fontPath, fontSize, resourceDir);
 		
 		writeJavaSource(sourceBuffer, srcDir);
