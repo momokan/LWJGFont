@@ -127,7 +127,7 @@ public class FontMapPainter {
 				x += stringWidthOnMap;
 			}
 
-			fontMap.addImageFile(imageIndex, writeFontMapImage(bufferedImage, font.getName(), imageIndex));
+			fontMap.addImageFile(imageIndex, writeFontMapImage(bufferedImage, font.getName(), font.getSize(), imageIndex));
 			imageIndex++;
 		} finally {
 			disposeImageBuffer(g, bufferedImage);
@@ -139,8 +139,8 @@ public class FontMapPainter {
 		return fontMap;
 	}
 	
-	private String writeFontMapImage(BufferedImage bufferedImage, String fontName, int imageIndex) throws IOException {
-		String		fileName = fontName.replace(' ', '_') + "_" + imageIndex + ".png";
+	private String writeFontMapImage(BufferedImage bufferedImage, String fontName, int fontSize, int imageIndex) throws IOException {
+		String		fileName = fontName.replace(' ', '_') + "_H" + fontSize + "_" +imageIndex + ".png";
 		File		dir = LwjgFontUtil.prepareDirectory(resourceDir, packageDirs);
 		
 		if (isWriteImage) {		

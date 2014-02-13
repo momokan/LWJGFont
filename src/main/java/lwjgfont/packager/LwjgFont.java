@@ -83,7 +83,7 @@ public class LwjgFont {
 		FontMap			fontMap = fontMapPainter.paint(fontPath, fontSize);
 		SourceBuffer	source = new SourceBuffer(packageName);
 
-		source.openClass(toFontClassName(fontFile.getName()), null, AbstractFont.class);
+		source.openClass(toFontClassName(fontFile.getName(), fontSize), null, AbstractFont.class);
 
 		printPrepareFontMap(source, fontMap);
 		printMethodGetFontMap(source);
@@ -191,7 +191,7 @@ public class LwjgFont {
 		}
 	}
 
-	private String toFontClassName(String fontName) {
+	private String toFontClassName(String fontName, int fontSize) {
 		fontName = LwjgFontUtil.trimExtention(fontName);
 		
 		String		className = "";
@@ -199,6 +199,7 @@ public class LwjgFont {
 		for (String token: tokens) {
 			className += LwjgFontUtil.capitalize(token);
 		}
+		className += "H" + fontSize;
 		className += "Font";
 		
 		return className;
