@@ -26,14 +26,14 @@ public abstract class AbstractFont {
 			font = getMappedCharacter(NotMatchedSign.getCharacter());
 		}
 
-		float	dstX1 = drawPoint.dstX;
-		float	dstY1 = drawPoint.dstY + font.getAscent();
-		float	dstX2 = drawPoint.dstX + font.getAdvance();
-		float	dstY2 = drawPoint.dstY - font.getDescent();
-		float	srcX1 = font.getSrcX();
-		float	srcY1 = font.getSrcY() - font.getAscent();
-		float	srcX2 = font.getSrcX() + font.getAdvance();
-		float	srcY2 = font.getSrcY() + font.getDescent();
+		float	dstX1 = drawPoint.dstX - font.getPadding();
+		float	dstY1 = drawPoint.dstY + font.getAscent() + font.getPadding();
+		float	dstX2 = drawPoint.dstX + font.getAdvance() + font.getPadding();
+		float	dstY2 = drawPoint.dstY - font.getDescent() - font.getPadding();
+		float	srcX1 = font.getSrcX() - font.getPadding();
+		float	srcY1 = font.getSrcY() - font.getAscent() - font.getPadding();
+		float	srcX2 = font.getSrcX() + font.getAdvance() + font.getPadding();
+		float	srcY2 = font.getSrcY() + font.getDescent() + font.getPadding();
 		
 		String		imagePath = getImagePath(font.getImageIndex());
 		Texture	texture = TextureLoader.loadTexture(this.getClass(), imagePath);

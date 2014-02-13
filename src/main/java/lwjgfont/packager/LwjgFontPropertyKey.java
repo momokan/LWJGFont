@@ -3,9 +3,12 @@ package lwjgfont.packager;
 import static lwjgfont.packager.FontMapPainter.DEFAULT_CHARACTERS_DIR;
 import static lwjgfont.packager.FontMapPainter.DEFAULT_PADDING;
 import static lwjgfont.packager.LwjgFont.DEFAULT_TEMP_DIR;
+import static lwjgfont.packager.FontMapPainter.DEFAULT_WRITE_IMAGE;
+import static lwjgfont.packager.FontMapPainter.DEFAULT_WRITE_IMAGE_FRAME;
 
 public enum LwjgFontPropertyKey {
-	IMAGE_DRAW(true),
+	IMAGE_DRAW(DEFAULT_WRITE_IMAGE),
+	IMAGE_DRAW_FRAME(DEFAULT_WRITE_IMAGE_FRAME),
 	IMAGE_CHARACTER_PADDING(DEFAULT_PADDING),
 	CHARACTER_FILE_DIR(DEFAULT_CHARACTERS_DIR),
 	TEMP_DIR(DEFAULT_TEMP_DIR),

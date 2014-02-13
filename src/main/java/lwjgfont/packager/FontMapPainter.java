@@ -24,13 +24,16 @@ public class FontMapPainter {
 	private static final int		IMAGE_MAX_LENGTH = 4096;
 	public static final int			DEFAULT_PADDING = 5;
 	public static final String		DEFAULT_CHARACTERS_DIR = "characters";
+	public static final boolean		DEFAULT_WRITE_IMAGE = true;
+	public static final boolean		DEFAULT_WRITE_IMAGE_FRAME = false;
 
 	private int						padding = DEFAULT_PADDING;
 	private String					charactersDir = DEFAULT_CHARACTERS_DIR;
 	private String					resourceDir = DEFAULT_TEMP_DIR;
 	private String					packageDirs = null;
 	private int						defaultImageHeightExponent = IMAGE_HEIGHT_DEFAULT_EXPONENT;
-	private boolean					isWriteImage = true;
+	private boolean					isWriteImage = DEFAULT_WRITE_IMAGE;
+	private boolean					isWriteImageFrame = DEFAULT_WRITE_IMAGE_FRAME;
 
 	//	paint 処理用。paint() の開始から終了までの間の一時データ
 	private CharacterFile			file;
@@ -55,6 +58,7 @@ public class FontMapPainter {
 		int				maxDescent;
 		int				advance;
 		int				imageIndex = 0;
+		Color			frameColor = new Color(0.8f, 0.8f, 1f);
 
 		/**
 		 *	font.getSize() … ベースラインから上辺までの高さ。この内部は重なることはない。
@@ -102,8 +106,10 @@ public class FontMapPainter {
 					}
 					y += stringHeightOnMap;
 				}
-				g.setColor(new Color(0.8f, 0.8f, 1f));
-				g.drawRect(x, y - maxAscent, stringWidthOnMap, stringHeightOnMap);
+				if (isWriteImageFrame) {
+					g.setColor(frameColor);
+					g.drawRect(x, y - maxAscent, stringWidthOnMap, stringHeightOnMap);
+				}
 
 				srcX = x + padding;
 				srcY = y;
@@ -244,9 +250,8 @@ public class FontMapPainter {
 	public void setWriteImage(boolean isWriteImage) {
 		this.isWriteImage = isWriteImage;
 	}
-
-	public static void main(String[] args) throws IOException, FontFormatException {
-		new FontMapPainter().paint("sample/migu-1p-regular.ttf", 40);
+	public void setWriteImageFrame(boolean isWriteImageFrame) {
+		this.isWriteImageFrame = isWriteImageFrame;
 	}
 
 }

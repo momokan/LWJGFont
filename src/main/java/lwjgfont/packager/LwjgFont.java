@@ -26,6 +26,7 @@ import lwjgfont.AbstractFont;
 import lwjgfont.MappedFont;
 
 import static lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW;
+import static lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW_FRAME;
 import static lwjgfont.packager.LwjgFontPropertyKey.CHARACTER_FILE_DIR;
 import static lwjgfont.packager.LwjgFontPropertyKey.IMAGE_CHARACTER_PADDING;
 import static lwjgfont.packager.LwjgFontPropertyKey.TEMP_DIR;
@@ -83,6 +84,7 @@ public class LwjgFont {
 		String			packageDirs = packageName.replace('.', File.separatorChar);
 
 		fontMapPainter.setWriteImage(properties.getAsBoolean(IMAGE_DRAW));
+		fontMapPainter.setWriteImageFrame(properties.getAsBoolean(IMAGE_DRAW_FRAME));
 		fontMapPainter.setPadding(properties.getAsInt(IMAGE_CHARACTER_PADDING));
 		fontMapPainter.setCharactersDir(properties.getAsString(CHARACTER_FILE_DIR));
 		fontMapPainter.setResourceDir(resourceDir);
