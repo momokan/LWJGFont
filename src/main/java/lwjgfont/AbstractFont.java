@@ -1,17 +1,14 @@
 package lwjgfont;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import lwjgfont.texture.Texture;
 import lwjgfont.texture.TextureLoader;
 
-import com.sun.org.apache.bcel.internal.generic.DSTORE;
+import static lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
 
 public abstract class AbstractFont {
 	protected static final FontMap	map = new FontMap();
-//	protected final Map<Character, MappedFont>	map = new HashMap<Character, MappedFont>();
 
 	public void drawString(String text, float dstX, float dstY, float dstZ) throws IOException {
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
@@ -25,7 +22,8 @@ public abstract class AbstractFont {
 		MappedFont	font = getMappedCharacter(ch);
 		
 		if (font == null) {
-			return;
+			//	指定の文字が描画対象でなければ、豆腐を表示する
+			font = getMappedCharacter(NotMatchedSign.getCharacter());
 		}
 
 		float	dstX1 = drawPoint.dstX;

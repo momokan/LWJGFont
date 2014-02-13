@@ -2,7 +2,8 @@ package lwjgfont.packager;
 
 public enum BuiltinCharacter {
 	Space(' '),
-	MultibytesSpace('　');
+	MultibytesSpace('　'),
+	NotMatchedSign('■');
 
 	private final char c; 
 	

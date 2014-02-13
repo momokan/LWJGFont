@@ -25,7 +25,7 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
 
-import lwjgfont.processor.exception.AptException;
+import lwjgfont.processor.exception.LwjgFontException;
 
 public class SourceCompiler {
 	

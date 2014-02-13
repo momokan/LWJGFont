@@ -35,8 +35,8 @@ public class Texture {
 	private int	 textureHeight;
 
 	private AlphaBlend	alphaBlend;
-	private float		alpha;
-	private boolean 	isAlphaPremultiplied;
+	private float			alpha;
+	private boolean 		isAlphaPremultiplied;
  
 	public Texture(int target, int textureID) {
 		this.target = target;
@@ -63,26 +63,17 @@ public class Texture {
 		
 		glEnable(GL_BLEND);
 		
-//		float	alpha = calcAlpha();
-		
 		alphaBlend.config(this);
 		
+		//	透過率を設定する
 		if (isAlphaPremultiplied) {
 			//	透過イメージを表示する (pre-multipled)
-//			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-			//	Premultiplied な画像である PNG を使うなら透過イメージの表示はこれが正しいらしい
-
 			//	Premultiplied な画像である PNG を半透明表示する場合、 RGB のそれぞれについて alpha 値をかける
 			glColor4f(1f * alpha, 1f * alpha, 1f * alpha, alpha);
 		} else {
 			//	透過イメージを表示する (not pre-multipled)
-//			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 			glColor4f(1f, 1f, 1f, alpha);
 		}
-		
-		//	透過率を設定する
-//		glColor4f(1f, 1f, 1f, alpha);
 
 		// draw a quad textured to match the sprite
 		glBegin(GL_QUADS);
