@@ -1,8 +1,8 @@
-.classpath
-.project
-.settings
-target
-characters/
-temp
-lwjgfont.properties
-*.jar
+/.classpath
+/.project
+/.settings
+/target
+/characters
+/temp
+/lwjgfont.properties
+/*.jar
