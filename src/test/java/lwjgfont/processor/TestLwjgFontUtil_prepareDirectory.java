@@ -3,7 +3,8 @@ package lwjgfont.processor;
 import java.io.File;
 import java.io.IOException;
 
-import lwjgfont.packager.LwjgFontUtil;
+
+import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 
 import org.junit.After;
 import org.junit.Before;

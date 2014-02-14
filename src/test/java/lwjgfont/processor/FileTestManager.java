@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import lwjgfont.packager.LwjgFontUtil;
+import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
+
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;

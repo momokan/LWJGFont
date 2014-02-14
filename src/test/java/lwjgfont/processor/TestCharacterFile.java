@@ -2,7 +2,8 @@ package lwjgfont.processor;
 
 import java.io.IOException;
 
-import lwjgfont.packager.CharacterFile;
+
+import net.chocolapod.lwjgfont.packager.CharacterFile;
 
 import org.junit.Test;
 
