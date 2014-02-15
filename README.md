@@ -12,6 +12,8 @@ $ mvn clean package
 $ java -jar target/lwjgfont-0.1.jar -x  
 $ java -jar target/lwjgfont-0.1.jar sample/migu-1p-regular.ttf:35  
 
+so myfont-1.0-SNAPSHOT.jar will be generated on current directory.
+
 ### Install generated jar to local repository
 
 $ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DgroupId=net.chocolapod.lwjgfont -DartifactId=myfont \  
