@@ -11,6 +11,10 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
 public abstract class AbstractFont {
 	protected static final FontMap	map = new FontMap();
 
+	private float r = 1f;
+	private float g = 1f;
+	private float b = 1f;
+	
 	public void drawString(String text, float dstX, float dstY, float dstZ) throws IOException {
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
 		
@@ -37,8 +41,9 @@ public abstract class AbstractFont {
 		float	srcY2 = font.getSrcY() + font.getDescent() + font.getPadding();
 		
 		String		imagePath = getImagePath(font.getImageIndex());
-		Texture	texture = TextureLoader.loadTexture(this.getClass(), imagePath);
+		Texture		texture = TextureLoader.loadTexture(this.getClass(), imagePath);
 		
+		texture.setColor(r, g, b);
 		texture.draw(dstX1, dstY1, dstX2, dstY2, srcX1, srcY1, srcX2, srcY2);
 		
 		drawPoint.dstX += font.getAdvance();
@@ -50,6 +55,12 @@ public abstract class AbstractFont {
 	
 	private String getImagePath(int index) {
 		return map.getImageFile(index);
+	}
+	
+	public void setColor(float r, float g, float b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
 	}
 
 	protected abstract FontMap getFontMap();

@@ -34,7 +34,10 @@ public class Texture {
 	private int	 textureWidth;
 	private int	 textureHeight;
 
-	private AlphaBlend	alphaBlend;
+	private float			r;
+	private float			g;
+	private float			b;
+	private AlphaBlend		alphaBlend;
 	private float			alpha;
 	private boolean 		isAlphaPremultiplied;
  
@@ -44,6 +47,9 @@ public class Texture {
 		this.alpha = 1f;
 		this.alphaBlend = AlphaBlend;
 		this.isAlphaPremultiplied = true;
+		this.r = 1f;
+		this.g = 1f;
+		this.b = 1f;
 	}
 
 	public void draw(float dstX1, float dstY1) {
@@ -69,10 +75,10 @@ public class Texture {
 		if (isAlphaPremultiplied) {
 			//	透過イメージを表示する (pre-multipled)
 			//	Premultiplied な画像である PNG を半透明表示する場合、 RGB のそれぞれについて alpha 値をかける
-			glColor4f(1f * alpha, 1f * alpha, 1f * alpha, alpha);
+			glColor4f(r * alpha, g * alpha, b * alpha, alpha);
 		} else {
 			//	透過イメージを表示する (not pre-multipled)
-			glColor4f(1f, 1f, 1f, alpha);
+			glColor4f(r, g, b, alpha);
 		}
 
 		// draw a quad textured to match the sprite
@@ -162,8 +168,15 @@ public class Texture {
 	public void setAlphaBlend(AlphaBlend alphaBlend) {
 		this.alphaBlend = alphaBlend;
 	}
+	
+	public void setColor(float r, float g, float b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
 
 	public void setAlpha(float alpha) {
 		this.alpha = alpha;
 	}
+
 }
