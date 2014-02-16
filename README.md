@@ -22,4 +22,4 @@ $ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DgroupId=net.chocolap
 ## License
 
 This software is released under the MIT License,
-see LICENSE.txt or http://lwjgfont.chocolapod.net/LICENSE.txt.
+see LICENSE.txt or http://lwjgfont.chocolapod.net/LICENSE.txt
