@@ -19,4 +19,7 @@ so myfont-1.0-SNAPSHOT.jar will be generated on current directory.
 $ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DgroupId=net.chocolapod.lwjgfont -DartifactId=myfont \  
   -Dversion=1.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
 
+## License
 
+This software is released under the MIT License,
+see LICENSE.txt or http://lwjgfont.chocolapod.net/LICENSE.txt.
