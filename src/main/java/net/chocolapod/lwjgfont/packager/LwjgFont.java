@@ -41,11 +41,13 @@ public class LwjgFont {
 	private static final String			COMPILES_DIR = "target";
 	
 	private LwjgFontProperties	properties;
+	private ClassMapLog			classMapLog;
 	
 	private int					maxCharacterRegistration = 500;
 	
 	public LwjgFont(String propertiesPath) throws IOException {
 		properties = LwjgFontProperties.load(propertiesPath);
+		classMapLog = new ClassMapLog();
 	}
 	
 	public void process(String fontPath, int fontSize) throws IOException, FontFormatException {
@@ -75,6 +77,8 @@ public class LwjgFont {
 		packager.setResourceDir(resourceDir);
 		packager.setTargetDir(targetDir);
 		packager.process(packageName);
+		
+		classMapLog.add(fontPath, fontSize, sourceBuffer.getCannonicalClassName());
 	}
 
 	private SourceBuffer processClass(String fontPath, int fontSize, String resourceDir) throws IOException, FontFormatException {
@@ -234,6 +238,11 @@ public class LwjgFont {
 		resourceExtractor.setResourcesDir(resourceDir);
 		resourceExtractor.copy();
 	}
+	
+	public void writeClassMapLog() throws IOException {
+		classMapLog.write();
+		classMapLog = new ClassMapLog();
+	}
 
 	//	TODO リファクタ
 	public void extractCharacterFiles() throws IOException, URISyntaxException {
@@ -314,6 +323,5 @@ public class LwjgFont {
 		}
 
 	}
-	
 
 }
