@@ -10,8 +10,11 @@
   <name>lwjgfont</name>
   <description>LWJGL 3rd party library to use any font as texture.</description>
   <url>http://lwjgfont.chocolapod.net</url>
+
   <scm>
+    <connection>scm:git:https://github.com/momokan/LWJGFont.git</connection>
     <url>https://github.com/momokan/LWJGFont</url>
+    <developerConnection>scm:git:https://github.com/momokan/LWJGFont.git</developerConnection>
   </scm>
 
   <licenses>
@@ -21,6 +24,15 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <developers>
+    <developer>
+      <id>momokan</id>
+	  <name>momokan</name>
+	  <email>momokan@chocolapod.net</email>
+	  <url>http://lwjgfont.chocolapod.net</url>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
