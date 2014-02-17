@@ -49,7 +49,8 @@ public class Main {
 				
 				lwjgFont.process(fontPath, fontSize);
 			}
-			lwjgFont.writeClassMapLog();
+			lwjgFont.makePackage();
+			lwjgFont.writeProcessLog();
 		}
 	}
 }

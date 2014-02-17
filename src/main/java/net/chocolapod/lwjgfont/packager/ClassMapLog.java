@@ -26,20 +26,35 @@ package net.chocolapod.lwjgfont.packager;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ClassMapLog {
 	private static final String		LOG_FILE_NAME = "lwjgfont.log"; 
-	
-	private Map<String, String>	classMap;
 
-	public ClassMapLog() {
+	private final String			jarName;
+	private Map<String, String>	classMap;
+	private int						keyLength;
+
+	public ClassMapLog(String jarName) {
+		this.jarName = jarName;
 		this.classMap = new HashMap<String, String>();
+		this.keyLength = 0;
 	}
 	
 	public void add(String fontName, int size, String className) {
-		classMap.put(fontName + " (Size: " + size + ")", className);
+		String		key = fontName + " (Size: " + size + ")";
+		
+		classMap.put(key, className);
+
+		if (keyLength < key.length()) {
+			keyLength = key.length();
+		}
+	}
+	public List<String> listClasses() {
+		return new ArrayList<String>(classMap.values());
 	}
 
 	public void write() throws IOException {
@@ -47,10 +62,7 @@ public class ClassMapLog {
 		
 		try {
 			pw = new PrintWriter(new FileOutputStream(LOG_FILE_NAME));
-			
-			for (String key: classMap.keySet()) {
-				pw.println(key + " --> " + classMap.get(key));
-			}
+			pw.println(toString());
 		} catch (IOException e) {
 			throw e;
 		} finally {
@@ -58,8 +70,21 @@ public class ClassMapLog {
 				pw.close();
 			}
 		}
-
-		
 	}
+
+	@Override
+	public String toString() {
+		String		buff = "Generate: " + jarName + "\n";
+		
+		buff += "\n";
+		buff += "This jar file contains theses classes.";
+
+		for (String key: classMap.keySet()) {
+			buff += String.format("\n%" + keyLength + "s -> %s", key, classMap.get(key));
+		}
+		
+		return buff;
+	}
+
 
 }

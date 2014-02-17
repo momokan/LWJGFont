@@ -61,7 +61,7 @@ public class SourceCompiler {
 	private String	resourceDir = "";
 	private String	targetDir = "";
 
-	public void compile(String classCanonicalName) throws IOException {
+	public void compile(List<String> classCanonicalNames) throws IOException {
 		JavaCompiler					compiler = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager		fileManager = compiler.getStandardFileManager(null, Locale.getDefault(), COMPILE_CHARSET_UTF8);
 		List<File>					classPaths = getClassPathAsFileList(fileManager);
@@ -71,9 +71,13 @@ public class SourceCompiler {
 		fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(targetDir)));
 
 		try {
-			JavaFileObject			file = fileManager.getJavaFileForInput(SOURCE_PATH, classCanonicalName, SOURCE);
+			List<JavaFileObject>	files = new ArrayList<>();
 
-			compiler.getTask(null, fileManager, new DiagnosticsReporter(), null, null, Arrays.asList(file)).call();
+			for (String classCanonicalName: classCanonicalNames) {
+				files.add(fileManager.getJavaFileForInput(SOURCE_PATH, classCanonicalName, SOURCE));
+			}
+
+			compiler.getTask(null, fileManager, new DiagnosticsReporter(), null, null, files).call();
 		} finally {
 			fileManager.close();
 		}

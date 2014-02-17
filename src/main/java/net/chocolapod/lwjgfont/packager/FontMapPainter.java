@@ -139,7 +139,7 @@ public class FontMapPainter {
 				srcY = y;
 				g.setColor(Color.WHITE);
 				g.drawString(c.toString(), srcX, srcY);
-				System.out.println("(" + x + ", " + y + ") :" + c.toString());
+//				System.out.println("(" + x + ", " + y + ") :" + c.toString());
 				fontMap.addMappedFont(new MappedFont(c, imageIndex, srcX, srcY, maxAscent, maxDescent, advance, imageIndex));
 				x += stringWidthOnMap;
 			}

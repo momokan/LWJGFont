@@ -66,42 +66,50 @@ public class LwjgFont {
 	private LwjgFontProperties	properties;
 	private ClassMapLog			classMapLog;
 	
+	private String				tempDir;
+	private String				srcDir;
+	private String				resourceDir;
+	private String				targetDir;
+	private String				packageName;
+
 	private int					maxCharacterRegistration = 500;
 	
 	public LwjgFont(String propertiesPath) throws IOException {
 		properties = LwjgFontProperties.load(propertiesPath);
-		classMapLog = new ClassMapLog();
-	}
-	
-	public void process(String fontPath, int fontSize) throws IOException, FontFormatException {
-		String			tempDir = properties.getAsString(TEMP_DIR);
 
+		tempDir = properties.getAsString(TEMP_DIR);
 		LwjgFontUtil.deleteFile(tempDir);
 
-		String			srcDir = LwjgFontUtil.prepareDirectory(tempDir, SOURCE_DIR).getPath();
-		String			resourceDir = LwjgFontUtil.prepareDirectory(tempDir, RESOURCE_DIR).getPath();
-		String			targetDir = LwjgFontUtil.prepareDirectory(tempDir, COMPILES_DIR).getPath();
+		srcDir = LwjgFontUtil.prepareDirectory(tempDir, SOURCE_DIR).getPath();
+		resourceDir = LwjgFontUtil.prepareDirectory(tempDir, RESOURCE_DIR).getPath();
+		targetDir = LwjgFontUtil.prepareDirectory(tempDir, COMPILES_DIR).getPath();
+		packageName = properties.getAsString(ARTIFACT_NAME) + "-" + properties.getAsString(ARTIFACT_VERSION) + ".jar";
+		classMapLog = new ClassMapLog(packageName);
+	}
+
+	public void process(String fontPath, int fontSize) throws IOException, FontFormatException {
 		SourceBuffer	sourceBuffer = processClass(fontPath, fontSize, resourceDir);
-		
+
 		writeJavaSource(sourceBuffer, srcDir);
-		
+
+		classMapLog.add(fontPath, fontSize, sourceBuffer.getCannonicalClassName());
+	}
+	
+	public void makePackage() throws IOException {
 		SourceCompiler	sourceCompiler = new SourceCompiler();
 		
 		sourceCompiler.setSourceDir(srcDir);
 		sourceCompiler.setResourceDir(resourceDir);
 		sourceCompiler.setTargetDir(targetDir);
-		sourceCompiler.compile(sourceBuffer.getCannonicalClassName());
+		sourceCompiler.compile(classMapLog.listClasses());
 		
 		extractStaticResources(resourceDir);
-		
+
 		Packager		packager = new Packager();
-		String			packageName = properties.getAsString(ARTIFACT_NAME) + "-" + properties.getAsString(ARTIFACT_VERSION) + ".jar";
 
 		packager.setResourceDir(resourceDir);
 		packager.setTargetDir(targetDir);
 		packager.process(packageName);
-		
-		classMapLog.add(fontPath, fontSize, sourceBuffer.getCannonicalClassName());
 	}
 
 	private SourceBuffer processClass(String fontPath, int fontSize, String resourceDir) throws IOException, FontFormatException {
@@ -276,9 +284,9 @@ public class LwjgFont {
 		resourceExtractor.copy();
 	}
 	
-	public void writeClassMapLog() throws IOException {
+	public void writeProcessLog() throws IOException {
 		classMapLog.write();
-		classMapLog = new ClassMapLog();
+		System.out.println(classMapLog);
 	}
 
 	//	TODO リファクタ
@@ -358,7 +366,6 @@ public class LwjgFont {
 				} catch (IOException e) {}
 			}
 		}
-
 	}
-
+	
 }
