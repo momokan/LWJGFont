@@ -50,9 +50,10 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
  * </pre>
  */
 public abstract class AbstractFont {
-	private float r = 1f;
-	private float g = 1f;
-	private float b = 1f;
+	private float red = 1f;
+	private float green = 1f;
+	private float blue = 1f;
+	private float alpha = 1f;
 	
 	/**
 	 * Draws the text given by the specified string, using this font instance's current color.<br>
@@ -91,7 +92,8 @@ public abstract class AbstractFont {
 		String		imagePath = getImagePath(character.getImageIndex());
 		Texture		texture = TextureLoader.loadTexture(this.getClass(), imagePath);
 		
-		texture.setColor(r, g, b);
+		texture.setColor(red, green, blue);
+		texture.setAlpha(alpha);
 		texture.draw(dstX1, dstY1, dstX2, dstY2, srcX1, srcY1, srcX2, srcY2);
 		
 		drawPoint.dstX += character.getAdvance();
@@ -112,15 +114,37 @@ public abstract class AbstractFont {
 	}
 	
 	/**
-	 * Set the color value as RGB to render any string with the font represented by this class.<br>
-	 * @param r the red value of the color. It must be between 0f to 1f.
-	 * @param g the green value of the color. It must be between 0f to 1f.
-	 * @param b the blue value of the color. It must be between 0f to 1f.
+	 * Set the color values as RGB to render any string with the font represented by this class.<br>
+	 * @param red the red value of the color. It must be between 0f to 1f.
+	 * @param green the green value of the color. It must be between 0f to 1f.
+	 * @param blue the blue value of the color. It must be between 0f to 1f.
 	 */
-	public final void setColor(float r, float g, float b) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
+	public final void setColor(float red, float green, float blue) {
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
+	}
+	
+	/**
+	 * Set the color values as RGBA to render any string with the font represented by this class.<br>
+	 * @param red the red value of the color. It must be between 0f to 1f.
+	 * @param green the green value of the color. It must be between 0f to 1f.
+	 * @param blue the blue value of the color. It must be between 0f to 1f.
+	 * @param alpha the alpha value of the color. It must be between 0f to 1f.
+	 */
+	public final void setColor(float red, float green, float blue, float alpha) {
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
+		this.alpha = alpha;
+	}
+	
+	/**
+	 * Set the alpha color values to render any string with the font represented by this class.<br>
+	 * @param alpha the alpha value of the color. It must be between 0f to 1f.
+	 */
+	public final void setAlpha(float alpha) {
+		this.alpha = alpha;
 	}
 
 	/**
