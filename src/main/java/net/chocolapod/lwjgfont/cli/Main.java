@@ -33,8 +33,14 @@ import net.chocolapod.lwjgfont.packager.LwjgFont;
 import static net.chocolapod.lwjgfont.cli.CliArgument._p;
 import static net.chocolapod.lwjgfont.cli.CliArgument._x;
 
+/**
+ * Main logic of LWJGFont in command line mode.
+ */
 public class Main {
 
+	/**
+	 * Main method of LWJGFont in command line mode.
+	 */
 	public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
 		CliArgumentParser	parser = new CliArgumentParser(args);	
 		LwjgFont				lwjgFont = new LwjgFont(parser.get(_p));
@@ -53,4 +59,5 @@ public class Main {
 			lwjgFont.writeProcessLog();
 		}
 	}
+
 }
