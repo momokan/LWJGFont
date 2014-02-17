@@ -48,7 +48,7 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
 
-import net.chocolapod.lwjgfont.processor.exception.LwjgFontException;
+import net.chocolapod.lwjgfont.exception.LwjgFontException;
 
 public class SourceCompiler {
 	

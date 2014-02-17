@@ -33,7 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.chocolapod.lwjgfont.processor.exception.CharactersDirectoryIsEmptyException;
+import net.chocolapod.lwjgfont.exception.CharactersDirectoryIsEmptyException;
 
 public class CharacterFile {
 	private final String	filePath;

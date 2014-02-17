@@ -21,7 +21,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package net.chocolapod.lwjgfont.processor;
+package net.chocolapod.lwjgfont.packager;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,13 +31,13 @@ import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 
 import org.junit.Test;
 
-import static net.chocolapod.lwjgfont.processor.FileTestManager.TEST_BASE_DIR;
-import static net.chocolapod.lwjgfont.processor.FileTestManager.TEST_DIR;
-import static net.chocolapod.lwjgfont.processor.FileTestManager.assertDirectoryExists;
-import static net.chocolapod.lwjgfont.processor.FileTestManager.assertFileExists;
-import static net.chocolapod.lwjgfont.processor.FileTestManager.assertFilePath;
-import static net.chocolapod.lwjgfont.processor.FileTestManager.assertNotExists;
-import static net.chocolapod.lwjgfont.processor.FileTestManager.createFile;
+import static net.chocolapod.lwjgfont.packager.FileTestManager.TEST_BASE_DIR;
+import static net.chocolapod.lwjgfont.packager.FileTestManager.TEST_DIR;
+import static net.chocolapod.lwjgfont.packager.FileTestManager.assertDirectoryExists;
+import static net.chocolapod.lwjgfont.packager.FileTestManager.assertFileExists;
+import static net.chocolapod.lwjgfont.packager.FileTestManager.assertFilePath;
+import static net.chocolapod.lwjgfont.packager.FileTestManager.assertNotExists;
+import static net.chocolapod.lwjgfont.packager.FileTestManager.createFile;
 import static org.junit.Assert.assertEquals;
 
 public class TestLwjgFontUtil_deleteFile {

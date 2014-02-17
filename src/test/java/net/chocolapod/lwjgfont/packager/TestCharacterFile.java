@@ -21,7 +21,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package net.chocolapod.lwjgfont.processor;
+package net.chocolapod.lwjgfont.packager;
 
 import java.io.IOException;
 
