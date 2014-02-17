@@ -37,6 +37,10 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 
 public class SourceBuffer {
+	private static final String	JAVADOC_START_PREFIX = "/** ";
+	private static final String	JAVADOC_PREFIX = " *  ";
+	private static final String	JAVADOC_END_PREFIX = " */";
+
 	private StringBuilder		buff;
 	private String				packageName;
 	private String				className;
@@ -58,7 +62,7 @@ public class SourceBuffer {
 		this.forCount = 0;
 	}
 	
-	public void openClass(String className, List<? extends TypeParameterElement> typeParameters, Object superClass, Object ...interfaceClasses) {
+	public void openClass(String className, List<? extends TypeParameterElement> typeParameters, boolean isFinal, Object superClass, Object ...interfaceClasses) {
 		Line		line = new Line();
 		String		typeParametersString = "";
 		
@@ -142,8 +146,6 @@ public class SourceBuffer {
 		openMethod(methodName, retuenClass, args, "public", isStatic);
 	}
 	public void openMethod(String methodName, String retuenClass, Map<String, Class> args, String scope, boolean isStatic) {
-		println();
-		
 		Line line = new Line();
 		
 		line.append(scope + " ");
@@ -298,7 +300,7 @@ public class SourceBuffer {
 			importedClasses.add(importedClass);
 		}
 	}
-	
+
 	private StringBuilder getHeader() {
 		StringBuilder		buff = new StringBuilder();
 		
@@ -312,6 +314,20 @@ public class SourceBuffer {
 		buff.append("\n");
 		
 		return buff;
+	}
+
+	public void printJavadocComment(String ...comments) {
+		if ((comments == null) || (comments.length <= 0)) {
+			return;
+		} else if (comments.length == 1) {
+			println(JAVADOC_START_PREFIX + comments[0] + JAVADOC_END_PREFIX);
+		} else {
+			println(JAVADOC_START_PREFIX);
+			for (String comment: comments) {
+				println(JAVADOC_PREFIX + comment);
+			}
+			println(JAVADOC_END_PREFIX);
+		}
 	}
 
 	public void printUnsupportedException() {

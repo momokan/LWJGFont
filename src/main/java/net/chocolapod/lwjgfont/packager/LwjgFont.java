@@ -121,14 +121,26 @@ public class LwjgFont {
 		FontMap			fontMap = fontMapPainter.paint(fontPath, fontSize);
 		SourceBuffer	source = new SourceBuffer(packageName);
 
-		source.openClass(toFontClassName(fontFile.getName(), fontSize), null, AbstractFont.class);
+		source.printJavadocComment(
+				"The subclass of net.chocolapod.lwjgfont.AbstractFont<br>",
+				"to render string with font: \"" + fontFile.getName() + "\", with size: " + fontSize + ".<br>",
+				"<br>",
+				"This class has utility methods to reder any strings with the above font.<br>",
+				"@see net.chocolapod.lwjgfont.AbstractFont"
+		);
+		source.openClass(toFontClassName(fontFile.getName(), fontSize), null, true, AbstractFont.class);
 
+		printStaticFieldFontMap(source);
 		printPrepareFontMap(source, fontMap);
 		printMethodGetFontMap(source);
 		
 		source.closeClass();
 		
 		return source;
+	}
+
+	private void printStaticFieldFontMap(SourceBuffer source) {
+		source.println("private static final FontMap\tmap = new FontMap();");
 	}
 
 	private void printPrepareFontMap(SourceBuffer source, FontMap fontMap) {
@@ -207,6 +219,8 @@ public class LwjgFont {
 	}
 	
 	private void printMethodGetFontMap(SourceBuffer source) {
+		source.printJavadocComment("@see net.chocolapod.lwjgfont.AbstractFont#getFontMap()");
+
 		source.importClass(FontMap.class);
 		source.openMethod("getFontMap", FontMap.class.getSimpleName(), new HashMap<String, Class>(), "protected", false);
 		source.println("return map;");
