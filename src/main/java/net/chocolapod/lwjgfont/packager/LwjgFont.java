@@ -64,7 +64,7 @@ public class LwjgFont {
 	private static final String			COMPILES_DIR = "target";
 	
 	private LwjgFontProperties	properties;
-	private ClassMapLog			classMapLog;
+	private ProcessLog			classMapLog;
 	
 	private String				tempDir;
 	private String				srcDir;
@@ -83,8 +83,13 @@ public class LwjgFont {
 		srcDir = LwjgFontUtil.prepareDirectory(tempDir, SOURCE_DIR).getPath();
 		resourceDir = LwjgFontUtil.prepareDirectory(tempDir, RESOURCE_DIR).getPath();
 		targetDir = LwjgFontUtil.prepareDirectory(tempDir, COMPILES_DIR).getPath();
-		packageName = properties.getAsString(ARTIFACT_NAME) + "-" + properties.getAsString(ARTIFACT_VERSION) + ".jar";
-		classMapLog = new ClassMapLog(packageName);
+
+		String		groupId = AbstractFont.class.getPackage().getName();
+		String		artifactId = properties.getAsString(ARTIFACT_NAME); 
+		String		version = properties.getAsString(ARTIFACT_VERSION);
+		
+		packageName = artifactId + "-" + version + ".jar";
+		classMapLog = new ProcessLog(packageName, groupId, artifactId, version);
 	}
 
 	public void process(String fontPath, int fontSize) throws IOException, FontFormatException {

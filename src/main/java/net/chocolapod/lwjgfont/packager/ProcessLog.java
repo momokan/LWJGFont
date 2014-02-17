@@ -31,17 +31,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ClassMapLog {
+public class ProcessLog {
 	private static final String		LOG_FILE_NAME = "lwjgfont.log"; 
 
 	private final String			jarName;
-	private Map<String, String>	classMap;
-	private int						keyLength;
+	private final String			groupId;
+	private final String			artifactId;
+	private final String			version;
 
-	public ClassMapLog(String jarName) {
+	private Map<String, String>	classMap;
+	private int						classLength;
+
+	public ProcessLog(String jarName, String groupId, String artifactId, String version) {
 		this.jarName = jarName;
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
 		this.classMap = new HashMap<String, String>();
-		this.keyLength = 0;
+		this.classLength = 0;
 	}
 	
 	public void add(String fontName, int size, String className) {
@@ -49,8 +56,8 @@ public class ClassMapLog {
 		
 		classMap.put(key, className);
 
-		if (keyLength < key.length()) {
-			keyLength = key.length();
+		if (classLength < className.length()) {
+			classLength = className.length();
 		}
 	}
 	public List<String> listClasses() {
@@ -77,12 +84,36 @@ public class ClassMapLog {
 		String		buff = "Generate: " + jarName + "\n";
 		
 		buff += "\n";
-		buff += "This jar file contains theses classes.";
+		buff += "* This jar file contains these classes.\n";
 
 		for (String key: classMap.keySet()) {
-			buff += String.format("\n%" + keyLength + "s -> %s", key, classMap.get(key));
+			buff += String.format("    %" + classLength + "s <- %s\n", classMap.get(key), key);
 		}
-		
+
+		buff += "\n";
+		buff += "* How to install this jar into Maven local repository.\n";
+		buff += String.format(
+					"    > mvn install:install-file -Dfile=%s -DgroupId=%s" + 
+					" -DartifactId=%s -Dversion=%s -Dpackaging=jar -DgeneratePom=true\n",
+					jarName, groupId, artifactId, version
+				);
+
+		buff += "\n";
+		buff += "* How to use this jar with Maven ( pom.xml settings )\n";
+		buff += String.format(
+					"    --------------------------------------------------------------------\n" +
+					"    <dependency>\n" +
+					"        <groupId>%s</groupId>\n" + 
+					"        <artifactId>%s</artifactId>\n" +
+					"        <version>%s</version>\n" +
+					"    </dependency>\n" +
+					"    --------------------------------------------------------------------\n",
+					groupId, artifactId, version
+				);
+
+		buff += "\n";
+		buff += "Thanks!\n";
+
 		return buff;
 	}
 
