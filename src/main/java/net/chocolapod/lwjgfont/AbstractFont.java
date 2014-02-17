@@ -55,7 +55,8 @@ public abstract class AbstractFont {
 	private float b = 1f;
 	
 	/**
-	 * Draws the text given by the specified string, using this font instance's current color.
+	 * Draws the text given by the specified string, using this font instance's current color.<br>
+	 * Note that the specified destination coordinates is a left point of the rendered string's baseline.
 	 * @param text the string to be drawn.
 	 * @param dstX the x coordinate to render the string.
 	 * @param dstY the y coordinate to render the string.
