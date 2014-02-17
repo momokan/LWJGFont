@@ -46,7 +46,7 @@ import java.util.zip.ZipInputStream;
 
 import net.chocolapod.lwjgfont.AbstractFont;
 import net.chocolapod.lwjgfont.FontMap;
-import net.chocolapod.lwjgfont.MappedFont;
+import net.chocolapod.lwjgfont.MappedCharacter;
 
 
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_NAME;
@@ -172,7 +172,7 @@ public class LwjgFont {
 
 		configMethodArguments.put("map", FontMap.class);
 		
-		source.importClass(MappedFont.class);
+		source.importClass(MappedCharacter.class);
 		for (char character: fontMap.listCharacters()) {
 			if ((configMethodSource == null) || (maxCharacterRegistration <= count)) {
 				if (configMethodSource != null) {
@@ -186,8 +186,8 @@ public class LwjgFont {
 				count = 0;
 			}
 			
-			MappedFont	mappedFont = fontMap.getMappedFont(character);
-			String			escapedCharacter = String.valueOf(mappedFont.getCharacter());
+			MappedCharacter	mappedCharacter = fontMap.getMappedCharacter(character);
+			String			escapedCharacter = String.valueOf(mappedCharacter.getCharacter());
 			
 			if (escapedCharacter.equals("'")) {
 				escapedCharacter = "\\'";
@@ -196,16 +196,16 @@ public class LwjgFont {
 			}
 			
 			configMethodSource.println(
-					"map.addMappedFont(new %s('%s', %d, %d, %d, %d, %d, %d, %d));",
-					MappedFont.class.getSimpleName(),
+					"map.addCharacter(new %s('%s', %d, %d, %d, %d, %d, %d, %d));",
+					MappedCharacter.class.getSimpleName(),
 					escapedCharacter,
-					mappedFont.getImageIndex(),
-					mappedFont.getSrcX(),
-					mappedFont.getSrcY(),
-					mappedFont.getAscent(),
-					mappedFont.getDescent(),
-					mappedFont.getAdvance(),
-					mappedFont.getPadding()
+					mappedCharacter.getImageIndex(),
+					mappedCharacter.getSrcX(),
+					mappedCharacter.getSrcY(),
+					mappedCharacter.getAscent(),
+					mappedCharacter.getDescent(),
+					mappedCharacter.getAdvance(),
+					mappedCharacter.getPadding()
 			);
 			
 			count++;

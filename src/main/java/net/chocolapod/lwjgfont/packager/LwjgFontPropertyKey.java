@@ -35,7 +35,7 @@ public enum LwjgFontPropertyKey {
 	IMAGE_CHARACTER_PADDING(DEFAULT_PADDING),
 	CHARACTER_FILE_DIR(DEFAULT_CHARACTERS_DIR),
 	TEMP_DIR(DEFAULT_TEMP_DIR),
-	ARTIFACT_NAME("myfont"),	//	TODO あれこれ置換する
+	ARTIFACT_NAME("myfont"),
 	ARTIFACT_VERSION("1.0-SNAPSHOT");
 
 	private final String	defaultValue;

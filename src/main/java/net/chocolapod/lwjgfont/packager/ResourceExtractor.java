@@ -81,8 +81,6 @@ public class ResourceExtractor {
 				pw.close();
 			}
 		}
-		
-		// TODO Auto-generated method stub
 	}
 
 	public void addResourcePath(String srcResourcePath, String dstResourcePath) {

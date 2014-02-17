@@ -40,7 +40,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import net.chocolapod.lwjgfont.FontMap;
-import net.chocolapod.lwjgfont.MappedFont;
+import net.chocolapod.lwjgfont.MappedCharacter;
 
 
 public class FontMapPainter {
@@ -140,7 +140,7 @@ public class FontMapPainter {
 				g.setColor(Color.WHITE);
 				g.drawString(c.toString(), srcX, srcY);
 //				System.out.println("(" + x + ", " + y + ") :" + c.toString());
-				fontMap.addMappedFont(new MappedFont(c, imageIndex, srcX, srcY, maxAscent, maxDescent, advance, imageIndex));
+				fontMap.addCharacter(new MappedCharacter(c, imageIndex, srcX, srcY, maxAscent, maxDescent, advance, imageIndex));
 				x += stringWidthOnMap;
 			}
 

@@ -72,39 +72,39 @@ public abstract class AbstractFont {
 	}
 	
 	private void drawCharacter(DrawPoint drawPoint, char ch) throws IOException {
-		MappedFont	font = getMappedCharacter(ch);
+		MappedCharacter	character = getMappedCharacter(ch);
 		
-		if (font == null) {
+		if (character == null) {
 			//	指定の文字が描画対象でなければ、豆腐を表示する
-			font = getMappedCharacter(NotMatchedSign.getCharacter());
+			character = getMappedCharacter(NotMatchedSign.getCharacter());
 		}
 
-		float	dstX1 = drawPoint.dstX - font.getPadding();
-		float	dstY1 = drawPoint.dstY + font.getAscent() + font.getPadding();
-		float	dstX2 = drawPoint.dstX + font.getAdvance() + font.getPadding();
-		float	dstY2 = drawPoint.dstY - font.getDescent() - font.getPadding();
-		float	srcX1 = font.getSrcX() - font.getPadding();
-		float	srcY1 = font.getSrcY() - font.getAscent() - font.getPadding();
-		float	srcX2 = font.getSrcX() + font.getAdvance() + font.getPadding();
-		float	srcY2 = font.getSrcY() + font.getDescent() + font.getPadding();
+		float	dstX1 = drawPoint.dstX - character.getPadding();
+		float	dstY1 = drawPoint.dstY + character.getAscent() + character.getPadding();
+		float	dstX2 = drawPoint.dstX + character.getAdvance() + character.getPadding();
+		float	dstY2 = drawPoint.dstY - character.getDescent() - character.getPadding();
+		float	srcX1 = character.getSrcX() - character.getPadding();
+		float	srcY1 = character.getSrcY() - character.getAscent() - character.getPadding();
+		float	srcX2 = character.getSrcX() + character.getAdvance() + character.getPadding();
+		float	srcY2 = character.getSrcY() + character.getDescent() + character.getPadding();
 		
-		String		imagePath = getImagePath(font.getImageIndex());
+		String		imagePath = getImagePath(character.getImageIndex());
 		Texture		texture = TextureLoader.loadTexture(this.getClass(), imagePath);
 		
 		texture.setColor(r, g, b);
 		texture.draw(dstX1, dstY1, dstX2, dstY2, srcX1, srcY1, srcX2, srcY2);
 		
-		drawPoint.dstX += font.getAdvance();
+		drawPoint.dstX += character.getAdvance();
 	}
 	
 	/**
 	 * Return the specified character's font informations to render the character with font which this instance represents.<br>
-	 * The returned MappedFont instance has ascent size, descent size, advance size and more of the specified character.
+	 * The returned MappedCharacter instance has ascent size, descent size, advance size and more of the specified character.
 	 * @param character the target character.
-	 * @return a MappedFont represents the specified character's font informations to render.
+	 * @return a MappedCharacter represents the specified character's font informations to render.
 	 */
-	public final MappedFont getMappedCharacter(char character) {
-		return getFontMap().getMappedFont(character);
+	public final MappedCharacter getMappedCharacter(char character) {
+		return getFontMap().getMappedCharacter(character);
 	}
 	
 	private String getImagePath(int index) {

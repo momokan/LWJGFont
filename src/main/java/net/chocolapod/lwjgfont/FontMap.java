@@ -30,20 +30,20 @@ import java.util.List;
 import java.util.Map;
 
 public class FontMap {
-	private final Map<Integer, String>			imageFiles;
-	private final Map<Character, MappedFont>	mappedFonts;
+	private final Map<Integer, String>				imageFiles;
+	private final Map<Character, MappedCharacter>	mappedCharacters;
 
 	public FontMap() {
 		this.imageFiles = new HashMap<Integer, String>();
-		this.mappedFonts = new LinkedHashMap<Character, MappedFont>();
+		this.mappedCharacters = new LinkedHashMap<Character, MappedCharacter>();
 	}
 	
 	public void addImageFile(int index, String imageFileName) {
 		imageFiles.put(index, imageFileName);
 	}
 	
-	public void addMappedFont(MappedFont mappedFont) {
-		mappedFonts.put(mappedFont.getCharacter(), mappedFont);
+	public void addCharacter(MappedCharacter mappedCharacter) {
+		mappedCharacters.put(mappedCharacter.getCharacter(), mappedCharacter);
 	}
 	
 	public List<Integer> listImageIndexes() {
@@ -54,9 +54,9 @@ public class FontMap {
 	}
 
 	public List<Character> listCharacters() {
-		return new ArrayList<>(mappedFonts.keySet());
+		return new ArrayList<>(mappedCharacters.keySet());
 	}
-	public MappedFont getMappedFont(char c) {
-		return mappedFonts.get(c);
+	public MappedCharacter getMappedCharacter(char character) {
+		return mappedCharacters.get(character);
 	}
 }

@@ -23,7 +23,7 @@
  */
 package net.chocolapod.lwjgfont;
 
-public class MappedFont {
+public class MappedCharacter {
 	private final char		character;
 	private final int		imageIndex;
 	private final int		srcX;
@@ -33,7 +33,7 @@ public class MappedFont {
 	private final int		advance;
 	private final int		padding;
 
-	public MappedFont(char character, int imageIndex, int srcX, int srcY, int ascent, int descent, int advance, int padding) {
+	public MappedCharacter(char character, int imageIndex, int srcX, int srcY, int ascent, int descent, int advance, int padding) {
 		this.character = character;
 		this.imageIndex = imageIndex;
 		this.srcX = srcX;
