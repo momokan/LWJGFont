@@ -146,6 +146,7 @@ public class LwjgFont {
 		printStaticFieldFontMap(source);
 		printPrepareFontMap(source, fontMap);
 		printMethodGetFontMap(source);
+		printMethodGetLineHieght(source, fontMap.getLineHeight());
 		
 		source.closeClass();
 		
@@ -237,6 +238,13 @@ public class LwjgFont {
 		source.importClass(FontMap.class);
 		source.openMethod("getFontMap", FontMap.class.getSimpleName(), new HashMap<String, Class>(), "protected", false);
 		source.println("return map;");
+		source.closeMethod();
+	}
+	
+	private void printMethodGetLineHieght(SourceBuffer source, int lineHeight) {
+		source.println("@Override");
+		source.openMethod("getLineHeight", "int", new HashMap<String, Class>(), false);
+		source.println("return " + lineHeight + ";");
 		source.closeMethod();
 	}
 	

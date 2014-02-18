@@ -25,11 +25,13 @@ package net.chocolapod.lwjgfont;
 
 import java.io.IOException;
 
+import net.chocolapod.lwjgfont.packager.ControlCharacter;
 import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 import net.chocolapod.lwjgfont.texture.Texture;
 import net.chocolapod.lwjgfont.texture.TextureLoader;
 
-
+import static net.chocolapod.lwjgfont.packager.ControlCharacter.LineFeed;
+import static net.chocolapod.lwjgfont.packager.ControlCharacter.CarriageReturn;
 import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
 
 /**
@@ -67,22 +69,40 @@ public abstract class AbstractFont {
 	 */
 	public final void drawString(String text, float dstX, float dstY, float dstZ) throws IOException {
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
+		MappedCharacter	character;
 		
 		if (!LwjgFontUtil.isEmpty(text)) {
 			for (int i = 0; i < text.length(); i++) {
-				drawCharacter(drawPoint, text.charAt(i));
+				char	ch = text.charAt(i);
+
+				if (ch == LineFeed.getCharacter()) {
+					//	LF は改行扱いにする
+					drawPoint.dstX = dstX;
+					drawPoint.dstY -= getLineHeight();
+					continue;
+				} else if (ch == CarriageReturn.getCharacter()) {
+					//	CR は無視する
+					continue;
+				}
+
+				character = retreiveCharacter(ch);
+				drawCharacter(drawPoint, character);
 			}
 		}
 	}
-	
-	private void drawCharacter(DrawPoint drawPoint, char ch) throws IOException {
+
+	private MappedCharacter retreiveCharacter(char ch) {
 		MappedCharacter	character = getMappedCharacter(ch);
 		
 		if (character == null) {
 			//	指定の文字が描画対象でなければ、豆腐を表示する
 			character = getMappedCharacter(NotMatchedSign.getCharacter());
 		}
-
+		
+		return character;
+	}
+	
+	private MappedCharacter drawCharacter(DrawPoint drawPoint, MappedCharacter character) throws IOException {
 		float	dstX1 = drawPoint.dstX - character.getPadding();
 		float	dstY1 = drawPoint.dstY + character.getAscent() + character.getPadding();
 		float	dstX2 = drawPoint.dstX + character.getAdvance() + character.getPadding();
@@ -100,8 +120,43 @@ public abstract class AbstractFont {
 		texture.draw(dstX1, dstY1, dstX2, dstY2, srcX1, srcY1, srcX2, srcY2);
 		
 		drawPoint.dstX += character.getAdvance();
+
+		return character;
 	}
 	
+	public final void drawParagraph(String text, float paragraphWidth, float dstX, float dstY, float dstZ) throws IOException {
+		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
+		MappedCharacter	character;
+		
+		if (!LwjgFontUtil.isEmpty(text)) {
+			for (int i = 0; i < text.length(); i++) {
+				char	ch = text.charAt(i);
+
+				if (ch == LineFeed.getCharacter()) {
+					//	LF は改行扱いにする
+					drawPoint.dstX = dstX;
+					drawPoint.dstY -= getLineHeight();
+					continue;
+				} else if (ch == CarriageReturn.getCharacter()) {
+					//	CR は無視する
+					continue;
+				}
+
+				character = retreiveCharacter(ch);
+
+				float		currentWidth = drawPoint.dstX - dstX;
+				
+				if (paragraphWidth < currentWidth + character.getAdvance()) {
+					//	paragraphWidth を超える場合はで折り返す
+					drawPoint.dstX = dstX;
+					drawPoint.dstY -= getLineHeight();
+				}
+				
+				drawCharacter(drawPoint, character);
+			}
+		}
+	}
+
 	/**
 	 * Returns the total advance width for showing the specified String in the Font which is represented by this instance.<br>
 	 * The advance is the distance from the leftmost point to the rightmost point on the string's baseline.<br>
@@ -193,6 +248,8 @@ public abstract class AbstractFont {
 	 */
 	protected abstract FontMap getFontMap();
 
+	protected abstract int getLineHeight();
+	
 	class DrawPoint {
 		private float		dstX;
 		private float		dstY;

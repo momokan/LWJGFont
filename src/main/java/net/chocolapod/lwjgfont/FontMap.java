@@ -32,6 +32,7 @@ import java.util.Map;
 public class FontMap {
 	private final Map<Integer, String>				imageFiles;
 	private final Map<Character, MappedCharacter>	mappedCharacters;
+	private int										lineHeight;
 
 	public FontMap() {
 		this.imageFiles = new HashMap<Integer, String>();
@@ -58,5 +59,12 @@ public class FontMap {
 	}
 	public MappedCharacter getMappedCharacter(char character) {
 		return mappedCharacters.get(character);
+	}
+
+	public int getLineHeight() {
+		return lineHeight;
+	}
+	public void setLineHeight(int lineHeight) {
+		this.lineHeight = lineHeight;
 	}
 }

@@ -113,6 +113,7 @@ public class FontMapPainter {
 			maxAscent = g.getFontMetrics(font).getMaxAscent();
 			maxDescent = g.getFontMetrics(font).getMaxDescent();
 			stringHeightOnMap = maxAscent + maxDescent;
+			fontMap.setLineHeight(stringHeightOnMap);
 			y = maxAscent;
 			while ((c = nextCharacter()) != null) {
 //				stringWidth = g.getFontMetrics().stringWidth(c.toString());
