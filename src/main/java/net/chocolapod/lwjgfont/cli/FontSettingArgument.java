@@ -23,39 +23,20 @@
  */
 package net.chocolapod.lwjgfont.cli;
 
-import java.awt.FontFormatException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import net.chocolapod.lwjgfont.packager.LwjgFont;
-
-
-import static net.chocolapod.lwjgfont.cli.CliArgument._p;
-import static net.chocolapod.lwjgfont.cli.CliArgument._x;
-
-/**
- * Main logic of LWJGFont in command line mode.
- */
-public class Main {
-
-	/**
-	 * Main method of LWJGFont in command line mode.
-	 */
-	public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
-		CliArgumentParser	parser = new CliArgumentParser(args);	
-		LwjgFont				lwjgFont = new LwjgFont(parser.get(_p));
-		
-		if (parser.hasArgument(_x)) {
-			//	キャラクターファイルを展開する
-			lwjgFont.extractCharacterFiles();
-		} else {
-			//	フォントマップを作成する
-			for (FontSettingArgument fontSetting: parser.listFontSettings()) {
-				lwjgFont.process(fontSetting.getFontPath(), fontSetting.getFontSize());
-			}
-			lwjgFont.makePackage();
-			lwjgFont.writeProcessLog();
-		}
+public class FontSettingArgument {
+	private final String	fontPath;
+	private final int		fontSize;
+	
+	public FontSettingArgument(String fontPath, int fontSize) {
+		this.fontPath = fontPath;
+		this.fontSize = fontSize;
+	}
+	
+	public String getFontPath() {
+		return fontPath;
+	}
+	public int getFontSize() {
+		return fontSize;
 	}
 
 }
