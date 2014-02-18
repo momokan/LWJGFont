@@ -25,6 +25,7 @@ package net.chocolapod.lwjgfont;
 
 import java.io.IOException;
 
+import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 import net.chocolapod.lwjgfont.texture.Texture;
 import net.chocolapod.lwjgfont.texture.TextureLoader;
 
@@ -66,8 +67,10 @@ public abstract class AbstractFont {
 	public final void drawString(String text, float dstX, float dstY, float dstZ) throws IOException {
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
 		
-		for (int i = 0; i < text.length(); i++) {
-			drawCharacter(drawPoint, text.charAt(i));
+		if (!LwjgFontUtil.isEmpty(text)) {
+			for (int i = 0; i < text.length(); i++) {
+				drawCharacter(drawPoint, text.charAt(i));
+			}
 		}
 	}
 	
@@ -97,6 +100,32 @@ public abstract class AbstractFont {
 		drawPoint.dstX += character.getAdvance();
 	}
 	
+	/**
+	 * Returns the total advance width for showing the specified String in the Font which is represented by this instance.<br>
+	 * The advance is the distance from the leftmost point to the rightmost point on the string's baseline.<br>
+	 * @param text the String to be measured
+	 * @return the advance width of the specified String in the Font which is represented by this instance.
+	 */
+	public final int stringWidth(String text) {
+		int		stringWidth = 0;
+
+		if (!LwjgFontUtil.isEmpty(text)) {
+			for (int i = 0; i < text.length(); i++) {
+				char				ch = text.charAt(i);
+				MappedCharacter	character = getMappedCharacter(ch);
+
+				if (character == null) {
+					//	指定の文字が描画対象でなければ、豆腐を表示する
+					character = getMappedCharacter(NotMatchedSign.getCharacter());
+				}
+
+				stringWidth += character.getAdvance();
+			}
+		}
+
+		return stringWidth;
+	}
+
 	/**
 	 * Return the specified character's font informations to render the character with font which this instance represents.<br>
 	 * The returned MappedCharacter instance has ascent size, descent size, advance size and more of the specified character.
