@@ -127,6 +127,16 @@ public abstract class AbstractFont {
 	}
 
 	/**
+	 * Returns the advance width for showing the specified character in the Font which is represented by this instance.<br>
+	 * The advance is the distance from the leftmost point to the rightmost point on the string's baseline.<br>
+	 * @param character the character to be measured
+	 * @return the advance width of the specified character in the Font which is represented by this instance.
+	 */
+	public final int stringWidth(char character) {
+		return stringWidth(String.valueOf(character));
+	}
+
+	/**
 	 * Return the specified character's font informations to render the character with font which this instance represents.<br>
 	 * The returned MappedCharacter instance has ascent size, descent size, advance size and more of the specified character.
 	 * @param character the target character.
