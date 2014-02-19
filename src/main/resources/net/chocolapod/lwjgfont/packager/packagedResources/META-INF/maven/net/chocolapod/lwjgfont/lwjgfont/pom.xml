@@ -15,7 +15,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>net.chocolapod.lwjgfont</groupId>
+      <groupId>net.chocolapod</groupId>
       <artifactId>lwjgfont</artifactId>
       <version>0.1</version>
     </dependency>
