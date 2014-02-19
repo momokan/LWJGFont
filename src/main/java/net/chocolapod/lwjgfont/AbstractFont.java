@@ -125,7 +125,17 @@ public abstract class AbstractFont {
 
 		return character;
 	}
-	
+
+	/**
+	 * Draws the paragraph given by the specified string, using this font instance's current color.<br>
+	 * if the specified string protrudes from paragraphWidth, protruded substring is auto wrapped.<br>
+	 * Note that the specified destination coordinates is a left point of the rendered string's baseline.
+	 * @param text the string to be drawn.
+	 * @param dstX the x coordinate to render the string.
+	 * @param dstY the y coordinate to render the string.
+	 * @param dstZ the z coordinate to render the string.
+	 * @throws IOException Indicates a failure to read font images as textures.
+	 */
 	public final void drawParagraph(String text, float paragraphWidth, float dstX, float dstY, float dstZ) throws IOException {
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
 		MappedCharacter	character;
@@ -243,13 +253,25 @@ public abstract class AbstractFont {
 		this.alpha = alpha;
 	}
 
+	/**
+	 * Returns the distance from one line's baseline to next line's baseline.<br>
+	 * @return the distance from one line's baseline to next line's baseline.
+	 */
 	public int getLineHeight() {
 		return lineHeight;
 	}
 
+	/**
+	 * Set the distance from one line's baseline to next line's baseline.<br>
+	 * @param lineHeight the distance from one line's baseline to next line's baseline.
+	 */
 	public void setLineHeight(int lineHeight) {
 		this.lineHeight = lineHeight;
 	}
+
+	/**
+	 * Reset the each line's distance to the default value.<br>
+	 */
 	public void resetLineHeight() {
 		this.lineHeight = getDefaultLineHeight();
 	}
@@ -261,6 +283,10 @@ public abstract class AbstractFont {
 	 */
 	protected abstract FontMap getFontMap();
 
+	/**
+	 * Returns a the each line's default distance.<br>
+	 * It is the total of max ascent and max descent in the font.
+	 */
 	protected abstract int getDefaultLineHeight();
 	
 	class DrawPoint {
