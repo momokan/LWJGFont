@@ -57,9 +57,9 @@ public class Texture {
 	private int	 textureWidth;
 	private int	 textureHeight;
 
-	private float			r;
-	private float			g;
-	private float			b;
+	private float			red;
+	private float			green;
+	private float			blue;
 	private AlphaBlend		alphaBlend;
 	private float			alpha;
 	private boolean 		isAlphaPremultiplied;
@@ -70,16 +70,19 @@ public class Texture {
 		this.alpha = 1f;
 		this.alphaBlend = AlphaBlend;
 		this.isAlphaPremultiplied = true;
-		this.r = 1f;
-		this.g = 1f;
-		this.b = 1f;
+		this.red = 1f;
+		this.green = 1f;
+		this.blue = 1f;
 	}
 
 	public void draw(float dstX1, float dstY1) {
-		draw(dstX1, dstY1, dstX1 + width, dstY1 - height, 0, 0, width, height);
+		draw(dstX1, dstY1, dstX1 + width, dstY1 - height, 0, 0, 0, width, height);
 	}
 
-	public void draw(float dstX1, float dstY1, float dstX2, float dstY2, float srcX1, float srcY1, float srcX2, float srcY2) {
+	public void draw(float dstX1, float dstY1, float dstX2, float dstY2, float dstZ, float srcX1, float srcY1, float srcX2, float srcY2) {
+		float	halfWidth = (dstX2 - dstX1) / 2;
+		float	halfHeight = (dstY1 - dstY2) / 2;
+
 		// store the current model matrix
 		glPushMatrix();
 
@@ -87,7 +90,7 @@ public class Texture {
 		bind();
 
 		// translate to the right location and prepare to draw
-		glTranslatef(0, 0, 0);
+		glTranslatef(dstX1 + halfWidth, dstY1 - halfHeight, dstZ * -1);
 //		glTranslatef(dstX, dstY, 0);
 		
 		glEnable(GL_BLEND);
@@ -98,31 +101,31 @@ public class Texture {
 		if (isAlphaPremultiplied) {
 			//	透過イメージを表示する (pre-multipled)
 			//	Premultiplied な画像である PNG を半透明表示する場合、 RGB のそれぞれについて alpha 値をかける
-			glColor4f(r * alpha, g * alpha, b * alpha, alpha);
+			glColor4f(red * alpha, green * alpha, blue * alpha, alpha);
 		} else {
 			//	透過イメージを表示する (not pre-multipled)
-			glColor4f(r, g, b, alpha);
+			glColor4f(red, green, blue, alpha);
 		}
 
 		// draw a quad textured to match the sprite
 		glBegin(GL_QUADS);
 		{
-			float	tx1 = 1.0f * srcX1 / textureWidth;
-			float	tx2 = 1.0f * srcX2 / textureWidth;
-			float	ty1 = 1.0f * srcY1 / textureHeight;
-			float	ty2 = 1.0f * srcY2 / textureHeight;
+			float	tx1 = srcX1 / textureWidth;
+			float	tx2 = srcX2 / textureWidth;
+			float	ty1 = srcY1 / textureHeight;
+			float	ty2 = srcY2 / textureHeight;
 
 			glTexCoord2f(tx1, ty1);
-			glVertex2f(dstX1, dstY1);
+			glVertex2f(halfWidth * -1, halfHeight);
 
 			glTexCoord2f(tx1, ty2);
-			glVertex2f(dstX1, dstY2);
+			glVertex2f(halfWidth * -1, halfHeight * -1);
 
 			glTexCoord2f(tx2, ty2);
-			glVertex2f(dstX2, dstY2);
+			glVertex2f(halfWidth, halfHeight * -1);
 
 			glTexCoord2f(tx2, ty1);
-			glVertex2f(dstX2, dstY1);
+			glVertex2f(halfWidth, halfHeight);
 		}
 		glEnd();
 
@@ -192,10 +195,10 @@ public class Texture {
 		this.alphaBlend = alphaBlend;
 	}
 	
-	public void setColor(float r, float g, float b) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
+	public void setColor(float red, float green, float blue) {
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
 	}
 
 	public void setAlpha(float alpha) {

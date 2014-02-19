@@ -119,7 +119,7 @@ public abstract class AbstractFont {
 		
 		texture.setColor(red, green, blue);
 		texture.setAlpha(alpha);
-		texture.draw(dstX1, dstY1, dstX2, dstY2, srcX1, srcY1, srcX2, srcY2);
+		texture.draw(dstX1, dstY1, dstX2, dstY2, drawPoint.dstZ, srcX1, srcY1, srcX2, srcY2);
 		
 		drawPoint.dstX += character.getAdvance();
 
