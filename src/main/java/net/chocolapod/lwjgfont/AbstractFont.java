@@ -25,6 +25,8 @@ package net.chocolapod.lwjgfont;
 
 import java.io.IOException;
 
+import org.lwjgl.LWJGLUtil;
+
 import net.chocolapod.lwjgfont.packager.ControlCharacter;
 import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 import net.chocolapod.lwjgfont.texture.Texture;
@@ -53,6 +55,35 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
  * </pre>
  */
 public abstract class AbstractFont {
+	public enum ALIGN {
+		LEGT {
+			@Override
+			protected DrawPoint calcDrawPoint(float paragraphWidth, float lineWidth, DrawPoint originalDrawPoint) {
+				return new DrawPoint(originalDrawPoint.dstX, originalDrawPoint.dstY, originalDrawPoint.dstZ);
+			}
+		},
+		RIGHT {
+			@Override
+			protected DrawPoint calcDrawPoint(float paragraphWidth, float lineWidth, DrawPoint originalDrawPoint) {
+				return new DrawPoint(
+						originalDrawPoint.dstX + (paragraphWidth - lineWidth),
+						originalDrawPoint.dstY,
+						originalDrawPoint.dstZ);
+			}
+		},
+		CENTER {
+			@Override
+			protected DrawPoint calcDrawPoint(float paragraphWidth, float lineWidth, DrawPoint originalDrawPoint) {
+				return new DrawPoint(
+						originalDrawPoint.dstX + ((paragraphWidth - lineWidth) / 2),
+						originalDrawPoint.dstY,
+						originalDrawPoint.dstZ);
+			}
+		};
+
+		protected abstract DrawPoint calcDrawPoint(float paragraphWidth, float lineWidth, DrawPoint originalDrawPoint);
+	}
+
 	private float red = 1f;
 	private float green = 1f;
 	private float blue = 1f;
@@ -128,17 +159,37 @@ public abstract class AbstractFont {
 
 	/**
 	 * Draws the paragraph given by the specified string, using this font instance's current color.<br>
-	 * if the specified string protrudes from paragraphWidth, protruded substring is auto wrapped.<br>
+	 * if the specified string protrudes from paragraphWidth, protruded substring is auto wrapped with left align.<br>
 	 * Note that the specified destination coordinates is a left point of the rendered string's baseline.
 	 * @param text the string to be drawn.
 	 * @param dstX the x coordinate to render the string.
 	 * @param dstY the y coordinate to render the string.
 	 * @param dstZ the z coordinate to render the string.
+	 * @param paragraphWidth the max width to draw the paragraph.
 	 * @throws IOException Indicates a failure to read font images as textures.
 	 */
-	public final void drawParagraph(String text, float paragraphWidth, float dstX, float dstY, float dstZ) throws IOException {
+	public final void drawParagraph(String text, float dstX, float dstY, float dstZ, float paragraphWidth) throws IOException {
+		this.drawParagraph(text, dstX, dstY, dstZ, paragraphWidth, ALIGN.LEGT);
+	}
+
+	/**
+	 * Draws the paragraph given by the specified string, using this font instance's current color.<br>
+	 * if the specified string protrudes from paragraphWidth, protruded substring is auto wrapped with the specified align.<br>
+	 * Note that the specified destination coordinates is a left point of the rendered string's baseline.
+	 * @param text the string to be drawn.
+	 * @param dstX the x coordinate to render the string.
+	 * @param dstY the y coordinate to render the string.
+	 * @param dstZ the z coordinate to render the string.
+	 * @param paragraphWidth the max width to draw the paragraph.
+	 * @param align the horizontal align to render the string.
+	 * @throws IOException Indicates a failure to read font images as textures.
+	 */
+	public final void drawParagraph(String text, float dstX, float dstY, float dstZ, float paragraphWidth, ALIGN align) throws IOException {
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
+		DrawPoint		tmpDrawPoint;
 		MappedCharacter	character;
+		String				line = "";
+		float				lineWidth = 0;
 		
 		if (!LwjgFontUtil.isEmpty(text)) {
 			for (int i = 0; i < text.length(); i++) {
@@ -146,7 +197,13 @@ public abstract class AbstractFont {
 
 				if (ch == LineFeed.getCharacter()) {
 					//	LF は改行扱いにする
-					drawPoint.dstX = dstX;
+//					drawPoint.dstX = dstX;
+//					drawPoint.dstY -= getLineHeight();
+					//	ここまでの文字を表示する
+					tmpDrawPoint = align.calcDrawPoint(paragraphWidth, lineWidth, drawPoint);
+					drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ);
+					line = "";
+					lineWidth = 0;
 					drawPoint.dstY -= getLineHeight();
 					continue;
 				} else if (ch == CarriageReturn.getCharacter()) {
@@ -156,15 +213,27 @@ public abstract class AbstractFont {
 
 				character = retreiveCharacter(ch);
 
-				float		currentWidth = drawPoint.dstX - dstX;
+//				float		currentWidth = drawPoint.dstX - dstX;
 				
-				if (paragraphWidth < currentWidth + character.getAdvance()) {
+				if (paragraphWidth < lineWidth + character.getAdvance()) {
 					//	paragraphWidth を超える場合はで折り返す
-					drawPoint.dstX = dstX;
+//					drawPoint.dstX = dstX;
+					//	ここまでの文字を表示する
+					tmpDrawPoint = align.calcDrawPoint(paragraphWidth, lineWidth, drawPoint);
+					drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ);
+					line = "";
+					lineWidth = 0;
 					drawPoint.dstY -= getLineHeight();
 				}
 				
-				drawCharacter(drawPoint, character);
+				line += String.valueOf(ch);
+				lineWidth += character.getAdvance();
+			}
+
+			//	残った文字を表示する
+			if (!LwjgFontUtil.isEmpty(line)) {
+				tmpDrawPoint = align.calcDrawPoint(paragraphWidth, lineWidth, drawPoint);
+				drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ);
 			}
 		}
 	}
@@ -289,7 +358,7 @@ public abstract class AbstractFont {
 	 */
 	protected abstract int getDefaultLineHeight();
 	
-	class DrawPoint {
+	static class DrawPoint {
 		private float		dstX;
 		private float		dstY;
 		private float		dstZ;
