@@ -153,13 +153,9 @@ public class TextureLoader {
 		byteBuffer.order(ByteOrder.nativeOrder());
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-
 				int	b[] = srcImage.getRaster().getPixel(x, y, pixel.getBuffer());
-				
-				byteBuffer.put(pixel.getRed());		//	Red
-				byteBuffer.put(pixel.getGreen());	//	Green
-				byteBuffer.put(pixel.getBlue());	//	Blue
-				byteBuffer.put(pixel.getAlpha());	//	Alpha
+
+				pixel.writeBuffer(byteBuffer);
 			}
 		}
 		byteBuffer.flip();
@@ -198,14 +194,11 @@ public class TextureLoader {
 		public ByteBuffer toBuffer(BufferedImage srcImage);
 
 		public int[] getBuffer();
-		public byte[] getRed();
-		public byte[] getGreen();
-		public byte[] getBlue();
-		public byte[] getAlpha();
-
+		public void writeBuffer(ByteBuffer byteBuffer);
 	}
 
 	//	1 ピクセルあたりのビット深度 64 の画像フォーマットの変換用クラス
+	/*
 	static class Pixel8ByteABGR implements Pixel {
 		private int[]	buffer = new int[8];
 
@@ -246,6 +239,7 @@ public class TextureLoader {
 			return byteBuffer;
 		}
 	}
+	*/
 	
 	//	1 ピクセルあたりのビット深度 32 の画像フォーマットの変換用クラス
 	static class Pixel4ByteABGR implements Pixel {
@@ -257,31 +251,23 @@ public class TextureLoader {
 		}
 
 		@Override
-		public byte[] getRed() {
-			return new byte[] {(byte)buffer[0]};
-		}
-
-		@Override
-		public byte[] getGreen() {
-			return new byte[] {(byte)buffer[1]};
-		}
-
-		@Override
-		public byte[] getBlue() {
-			return new byte[] {(byte)buffer[2]};
-		}
-
-		@Override
-		public byte[] getAlpha() {
-			return new byte[] {(byte)buffer[3]};
-		}
-
-		@Override
 		public ByteBuffer toBuffer(BufferedImage srcImage) {
+			//	読み込む画像も返還後のテクスチャーも 4 Byte / pixel なので、
+			//	もとのバイト列と同じ大きさのバイト領域を用意する
 			DataBufferByte	imageBuffer = (DataBufferByte)srcImage.getRaster().getDataBuffer();	
 			ByteBuffer		byteBuffer = ByteBuffer.allocateDirect(imageBuffer.getSize());
 			
 			return byteBuffer;
+		}
+
+		@Override
+		public void writeBuffer(ByteBuffer byteBuffer) {
+			byteBuffer.put(new byte[] {
+					(byte)buffer[0],	//	Red
+					(byte)buffer[1],	//	Green
+					(byte)buffer[2],	//	Blue
+					(byte)buffer[3]		//	Alpha
+			});
 		}
 	}
 
@@ -294,31 +280,24 @@ public class TextureLoader {
 		}
 
 		@Override
-		public byte[] getRed() {
-			return new byte[] {(byte)buffer[0]};
-		}
-
-		@Override
-		public byte[] getGreen() {
-			return new byte[] {(byte)buffer[1]};
-		}
-
-		@Override
-		public byte[] getBlue() {
-			return new byte[] {(byte)buffer[2]};
-		}
-
-		@Override
-		public byte[] getAlpha() {
-			return new byte[] {(byte)0xff};
-		}
-
-		@Override
 		public ByteBuffer toBuffer(BufferedImage srcImage) {
+			//	読み込む画像は 3 Byte / pixel だが、変換後のテクスチャーはアルファを足して 4 Byte / pixel になるので、
+			//	もとのバイト列の 3/4 倍の長さのバイト領域を用意する
 			DataBufferByte	imageBuffer = (DataBufferByte)srcImage.getRaster().getDataBuffer();	
-			ByteBuffer		byteBuffer = ByteBuffer.allocateDirect(imageBuffer.getSize());
+			ByteBuffer		byteBuffer = ByteBuffer.allocateDirect(imageBuffer.getSize() / 3 * 4);
 			
 			return byteBuffer;
+		}
+
+		@Override
+		public void writeBuffer(ByteBuffer byteBuffer) {
+			byteBuffer.put(new byte[] {
+					(byte)buffer[0],	//	Red
+					(byte)buffer[1],	//	Green
+					(byte)buffer[2],	//	Blue
+					(byte)0xff
+			});
+
 		}
 	}
 
