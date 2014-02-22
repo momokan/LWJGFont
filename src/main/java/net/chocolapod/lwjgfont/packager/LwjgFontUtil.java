@@ -33,6 +33,9 @@ public class LwjgFontUtil {
 	public static boolean isEmpty(String value) {
 		return ((value == null) || (value.length() <= 0));
 	}
+	public static boolean isEmpty(String[] values) {
+		return ((values == null) || (values.length <= 0));
+	}
 	
 	public static String capitalize(String value) {
 		String	capitalized = "";
@@ -119,5 +122,6 @@ public class LwjgFontUtil {
 
 		return file;
 	}
+
 
 }

@@ -176,6 +176,34 @@ public abstract class AbstractFont {
 	 * Draws the paragraph given by the specified string, using this font instance's current color.<br>
 	 * if the specified string protrudes from paragraphWidth, protruded substring is auto wrapped with the specified align.<br>
 	 * Note that the specified destination coordinates is a left point of the rendered string's baseline.
+	 * @param texts the array of strings to be drawn.
+	 * @param dstX the x coordinate to render the string.
+	 * @param dstY the y coordinate to render the string.
+	 * @param dstZ the z coordinate to render the string.
+	 * @param paragraphWidth the max width to draw the paragraph.
+	 * @param align the horizontal align to render the string.
+	 * @throws IOException Indicates a failure to read font images as textures.
+	 */
+	public final void drawParagraph(String[] texts, float dstX, float dstY, float dstZ, float paragraphWidth, ALIGN align) throws IOException {
+		if (LwjgFontUtil.isEmpty(texts)) {
+			return;
+		}
+
+		String	buff = "";
+		for (String text: texts) {
+			if (!LwjgFontUtil.isEmpty(text)) {
+				buff += "\n";
+			}
+			buff += text;
+		}
+
+		drawParagraph(buff, dstX, dstY, dstZ, paragraphWidth, align);
+	}
+
+	/**
+	 * Draws the paragraph given by the specified string, using this font instance's current color.<br>
+	 * if the specified string protrudes from paragraphWidth, protruded substring is auto wrapped with the specified align.<br>
+	 * Note that the specified destination coordinates is a left point of the rendered string's baseline.
 	 * @param text the string to be drawn.
 	 * @param dstX the x coordinate to render the string.
 	 * @param dstY the y coordinate to render the string.
