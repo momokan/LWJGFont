@@ -21,22 +21,23 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package net.chocolapod.lwjgfont.cli;
+package net.chocolapod.lwjgfont.logicalfont;
 
-public class FontSettingArgument {
-	private final String	fontPath;
-	private final int		fontSize;
-	
-	public FontSettingArgument(String fontPath, int fontSize) {
-		this.fontPath = fontPath;
-		this.fontSize = fontSize;
-	}
-	
-	public String getFontPath() {
-		return fontPath;
-	}
-	public int getFontSize() {
-		return fontSize;
-	}
+import java.awt.GraphicsEnvironment;
 
+import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
+
+public class SystemFont {
+
+	public static void listLogicalFont() {
+		GraphicsEnvironment		graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		String[]				fontNames = graphicsEnvironment.getAvailableFontFamilyNames();
+		
+		if (!LwjgFontUtil.isEmpty(fontNames)) {
+			for (String fontName: fontNames) {
+				System.out.println(fontName);
+			}
+		}
+	}
+	
 }

@@ -69,7 +69,7 @@ public class FontMapPainter {
 	private BufferedImage			bufferedImage;
 	private Graphics2D				g;
 	
-	public FontMap paint(String fontPath, int fontSize) throws IOException, FontFormatException {
+	public FontMap paint(FontSetting fontSetting) throws IOException, FontFormatException {
 		FontMap			fontMap = new FontMap();
 		int				x = 0;
 		int				y = 0;
@@ -97,7 +97,14 @@ public class FontMapPainter {
 		bufferedImage = null;
 		g = null;
 		try {
-			font = loadFont(fontPath, fontSize);
+			if (fontSetting.isSystemFont()) {
+				//	@ で始まるフォントはシステムフォントとして扱う
+				font = new Font(fontSetting.getFontPath(), Font.PLAIN, fontSetting.getFontSize());
+			} else {
+				//	指定のパスのファイルをフォントとして読み込む
+				font = loadFont(fontSetting.getFontPath(), fontSetting.getFontSize());
+			}
+			fontSetting.configure(font.getName());
 			/*
 			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
 			g = bufferedImage.createGraphics();
@@ -145,7 +152,7 @@ public class FontMapPainter {
 				x += stringWidthOnMap;
 			}
 
-			fontMap.addImageFile(imageIndex, writeFontMapImage(bufferedImage, font.getName(), font.getSize(), imageIndex));
+			fontMap.addImageFile(imageIndex, writeFontMapImage(bufferedImage, fontSetting, imageIndex));
 			imageIndex++;
 		} finally {
 			disposeImageBuffer(g, bufferedImage);
@@ -156,9 +163,9 @@ public class FontMapPainter {
 		
 		return fontMap;
 	}
-	
-	private String writeFontMapImage(BufferedImage bufferedImage, String fontName, int fontSize, int imageIndex) throws IOException {
-		String		fileName = fontName.replace(' ', '_') + "_H" + fontSize + "_" +imageIndex + ".png";
+
+	private String writeFontMapImage(BufferedImage bufferedImage, FontSetting fontSettings, int imageIndex) throws IOException {
+		String		fileName = fontSettings.getImageFileName(imageIndex);
 		File		dir = LwjgFontUtil.prepareDirectory(resourceDir, packageDirs);
 		
 		if (isWriteImage) {		

@@ -92,12 +92,12 @@ public class LwjgFont {
 		classMapLog = new ProcessLog(packageName, groupId, artifactId, version);
 	}
 
-	public void process(String fontPath, int fontSize) throws IOException, FontFormatException {
-		SourceBuffer	sourceBuffer = processClass(fontPath, fontSize, resourceDir);
+	public void process(FontSetting fontSetting) throws IOException, FontFormatException {
+		SourceBuffer	sourceBuffer = processClass(fontSetting, resourceDir);
 
 		writeJavaSource(sourceBuffer, srcDir);
 
-		classMapLog.add(fontPath, fontSize, sourceBuffer.getCannonicalClassName());
+		classMapLog.add(fontSetting.getFontPath(), fontSetting.getFontSize(), fontSetting.getFontAlias(), sourceBuffer.getCannonicalClassName());
 	}
 	
 	public void makePackage() throws IOException {
@@ -117,9 +117,8 @@ public class LwjgFont {
 		packager.process(packageName);
 	}
 
-	private SourceBuffer processClass(String fontPath, int fontSize, String resourceDir) throws IOException, FontFormatException {
+	private SourceBuffer processClass(FontSetting fontSetting, String resourceDir) throws IOException, FontFormatException {
 		FontMapPainter	fontMapPainter = new FontMapPainter();
-		File			fontFile = new File(fontPath);
 		String			artifactName = properties.getAsString(ARTIFACT_NAME);
 		String			packageName = AbstractFont.class.getPackage().getName() + "." + artifactName;
 		String			packageDirs = packageName.replace('.', File.separatorChar);
@@ -131,17 +130,17 @@ public class LwjgFont {
 		fontMapPainter.setResourceDir(resourceDir);
 		fontMapPainter.setPackageDirs(packageDirs);
 		
-		FontMap			fontMap = fontMapPainter.paint(fontPath, fontSize);
+		FontMap			fontMap = fontMapPainter.paint(fontSetting);
 		SourceBuffer	source = new SourceBuffer(packageName);
 
 		source.printJavadocComment(
 				"The subclass of net.chocolapod.lwjgfont.AbstractFont<br>",
-				"to render string with font: \"" + fontFile.getName() + "\", with size: " + fontSize + ".<br>",
+				"to render string with font: \"" + fontSetting.getFontPath() + "\", with size: " + fontSetting.getFontSize() + ".<br>",
 				"<br>",
 				"This class has utility methods to reder any strings with the above font.<br>",
 				"@see net.chocolapod.lwjgfont.AbstractFont"
 		);
-		source.openClass(toFontClassName(fontFile.getName(), fontSize), null, true, AbstractFont.class);
+		source.openClass(fontSetting.getFontClassName(), null, true, AbstractFont.class);
 
 		printStaticFieldFontMap(source);
 		printPrepareFontMap(source, fontMap);
@@ -262,20 +261,6 @@ public class LwjgFont {
 				pw.close();
 			}
 		}
-	}
-
-	private String toFontClassName(String fontName, int fontSize) {
-		fontName = LwjgFontUtil.trimExtention(fontName);
-		
-		String		className = "";
-		String[]	tokens = fontName.split("[^0-9a-zA-Z]+");
-		for (String token: tokens) {
-			className += LwjgFontUtil.capitalize(token);
-		}
-		className += "H" + fontSize;
-		className += "Font";
-		
-		return className;
 	}
 
 	private void extractStaticResources(String resourceDir) throws IOException {

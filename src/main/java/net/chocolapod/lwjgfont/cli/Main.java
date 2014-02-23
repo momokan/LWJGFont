@@ -27,11 +27,14 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import net.chocolapod.lwjgfont.logicalfont.SystemFont;
+import net.chocolapod.lwjgfont.packager.FontSetting;
 import net.chocolapod.lwjgfont.packager.LwjgFont;
 
 
 import static net.chocolapod.lwjgfont.cli.CliArgument._p;
 import static net.chocolapod.lwjgfont.cli.CliArgument._x;
+import static net.chocolapod.lwjgfont.cli.CliArgument._l;
 
 /**
  * Main logic of LWJGFont in command line mode.
@@ -48,10 +51,13 @@ public class Main {
 		if (parser.hasArgument(_x)) {
 			//	キャラクターファイルを展開する
 			lwjgFont.extractCharacterFiles();
+		} else if (parser.hasArgument(_l)) {
+			//	システムが認識しているフォント名を一覧表示する
+			SystemFont.listLogicalFont();
 		} else {
 			//	フォントマップを作成する
-			for (FontSettingArgument fontSetting: parser.listFontSettings()) {
-				lwjgFont.process(fontSetting.getFontPath(), fontSetting.getFontSize());
+			for (FontSetting fontSetting: parser.listFontSettings()) {
+				lwjgFont.process(fontSetting);
 			}
 			lwjgFont.makePackage();
 			lwjgFont.writeProcessLog();

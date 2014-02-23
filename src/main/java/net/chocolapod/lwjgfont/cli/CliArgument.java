@@ -25,7 +25,8 @@ package net.chocolapod.lwjgfont.cli;
 
 public enum CliArgument {
 	_p(true),
-	_x(false);
+	_x(false),
+	_l(false);
 	
 	private final boolean hasValue;
 	

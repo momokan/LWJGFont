@@ -51,9 +51,13 @@ public class ProcessLog {
 		this.classLength = 0;
 	}
 	
-	public void add(String fontName, int size, String className) {
+	public void add(String fontName, int size, String fontAlias, String className) {
 		String		key = fontName + " (Size: " + size + ")";
 		
+		if (!LwjgFontUtil.isEmpty(fontAlias)) {
+			key = fontAlias + "@" + key;
+		}
+
 		classMap.put(key, className);
 
 		if (classLength < className.length()) {

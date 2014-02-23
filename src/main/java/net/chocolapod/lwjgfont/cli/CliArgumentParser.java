@@ -30,9 +30,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.chocolapod.lwjgfont.packager.FontSetting;
+
 public class CliArgumentParser {
 	private Map<CliArgument, String>		parsedArguments;
-	private List<FontSettingArgument>		fontSettings;
+	private List<FontSetting>		fontSettings;
 
 	public CliArgumentParser(String[] args) {
 		List<String>		arguments = new ArrayList<>(Arrays.asList(args));
@@ -61,7 +63,13 @@ public class CliArgumentParser {
 
 		try {
 			if (tokens.length == 2) {
-				fontSettings.add(new FontSettingArgument(tokens[0], Integer.parseInt(tokens[1])));
+				FontSetting	fontSetting = FontSetting.asSystemFont(tokens[0], Integer.parseInt(tokens[1]));
+
+				if (fontSetting != null) {
+					fontSettings.add(fontSetting);
+				} else {
+					fontSettings.add(new FontSetting(tokens[0], Integer.parseInt(tokens[1])));
+				}
 				return true;
 			}
 		} catch (Exception e) {}
@@ -92,7 +100,7 @@ public class CliArgumentParser {
 		return parsedArguments.get(argument);
 	}
 	
-	public FontSettingArgument[] listFontSettings() {
-		return fontSettings.toArray(new FontSettingArgument[] {});
+	public FontSetting[] listFontSettings() {
+		return fontSettings.toArray(new FontSetting[] {});
 	}
 }
