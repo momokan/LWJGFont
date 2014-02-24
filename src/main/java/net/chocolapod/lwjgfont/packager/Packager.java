@@ -71,6 +71,12 @@ public class Packager {
 			if (dstPath.startsWith(filePathMask)) {
 				dstPath = dstPath.substring(filePathMask.length());
 			}
+			
+			//	Windows 環境ではファイルセパレーターが \ なので、
+			//	Jar にパッケージする際のパスでは / に置き換えておく。
+			if (File.separatorChar == '\\') {
+				dstPath = dstPath.replaceAll("\\\\", "/");
+			}
 
 			try {
 				in = new FileInputStream(file.getPath());
