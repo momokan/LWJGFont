@@ -10,7 +10,7 @@ and packages into jar which contains these images and classes to use the charact
 
 $ mvn clean package  
 $ java -jar target/lwjgfont-1.0.jar -x  
-$ java -jar target/lwjgfont-1.0.jar sample/migu-1p-regular.ttf:35  
+$ java -Dfile.encoding=UTF8 -jar target/lwjgfont-1.0.jar sample/migu-1p-regular.ttf:35  
 
 so myfont-1.0-SNAPSHOT.jar will be generated on current directory.
 
