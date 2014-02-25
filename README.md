@@ -45,6 +45,11 @@ Now, draw a string on Java.
     //  Draw a string on the specified location.
     font.drawString("いろはにほへと ちりぬるを", 100, 50, 0);
 
+All generated classes by LWJGFont are subclass of AbstractFont.  
+AbstractFont has many utility methods to render strings on LWJGL.  
+
+These classes are included in net.chocolapod.lwjgfont package.  
+
 ## License
 
 This software is released under the MIT License,  
