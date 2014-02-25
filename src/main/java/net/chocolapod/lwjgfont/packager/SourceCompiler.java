@@ -25,6 +25,7 @@ package net.chocolapod.lwjgfont.packager;
 
 import static javax.tools.JavaFileObject.Kind.SOURCE;
 import static javax.tools.StandardLocation.SOURCE_PATH;
+import static net.chocolapod.lwjgfont.packager.LwjgFont.CHARSET_UTF8;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +53,6 @@ import net.chocolapod.lwjgfont.exception.LwjgFontException;
 
 public class SourceCompiler {
 	
-	protected static final Charset			COMPILE_CHARSET_UTF8 = Charset.forName("utf-8");
 	protected static final JavaCompiler		COMPILER = ToolProvider.getSystemJavaCompiler();
 //	protected static final CompileOption	MAIN_COMPILE_OPTION = new CompileOption("src/main/java/", TestResource.MAIN_BASE_DIR, "target/classes/");
 //	protected static final CompileOption	TEST_COMPILE_OPTION = new CompileOption("src/test/java/", TestResource.TEST_BASE_DIR, "target/test-classes/");
@@ -63,7 +63,7 @@ public class SourceCompiler {
 
 	public void compile(List<String> classCanonicalNames) throws IOException {
 		JavaCompiler					compiler = ToolProvider.getSystemJavaCompiler();
-		StandardJavaFileManager		fileManager = compiler.getStandardFileManager(null, Locale.getDefault(), COMPILE_CHARSET_UTF8);
+		StandardJavaFileManager		fileManager = compiler.getStandardFileManager(null, Locale.getDefault(), CHARSET_UTF8);
 		List<File>					classPaths = getClassPathAsFileList(fileManager);
 		
 		fileManager.setLocation(StandardLocation.SOURCE_PATH, Arrays.asList(new File(srcDir)));

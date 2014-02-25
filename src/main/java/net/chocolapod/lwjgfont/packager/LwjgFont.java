@@ -28,11 +28,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -56,8 +58,10 @@ import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_CHARACT
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW_FRAME;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.TEMP_DIR;
+import static net.chocolapod.lwjgfont.packager.LwjgFont.CHARSET_UTF8;
 
 public class LwjgFont {
+	public static final Charset			CHARSET_UTF8 = Charset.forName("utf-8");
 	public static final String			DEFAULT_TEMP_DIR = "temp/";
 	private static final String			SOURCE_DIR = "src";
 	public static final String			RESOURCE_DIR = "resources";
@@ -254,7 +258,7 @@ public class LwjgFont {
 		LwjgFontUtil.prepareDirectory(sourceFile.getParent());
 		
 		try {
-			pw = new PrintWriter(sourceFile);
+			pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(sourceFile), CHARSET_UTF8));
 			pw.print(sourceBuffer.toString());
 		} finally {
 			if (pw != null) {
