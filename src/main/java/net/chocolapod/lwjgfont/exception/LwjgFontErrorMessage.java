@@ -23,36 +23,45 @@
  */
 package net.chocolapod.lwjgfont.exception;
 
-import static net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage.DEFAULT_ERROR;
+import java.io.InputStreamReader;
+import java.util.Locale;
+import java.util.Properties;
 
-public class LwjgFontException extends RuntimeException {
+import net.chocolapod.lwjgfont.packager.LwjgFont;
+import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 
-	public LwjgFontException() {
-		this(DEFAULT_ERROR);
-	}
+public enum LwjgFontErrorMessage {
+	DEFAULT_ERROR,
+	SYSTEM_COMPILER_NOT_FOUND;
 
-	public LwjgFontException(LwjgFontErrorMessage message, Object... args) {
-		super(String.format(message.getMessage(), args));
-	}
-
-	public LwjgFontException(LwjgFontErrorMessage message, Throwable cause) {
-		super(message.getMessage(), cause);
-	}
-
-	public LwjgFontException(String message, Object... args) {
-		super(String.format(message, args));
-	}
-
-	public LwjgFontException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	public static LwjgFontException as(Throwable cause) {
-		if (cause instanceof LwjgFontException) {
-			return (LwjgFontException)cause;
-		} else {
-			return new LwjgFontException(cause.getMessage(), cause);
+	private static final Properties		properties = new Properties();
+	static {
+		if (!loadProperties(Locale.getDefault())) {
+			loadProperties(Locale.ENGLISH);
 		}
 	}
+	
+	private static boolean loadProperties(Locale locale) {
+		String		resourceName = String.format("error.%s.properties", locale.getLanguage());
 
+		try {
+			properties.clear();
+			properties.load(new InputStreamReader(LwjgFontErrorMessage.class.getResourceAsStream(resourceName), LwjgFont.CHARSET_UTF8));
+		} catch (Exception e) {
+			System.err.println(resourceName + " is not found.");
+			return false;
+		}
+		return true;
+	}
+
+	public String getMessage() {
+		String		message = properties.getProperty(this.name());
+		
+		if (LwjgFontUtil.isEmpty(message)) {
+			message = this.name();
+		}
+
+		return message;
+	}
+	
 }

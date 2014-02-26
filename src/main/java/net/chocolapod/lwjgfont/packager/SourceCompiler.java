@@ -51,6 +51,8 @@ import javax.tools.JavaCompiler.CompilationTask;
 
 import net.chocolapod.lwjgfont.exception.LwjgFontException;
 
+import static net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage.SYSTEM_COMPILER_NOT_FOUND;
+
 public class SourceCompiler {
 	
 	protected static final JavaCompiler		COMPILER = ToolProvider.getSystemJavaCompiler();
@@ -63,9 +65,14 @@ public class SourceCompiler {
 
 	public void compile(List<String> classCanonicalNames) throws IOException {
 		JavaCompiler					compiler = ToolProvider.getSystemJavaCompiler();
+
+		if (compiler == null) {
+			throw new LwjgFontException(SYSTEM_COMPILER_NOT_FOUND);
+		}
+
 		StandardJavaFileManager		fileManager = compiler.getStandardFileManager(null, Locale.getDefault(), CHARSET_UTF8);
 		List<File>					classPaths = getClassPathAsFileList(fileManager);
-		
+
 		fileManager.setLocation(StandardLocation.SOURCE_PATH, Arrays.asList(new File(srcDir)));
 		fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
 		fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(targetDir)));
