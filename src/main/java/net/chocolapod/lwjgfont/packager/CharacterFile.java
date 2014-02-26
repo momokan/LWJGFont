@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.chocolapod.lwjgfont.exception.CharactersDirectoryIsEmptyException;
+import net.chocolapod.lwjgfont.exception.LwjgFontException;
+
+import static net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage.CHARACTERS_DIR_NOT_FOUND;
 
 public class CharacterFile {
 	private final String	filePath;
@@ -84,7 +87,7 @@ public class CharacterFile {
 		File[]				files = fileDir.listFiles();
 		
 		if ((files == null) || (files.length <= 0)) {
-			throw new CharactersDirectoryIsEmptyException(fileDir);
+			throw new LwjgFontException(CHARACTERS_DIR_NOT_FOUND, fileDir);
 		}
 		
 		for (File file: files) {

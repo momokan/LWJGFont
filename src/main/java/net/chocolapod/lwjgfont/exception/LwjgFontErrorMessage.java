@@ -32,7 +32,8 @@ import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 
 public enum LwjgFontErrorMessage {
 	DEFAULT_ERROR,
-	SYSTEM_COMPILER_NOT_FOUND;
+	SYSTEM_COMPILER_NOT_FOUND,
+	CHARACTERS_DIR_NOT_FOUND;
 
 	private static final Properties		properties = new Properties();
 	static {
