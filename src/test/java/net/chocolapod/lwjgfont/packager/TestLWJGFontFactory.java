@@ -23,27 +23,41 @@
  */
 package net.chocolapod.lwjgfont.packager;
 
+import static org.junit.Assert.assertEquals;
+
+import java.awt.FontFormatException;
+import java.io.File;
+import java.io.IOException;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import static net.chocolapod.lwjgfont.packager.TestResources.PROPERTY_DIST_DIR;
-import static net.chocolapod.lwjgfont.packager.TestResources.TEST_JAR_NAME;
+import static net.chocolapod.lwjgfont.packager.TestResources.TEST_JAR_PATH;
 
-/**
- *	Define resources font unit test code.
- *	
- *	Any test cases use Mosamosa-v1.1.ttf (もさもさフォント).
- *	The font is not included in LWJGFont jar and the genereted jar by LWJGFont.
- *
- *	Mosamosa-v1.1.ttf (もさもさフォント) 's copyright is @Longsword (https://twitter.com/Longsword).
- *	Distributed at http://lovalotta.pya.jp/mosamosa/
- */
-public class TestResources {
+public class TestLWJGFontFactory {
+	
+	@BeforeClass
+	public static void ceateJar() throws IOException, FontFormatException {
+		File	jar = new File(TEST_JAR_PATH);
+		
+		jar.delete();
+		if (jar.exists()) {
+			throw new IOException("cannot initialize " + TEST_JAR_PATH);
+		}
+		
+		//	create jar
+		LwjgFontFactory		lwjgFont = new LwjgFontFactory(TestResources.FILE_TEST_PROPERTIES);
 
-	public static final String	FILE_BASE = "src/test/resources/";
-	public static final String	FILE_PACKAGER_BASE = FILE_BASE + TestResources.class.getPackage().getName().replaceAll("\\.", "/") + "/";
-	public static final String	FILE_TEST_PROPERTIES = FILE_PACKAGER_BASE + "lwjgfont-test.properties";
-	public static final String	FILE_MOSAMOSAFONT = FILE_PACKAGER_BASE + "Mosamosa-v1.1.ttf";
+		lwjgFont.create(new FontSetting(TestResources.FILE_MOSAMOSAFONT, 8));
+		lwjgFont.makePackage();
+//		lwjgFont.writeProcessLog();
+	}
+	
+	@Test
+	public void existsJar() {
+		assertEquals(true, new File(TEST_JAR_PATH).isFile());
+	}
 
-	public static final String	PROPERTY_DIST_DIR = "target/";
-	public static final String	TEST_JAR_NAME = "test_lwjgfont-0.99TR.jar";
-	public static final String	TEST_JAR_PATH = PROPERTY_DIST_DIR + TEST_JAR_NAME;
-
+	//	TODO
 }

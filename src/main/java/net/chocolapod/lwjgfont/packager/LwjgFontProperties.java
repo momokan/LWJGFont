@@ -81,7 +81,8 @@ public class LwjgFontProperties {
 
 		@Override
 		public String convert(String value) {
-			if (LwjgFontUtil.isEmpty(value)) {
+			if (value == null) {
+//			if (LwjgFontUtil.isEmpty(value)) {
 				throw new IllegalArgumentException("empty string.");
 			}
 

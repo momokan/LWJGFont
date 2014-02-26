@@ -23,3 +23,9 @@ $ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DgroupId=net.chocolap
 
 This software is released under the MIT License, 
 see LICENSE.txt or http://lwjgfont.chocolapod.net/LICENSE.txt
+
+## I am deeply grateful to
+
+* [The Lightweight Java Game Library (LWJGL)](http://lwjgl.org/) : The greatest Java game library.
+* [もさもさフォント](http://lovalotta.pya.jp/mosamosa/) created by @Longsword : The cool font which is used in LWJGFont unit test.
+

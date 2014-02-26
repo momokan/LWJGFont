@@ -69,19 +69,23 @@ public class LwjgFontUtil {
 	public static File prepareDirectory(String ...dirPaths) throws IOException {
 		String		fullDirPath = "";
 		
-		for (String dirPath: dirPaths) {
-			if (dirPath == null) {
-				continue;
+		if (!LwjgFontUtil.isEmpty(dirPaths)) {
+			for (String dirPath: dirPaths) {
+				if (dirPath == null) {
+					continue;
+				}
+				if (!LwjgFontUtil.isEmpty(fullDirPath)) {
+					fullDirPath += File.separator;
+				}
+				fullDirPath += dirPath;
 			}
-			if (!LwjgFontUtil.isEmpty(fullDirPath)) {
-				fullDirPath += File.separator;
-			}
-			fullDirPath += dirPath;
 		}
 		
 		File		dir = new File(fullDirPath);
 
-		if (dir.isFile()) {
+		if (fullDirPath.length() <= 0) {
+			//	ignored
+		} else if (dir.isFile()) {
 			throw new IOException("output directory is a file: " + dir.getAbsolutePath());
 		} else if ((!dir.exists()) && (!dir.mkdirs())) {
 			throw new IOException("cannot make output directory: " + dir.getAbsolutePath());

@@ -57,9 +57,11 @@ import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_CHARACT
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW_FRAME;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.TEMP_DIR;
+import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.DIST_DIR;
 import static net.chocolapod.lwjgfont.packager.LwjgFontUtil.CHARSET_UTF8;
 
 public class LwjgFontFactory {
+	public static final String			DEFAULT_DIST_DIR = "";
 	public static final String			DEFAULT_TEMP_DIR = "temp/";
 	private static final String			SOURCE_DIR = "src";
 	public static final String			RESOURCE_DIR = "resources";
@@ -85,12 +87,13 @@ public class LwjgFontFactory {
 		srcDir = LwjgFontUtil.prepareDirectory(tempDir, SOURCE_DIR).getPath();
 		resourceDir = LwjgFontUtil.prepareDirectory(tempDir, RESOURCE_DIR).getPath();
 		targetDir = LwjgFontUtil.prepareDirectory(tempDir, COMPILES_DIR).getPath();
-
+		
 		String		groupId = LWJGFont.class.getPackage().getName();
 		String		artifactId = properties.getAsString(ARTIFACT_NAME); 
 		String		version = properties.getAsString(ARTIFACT_VERSION);
+		String		dstDir = LwjgFontUtil.prepareDirectory(properties.getAsString(DIST_DIR)).getPath();
 		
-		packageName = artifactId + "-" + version + ".jar";
+		packageName = dstDir + "/" + artifactId + "-" + version + ".jar";
 		classMapLog = new ProcessLog(packageName, groupId, artifactId, version);
 	}
 
