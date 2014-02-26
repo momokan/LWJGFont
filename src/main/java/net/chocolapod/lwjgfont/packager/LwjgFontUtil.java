@@ -25,6 +25,7 @@ package net.chocolapod.lwjgfont.packager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.lwjgl.LWJGLUtil;
 
@@ -122,6 +123,7 @@ public class LwjgFontUtil {
 
 		return file;
 	}
+	public static final Charset			CHARSET_UTF8 = Charset.forName("utf-8");
 
 
 }

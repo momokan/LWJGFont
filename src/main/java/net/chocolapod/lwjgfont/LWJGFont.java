@@ -41,7 +41,7 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
  * Each subclasses of this class represent a font and its size to render strings on LWJGL.<br>
  *	This class provide some utility methods for text rendering.<br>
  *	<br>
- *	Example with ClassicTrueTypeH20Font (Let This class be a subclass of AbstractFont).<br>
+ *	Example with ClassicTrueTypeH20Font (Let This class be a subclass of LWJGFont).<br>
  * <br>
  * <pre>
  * {@code
@@ -54,7 +54,7 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
  * }
  * </pre>
  */
-public abstract class AbstractFont {
+public abstract class LWJGFont {
 	public enum ALIGN {
 		LEGT {
 			@Override

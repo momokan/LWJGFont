@@ -33,7 +33,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.chocolapod.lwjgfont.exception.CharactersDirectoryIsEmptyException;
 import net.chocolapod.lwjgfont.exception.LwjgFontException;
 
 import static net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage.CHARACTERS_DIR_NOT_FOUND;
@@ -50,7 +49,7 @@ public class CharacterFile {
 	
 	public void open() throws UnsupportedEncodingException, FileNotFoundException {
 		if (br == null) {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), LwjgFontUtil.CHARSET_UTF8));
 		}
 	}
 	

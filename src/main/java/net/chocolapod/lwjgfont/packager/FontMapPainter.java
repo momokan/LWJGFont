@@ -23,7 +23,7 @@
  */
 package net.chocolapod.lwjgfont.packager;
 
-import static net.chocolapod.lwjgfont.packager.LwjgFont.DEFAULT_TEMP_DIR;
+import static net.chocolapod.lwjgfont.packager.LwjgFontFactory.DEFAULT_TEMP_DIR;
 
 import java.awt.Color;
 import java.awt.Font;

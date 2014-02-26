@@ -27,8 +27,9 @@ import java.io.InputStreamReader;
 import java.util.Locale;
 import java.util.Properties;
 
-import net.chocolapod.lwjgfont.packager.LwjgFont;
 import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
+
+import static net.chocolapod.lwjgfont.packager.LwjgFontUtil.CHARSET_UTF8;
 
 public enum LwjgFontErrorMessage {
 	DEFAULT_ERROR,
@@ -47,7 +48,7 @@ public enum LwjgFontErrorMessage {
 
 		try {
 			properties.clear();
-			properties.load(new InputStreamReader(LwjgFontErrorMessage.class.getResourceAsStream(resourceName), LwjgFont.CHARSET_UTF8));
+			properties.load(new InputStreamReader(LwjgFontErrorMessage.class.getResourceAsStream(resourceName), CHARSET_UTF8));
 		} catch (Exception e) {
 			System.err.println(resourceName + " is not found.");
 			return false;

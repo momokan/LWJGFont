@@ -25,7 +25,7 @@ package net.chocolapod.lwjgfont.packager;
 
 import static javax.tools.JavaFileObject.Kind.SOURCE;
 import static javax.tools.StandardLocation.SOURCE_PATH;
-import static net.chocolapod.lwjgfont.packager.LwjgFont.CHARSET_UTF8;
+import static net.chocolapod.lwjgfont.packager.LwjgFontUtil.CHARSET_UTF8;
 
 import java.io.File;
 import java.io.IOException;

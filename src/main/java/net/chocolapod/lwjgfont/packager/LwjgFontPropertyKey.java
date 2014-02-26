@@ -27,7 +27,7 @@ import static net.chocolapod.lwjgfont.packager.FontMapPainter.DEFAULT_CHARACTERS
 import static net.chocolapod.lwjgfont.packager.FontMapPainter.DEFAULT_PADDING;
 import static net.chocolapod.lwjgfont.packager.FontMapPainter.DEFAULT_WRITE_IMAGE;
 import static net.chocolapod.lwjgfont.packager.FontMapPainter.DEFAULT_WRITE_IMAGE_FRAME;
-import static net.chocolapod.lwjgfont.packager.LwjgFont.DEFAULT_TEMP_DIR;
+import static net.chocolapod.lwjgfont.packager.LwjgFontFactory.DEFAULT_TEMP_DIR;
 
 public enum LwjgFontPropertyKey {
 	IMAGE_DRAW(DEFAULT_WRITE_IMAGE),

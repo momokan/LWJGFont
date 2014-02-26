@@ -29,7 +29,7 @@ import java.net.URISyntaxException;
 
 import net.chocolapod.lwjgfont.logicalfont.SystemFont;
 import net.chocolapod.lwjgfont.packager.FontSetting;
-import net.chocolapod.lwjgfont.packager.LwjgFont;
+import net.chocolapod.lwjgfont.packager.LwjgFontFactory;
 
 
 import static net.chocolapod.lwjgfont.cli.CliArgument._p;
@@ -46,7 +46,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException, FontFormatException, URISyntaxException {
 		CliArgumentParser	parser = new CliArgumentParser(args);	
-		LwjgFont				lwjgFont = new LwjgFont(parser.get(_p));
+		LwjgFontFactory				lwjgFont = new LwjgFontFactory(parser.get(_p));
 		
 		if (parser.hasArgument(_x)) {
 			//	キャラクターファイルを展開する
@@ -57,7 +57,7 @@ public class Main {
 		} else {
 			//	フォントマップを作成する
 			for (FontSetting fontSetting: parser.listFontSettings()) {
-				lwjgFont.process(fontSetting);
+				lwjgFont.create(fontSetting);
 			}
 			lwjgFont.makePackage();
 			lwjgFont.writeProcessLog();

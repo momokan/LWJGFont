@@ -34,7 +34,6 @@ import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -46,7 +45,7 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import net.chocolapod.lwjgfont.AbstractFont;
+import net.chocolapod.lwjgfont.LWJGFont;
 import net.chocolapod.lwjgfont.FontMap;
 import net.chocolapod.lwjgfont.MappedCharacter;
 
@@ -58,10 +57,9 @@ import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_CHARACT
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW_FRAME;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.TEMP_DIR;
-import static net.chocolapod.lwjgfont.packager.LwjgFont.CHARSET_UTF8;
+import static net.chocolapod.lwjgfont.packager.LwjgFontUtil.CHARSET_UTF8;
 
-public class LwjgFont {
-	public static final Charset			CHARSET_UTF8 = Charset.forName("utf-8");
+public class LwjgFontFactory {
 	public static final String			DEFAULT_TEMP_DIR = "temp/";
 	private static final String			SOURCE_DIR = "src";
 	public static final String			RESOURCE_DIR = "resources";
@@ -78,7 +76,7 @@ public class LwjgFont {
 
 	private int					maxCharacterRegistration = 500;
 	
-	public LwjgFont(String propertiesPath) throws IOException {
+	public LwjgFontFactory(String propertiesPath) throws IOException {
 		properties = LwjgFontProperties.load(propertiesPath);
 
 		tempDir = properties.getAsString(TEMP_DIR);
@@ -88,7 +86,7 @@ public class LwjgFont {
 		resourceDir = LwjgFontUtil.prepareDirectory(tempDir, RESOURCE_DIR).getPath();
 		targetDir = LwjgFontUtil.prepareDirectory(tempDir, COMPILES_DIR).getPath();
 
-		String		groupId = AbstractFont.class.getPackage().getName();
+		String		groupId = LWJGFont.class.getPackage().getName();
 		String		artifactId = properties.getAsString(ARTIFACT_NAME); 
 		String		version = properties.getAsString(ARTIFACT_VERSION);
 		
@@ -96,7 +94,7 @@ public class LwjgFont {
 		classMapLog = new ProcessLog(packageName, groupId, artifactId, version);
 	}
 
-	public void process(FontSetting fontSetting) throws IOException, FontFormatException {
+	public void create(FontSetting fontSetting) throws IOException, FontFormatException {
 		SourceBuffer	sourceBuffer = processClass(fontSetting, resourceDir);
 
 		writeJavaSource(sourceBuffer, srcDir);
@@ -124,7 +122,7 @@ public class LwjgFont {
 	private SourceBuffer processClass(FontSetting fontSetting, String resourceDir) throws IOException, FontFormatException {
 		FontMapPainter	fontMapPainter = new FontMapPainter();
 		String			artifactName = properties.getAsString(ARTIFACT_NAME);
-		String			packageName = AbstractFont.class.getPackage().getName() + "." + artifactName;
+		String			packageName = LWJGFont.class.getPackage().getName() + "." + artifactName;
 		String			packageDirs = packageName.replace('.', File.separatorChar);
 
 		fontMapPainter.setWriteImage(properties.getAsBoolean(IMAGE_DRAW));
@@ -138,13 +136,13 @@ public class LwjgFont {
 		SourceBuffer	source = new SourceBuffer(packageName);
 
 		source.printJavadocComment(
-				"The subclass of net.chocolapod.lwjgfont.AbstractFont<br>",
+				"The subclass of net.chocolapod.lwjgfont.LWJGFont<br>",
 				"to render string with font: \"" + fontSetting.getFontPath() + "\", with size: " + fontSetting.getFontSize() + ".<br>",
 				"<br>",
 				"This class has utility methods to reder any strings with the above font.<br>",
-				"@see net.chocolapod.lwjgfont.AbstractFont"
+				"@see net.chocolapod.lwjgfont.LWJGFont"
 		);
-		source.openClass(fontSetting.getFontClassName(), null, true, AbstractFont.class);
+		source.openClass(fontSetting.getFontClassName(), null, true, LWJGFont.class);
 
 		printStaticFieldFontMap(source);
 		printPrepareFontMap(source, fontMap);
@@ -236,7 +234,7 @@ public class LwjgFont {
 	}
 	
 	private void printMethodGetFontMap(SourceBuffer source) {
-		source.printJavadocComment("@see net.chocolapod.lwjgfont.AbstractFont#getFontMap()");
+		source.printJavadocComment("@see net.chocolapod.lwjgfont.LWJGFont#getFontMap()");
 
 		source.importClass(FontMap.class);
 		source.openMethod("getFontMap", FontMap.class.getSimpleName(), new HashMap<String, Class>(), "protected", false);
