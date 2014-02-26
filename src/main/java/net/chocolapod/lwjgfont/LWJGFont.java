@@ -29,8 +29,8 @@ import org.lwjgl.LWJGLUtil;
 
 import net.chocolapod.lwjgfont.packager.ControlCharacter;
 import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
-import net.chocolapod.lwjgfont.texture.Texture;
-import net.chocolapod.lwjgfont.texture.TextureLoader;
+import net.chocolapod.lwjgfont.texture.FontTexture;
+import net.chocolapod.lwjgfont.texture.FontTextureLoader;
 
 import static net.chocolapod.lwjgfont.packager.ControlCharacter.LineFeed;
 import static net.chocolapod.lwjgfont.packager.ControlCharacter.CarriageReturn;
@@ -145,8 +145,8 @@ public abstract class LWJGFont {
 		float	srcX2 = character.getSrcX() + character.getAdvance() + character.getPadding();
 		float	srcY2 = character.getSrcY() + character.getDescent() + character.getPadding();
 		
-		String		imagePath = getImagePath(character.getImageIndex());
-		Texture		texture = TextureLoader.loadTexture(this.getClass(), imagePath);
+		String			imagePath = getImagePath(character.getImageIndex());
+		FontTexture		texture = FontTextureLoader.loadTexture(this.getClass(), imagePath);
 		
 		texture.setColor(red, green, blue);
 		texture.setAlpha(alpha);

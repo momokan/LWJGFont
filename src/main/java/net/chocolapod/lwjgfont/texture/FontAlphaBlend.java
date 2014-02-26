@@ -31,7 +31,7 @@ import static org.lwjgl.opengl.GL11.GL_SRC_COLOR;
 import static org.lwjgl.opengl.GL11.GL_ZERO;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
  
-public enum AlphaBlend {
+enum FontAlphaBlend {
 	AlphaBlend {
 		@Override
 		public void config() {

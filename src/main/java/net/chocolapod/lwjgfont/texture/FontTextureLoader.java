@@ -66,11 +66,11 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.PixelFormat;
 
-public class TextureLoader {
-	private static final Map<String, Texture>	texturesMap = new HashMap<>();
+public class FontTextureLoader {
+	private static final Map<String, FontTexture>	texturesMap = new HashMap<>();
 
-	public static Texture loadTexture(Class clazz, String imagePath) throws IOException {
-		Texture		texture = texturesMap.get(imagePath);
+	public static FontTexture loadTexture(Class clazz, String imagePath) throws IOException {
+		FontTexture		texture = texturesMap.get(imagePath);
 		
 		if (texture == null) {
 			texture = makeTexture(clazz, imagePath);
@@ -80,7 +80,7 @@ public class TextureLoader {
 		return texture;
 	}
 
-	private static Texture makeTexture(Class clazz, String imagePath) throws IOException {
+	private static FontTexture makeTexture(Class clazz, String imagePath) throws IOException {
 		BufferedImage	srcImage;
 		int				srcImageType;
 
@@ -94,7 +94,7 @@ public class TextureLoader {
 
 		//	テクスチャー ID を生成する
 		int				textureID = GL11.glGenTextures();
-		Texture			texture = new Texture(target, textureID);
+		FontTexture			texture = new FontTexture(target, textureID);
 
 		//	glTexImage2D() の対象となるテクスチャー ID をバインドする
 		glBindTexture(target, textureID);
@@ -184,7 +184,7 @@ public class TextureLoader {
 	}
 	
 	public static void dispose() {
-		for (Texture texture: texturesMap.values()) {
+		for (FontTexture texture: texturesMap.values()) {
 			texture.dispose();
 		}
 		texturesMap.clear();

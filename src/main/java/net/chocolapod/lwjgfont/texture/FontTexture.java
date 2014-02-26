@@ -23,7 +23,7 @@
  */
 package net.chocolapod.lwjgfont.texture;
  
-import static net.chocolapod.lwjgfont.texture.AlphaBlend.AlphaBlend;
+import static net.chocolapod.lwjgfont.texture.FontAlphaBlend.AlphaBlend;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
@@ -47,7 +47,7 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
-public class Texture {
+public class FontTexture {
 	private int	 target;
 	private int	 textureID;
  
@@ -60,11 +60,11 @@ public class Texture {
 	private float			red;
 	private float			green;
 	private float			blue;
-	private AlphaBlend		alphaBlend;
+	private FontAlphaBlend		alphaBlend;
 	private float			alpha;
 	private boolean 		isAlphaPremultiplied;
  
-	public Texture(int target, int textureID) {
+	public FontTexture(int target, int textureID) {
 		this.target = target;
 		this.textureID = textureID;
 		this.alpha = 1f;
@@ -191,7 +191,7 @@ public class Texture {
 		glBindTexture(target, textureID);
 	}
 
-	public void setAlphaBlend(AlphaBlend alphaBlend) {
+	public void setAlphaBlend(FontAlphaBlend alphaBlend) {
 		this.alphaBlend = alphaBlend;
 	}
 	
