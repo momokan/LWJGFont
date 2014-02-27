@@ -28,7 +28,7 @@ import static net.chocolapod.lwjgfont.packager.TestResources.FILE_MOSAMOSAFONT;
 import static net.chocolapod.lwjgfont.packager.TestResources.FILE_TEST_PROPERTIES;
 import static net.chocolapod.lwjgfont.packager.TestResources.TEST_JAR_PATH;
 import static net.chocolapod.lwjgfont.packager.TestResources.IMAGE_MOSAMOSAFONT_18; 
-import static net.chocolapod.lwjgfont.packager.TestResources.SYSTEM_PROPERTY_FILE_SEPARATOR;
+import static net.chocolapod.lwjgfont.packager.TestResources.FILE_MAIN_PACKAGER_BASE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -39,10 +39,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import net.chocolapod.lwjgfont.LWJGFont;
+import net.chocolapod.lwjgfont.MappedCharacter;
 
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
@@ -97,4 +99,33 @@ public class TestLWJGFontFactory {
 		assertNotNull(image);
 	}
 
+	@Test
+	public void getMappedCharacters() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+		URLClassLoader		classLoader = new URLClassLoader(new URL[] {new File(TEST_JAR_PATH).toURI().toURL()});
+		Class				clazz = classLoader.loadClass(CLASS_MOSAMOSAFONT_18);
+		LWJGFont			font = (LWJGFont)clazz.newInstance();
+		List<CharacterFile>	files = CharacterFile.listStreams(FILE_MAIN_PACKAGER_BASE);
+		
+		for (CharacterFile file: files) {
+			Character			c;
+			MappedCharacter		mappedCharacter;
+			
+			try {
+				file.open();
+				
+				while ((c = file.next()) != null) {
+					mappedCharacter = font.getMappedCharacter(c);
+
+					assertNotNull(mappedCharacter);
+				}
+			} finally {
+				try {
+					file.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }

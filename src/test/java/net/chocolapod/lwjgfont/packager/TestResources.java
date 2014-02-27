@@ -44,13 +44,14 @@ public class TestResources {
 	public static final String	FILE_TEST_PROPERTIES = FILE_PACKAGER_BASE + "lwjgfont-test.properties";
 	public static final String	FILE_MOSAMOSAFONT = FILE_PACKAGER_BASE + "Mosamosa-v1.1.ttf";
 
+	public static final String	FILE_MAIN_BASE = "src/main/resources/";
+	public static final String	FILE_MAIN_PACKAGER_BASE = FILE_BASE + TestResources.class.getPackage().getName().replaceAll("\\.", "/") + "/";
+
 	public static final String	PROPERTY_DIST_DIR = "target/";
 	public static final String	TEST_JAR_NAME = "test_lwjgfont-0.99TR.jar";
 	public static final String	TEST_JAR_PATH = PROPERTY_DIST_DIR + TEST_JAR_NAME;
 
 	public static final String	CLASS_MOSAMOSAFONT_18 = "net.chocolapod.lwjgfont.test_lwjgfont.MosamosaV11H8Font";
 	public static final String	IMAGE_MOSAMOSAFONT_18 = "net/chocolapod/lwjgfont/test_lwjgfont/MosamosaV11H8Font_H8_0.png";
-
-	public static final String	SYSTEM_PROPERTY_FILE_SEPARATOR = "file.separator";
 
 }
