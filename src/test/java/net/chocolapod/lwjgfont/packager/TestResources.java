@@ -26,6 +26,8 @@ package net.chocolapod.lwjgfont.packager;
 import static net.chocolapod.lwjgfont.packager.TestResources.PROPERTY_DIST_DIR;
 import static net.chocolapod.lwjgfont.packager.TestResources.TEST_JAR_NAME;
 
+import java.io.File;
+
 /**
  *	Define resources font unit test code.
  *	
@@ -45,5 +47,10 @@ public class TestResources {
 	public static final String	PROPERTY_DIST_DIR = "target/";
 	public static final String	TEST_JAR_NAME = "test_lwjgfont-0.99TR.jar";
 	public static final String	TEST_JAR_PATH = PROPERTY_DIST_DIR + TEST_JAR_NAME;
+
+	public static final String	CLASS_MOSAMOSAFONT_18 = "net.chocolapod.lwjgfont.test_lwjgfont.MosamosaV11H8Font";
+	public static final String	IMAGE_MOSAMOSAFONT_18 = "net/chocolapod/lwjgfont/test_lwjgfont/MosamosaV11H8Font_H8_0.png";
+
+	public static final String	SYSTEM_PROPERTY_FILE_SEPARATOR = "file.separator";
 
 }

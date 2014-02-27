@@ -23,17 +23,30 @@
  */
 package net.chocolapod.lwjgfont.packager;
 
+import static net.chocolapod.lwjgfont.packager.TestResources.CLASS_MOSAMOSAFONT_18;
+import static net.chocolapod.lwjgfont.packager.TestResources.FILE_MOSAMOSAFONT;
+import static net.chocolapod.lwjgfont.packager.TestResources.FILE_TEST_PROPERTIES;
+import static net.chocolapod.lwjgfont.packager.TestResources.TEST_JAR_PATH;
+import static net.chocolapod.lwjgfont.packager.TestResources.IMAGE_MOSAMOSAFONT_18; 
+import static net.chocolapod.lwjgfont.packager.TestResources.SYSTEM_PROPERTY_FILE_SEPARATOR;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.awt.FontFormatException;
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import javax.imageio.ImageIO;
+
+import net.chocolapod.lwjgfont.LWJGFont;
 
 import org.junit.BeforeClass;
+import org.junit.AfterClass;
 import org.junit.Test;
-
-import static net.chocolapod.lwjgfont.packager.TestResources.PROPERTY_DIST_DIR;
-import static net.chocolapod.lwjgfont.packager.TestResources.TEST_JAR_PATH;
 
 public class TestLWJGFontFactory {
 	
@@ -45,11 +58,11 @@ public class TestLWJGFontFactory {
 		if (jar.exists()) {
 			throw new IOException("cannot initialize " + TEST_JAR_PATH);
 		}
-		
-		//	create jar
-		LwjgFontFactory		lwjgFont = new LwjgFontFactory(TestResources.FILE_TEST_PROPERTIES);
 
-		lwjgFont.create(new FontSetting(TestResources.FILE_MOSAMOSAFONT, 8));
+		//	create jar
+		LwjgFontFactory		lwjgFont = new LwjgFontFactory(FILE_TEST_PROPERTIES);
+
+		lwjgFont.create(new FontSetting(FILE_MOSAMOSAFONT, 8));
 		lwjgFont.makePackage();
 //		lwjgFont.writeProcessLog();
 	}
@@ -59,5 +72,29 @@ public class TestLWJGFontFactory {
 		assertEquals(true, new File(TEST_JAR_PATH).isFile());
 	}
 
-	//	TODO
+	@Test
+	public void loadLWJGFontClass() throws MalformedURLException, ClassNotFoundException {
+		URLClassLoader	classLoader = new URLClassLoader(new URL[] {new File(TEST_JAR_PATH).toURI().toURL()});
+		Class			clazz = classLoader.loadClass(CLASS_MOSAMOSAFONT_18);
+
+		assertNotNull(clazz);
+	}
+
+	@Test
+	public void loadLWJGFont() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		URLClassLoader	classLoader = new URLClassLoader(new URL[] {new File(TEST_JAR_PATH).toURI().toURL()});
+		Class			clazz = classLoader.loadClass(CLASS_MOSAMOSAFONT_18);
+		Object			object = clazz.newInstance();
+
+		assertEquals(true, object instanceof LWJGFont);
+	}
+
+	@Test
+	public void loadImage() throws IOException {
+		URLClassLoader	classLoader = new URLClassLoader(new URL[] {new File(TEST_JAR_PATH).toURI().toURL()});
+		Image			image = ImageIO.read(classLoader.getResourceAsStream(IMAGE_MOSAMOSAFONT_18));
+
+		assertNotNull(image);
+	}
+
 }
