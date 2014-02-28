@@ -48,8 +48,10 @@ import java.util.zip.ZipInputStream;
 import net.chocolapod.lwjgfont.LWJGFont;
 import net.chocolapod.lwjgfont.FontMap;
 import net.chocolapod.lwjgfont.MappedCharacter;
+import net.chocolapod.lwjgfont.cli.Main;
 
 
+import static net.chocolapod.lwjgfont.cli.CliMessage.LWJGFONT_VERSION;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_NAME;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_VERSION;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.CHARACTER_FILE_DIR;
@@ -369,6 +371,16 @@ public class LwjgFontFactory {
 				} catch (IOException e) {}
 			}
 		}
+	}
+
+	public void printVersion() {
+		String	version = Main.class.getPackage().getImplementationVersion();
+
+		if (LwjgFontUtil.isEmpty(version)) {
+			version = "Development";
+		}
+
+		System.out.println(LWJGFONT_VERSION.format(version));
 	}
 	
 }

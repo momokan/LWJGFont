@@ -27,9 +27,9 @@
   <developers>
     <developer>
       <id>momokan</id>
-	  <name>momokan</name>
-	  <email>momokan@chocolapod.net</email>
-	  <url>http://lwjgfont.chocolapod.net</url>
+      <name>momokan</name>
+      <email>momokan@chocolapod.net</email>
+      <url>http://lwjgfont.chocolapod.net</url>
     </developer>
   </developers>
 
@@ -79,6 +79,8 @@
           <archive>
             <manifest>
               <mainClass>net.chocolapod.lwjgfont.cli.Main</mainClass>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
             </manifest>
           </archive>
         </configuration>

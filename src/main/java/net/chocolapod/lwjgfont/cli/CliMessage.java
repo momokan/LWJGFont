@@ -27,6 +27,7 @@ import net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage;
 import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
 
 public enum CliMessage {
+	LWJGFONT_VERSION,
 	GENERATED_JAR_FORMAT,
 	HEADER_LIST_CLASSES,
 	HEADER_INSTALL_JAR,
