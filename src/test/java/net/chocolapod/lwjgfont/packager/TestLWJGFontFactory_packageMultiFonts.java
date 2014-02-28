@@ -75,12 +75,25 @@ public class TestLWJGFontFactory_packageMultiFonts {
 	
 	@Test
 	public void loadLWJGFontClass() throws ClassNotFoundException, IOException, FontFormatException {
-		URLClassLoader	classLoader = new URLClassLoader(new URL[] {new File(TEST_JAR_PATH).toURI().toURL()});
-
-		assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_8));
-		assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_9));
-		assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_10));
-		assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_11));
+		URLClassLoader	classLoader = null;
+		
+		try {
+			classLoader = new URLClassLoader(new URL[] {new File(TEST_JAR_PATH).toURI().toURL()});
+	
+			assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_8));
+			assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_9));
+			assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_10));
+			assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_11));
+		} finally {
+			if (classLoader != null) {
+				try {
+					classLoader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	@Test

@@ -25,19 +25,18 @@ package net.chocolapod.lwjgfont.packager;
 
 import static net.chocolapod.lwjgfont.packager.TestResources.CLASS_MOSAMOSAFONT_8;
 import static net.chocolapod.lwjgfont.packager.TestResources.ENTRY_MOSAMOSAFONT_8;
-import static net.chocolapod.lwjgfont.packager.TestResources.IMAGE_MOSAMOSAFONT_8;
 import static net.chocolapod.lwjgfont.packager.TestResources.FILE_MOSAMOSAFONT;
 import static net.chocolapod.lwjgfont.packager.TestResources.FILE_MOSAMOSAFONT_ALIAS01;
 import static net.chocolapod.lwjgfont.packager.TestResources.FILE_MOSAMOSAFONT_ALIAS02;
+import static net.chocolapod.lwjgfont.packager.TestResources.IMAGE_MOSAMOSAFONT_8;
 import static net.chocolapod.lwjgfont.packager.TestResources.TEST_JAR_PATH;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import java.awt.FontFormatException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -63,10 +62,22 @@ public class TestLWJGFontFactory_packageDuplicateFonts {
 	
 	@Test
 	public void loadLWJGFontClass() throws ClassNotFoundException, IOException, FontFormatException {
-		URLClassLoader	classLoader = new URLClassLoader(new URL[] {new File(TEST_JAR_PATH).toURI().toURL()});
-		Class			clazz = classLoader.loadClass(CLASS_MOSAMOSAFONT_8);
-
-		assertNotNull(clazz);
+		URLClassLoader	classLoader = null;
+		
+		try {
+			classLoader = new URLClassLoader(new URL[] {new File(TEST_JAR_PATH).toURI().toURL()});
+	
+			assertNotNull(classLoader.loadClass(CLASS_MOSAMOSAFONT_8));
+		} finally {
+			if (classLoader != null) {
+				try {
+					classLoader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	@Test
