@@ -108,7 +108,7 @@ public class FontSetting {
 	}
 
 	public String getImageFileName(int imageIndex) {
-		return fontClassName + "_H" + fontSize + "_" + imageIndex + ".png";
+		return fontClassName + "_" + imageIndex + ".png";
 	}
 
 	public String getFontClassName() {
