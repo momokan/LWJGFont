@@ -111,7 +111,8 @@ public class ProcessLog {
 					"        <artifactId>%s</artifactId>\n" +
 					"        <version>%s</version>\n" +
 					"    </dependency>\n" +
-					"    --------------------------------------------------------------------\n",
+					"    --------------------------------------------------------------------\n" +
+					"    Note: This artifact depends on net.chocolapod.lwjgfont",
 					groupId, artifactId, version
 				);
 
