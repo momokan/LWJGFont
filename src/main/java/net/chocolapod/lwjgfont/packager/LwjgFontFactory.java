@@ -93,7 +93,7 @@ public class LwjgFontFactory {
 		String		version = properties.getAsString(ARTIFACT_VERSION);
 		String		dstDir = LwjgFontUtil.prepareDirectory(properties.getAsString(DIST_DIR)).getPath();
 		
-		packageName = dstDir + "/" + artifactId + "-" + version + ".jar";
+		packageName = LwjgFontUtil.toDirectoryPath(dstDir) + artifactId + "-" + version + ".jar";
 		classMapLog = new ProcessLog(packageName, groupId, artifactId, version);
 	}
 

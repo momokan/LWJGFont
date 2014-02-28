@@ -30,6 +30,7 @@ import java.nio.charset.Charset;
 import org.lwjgl.LWJGLUtil;
 
 public class LwjgFontUtil {
+	public static final Charset			CHARSET_UTF8 = Charset.forName("utf-8");
 
 	public static boolean isEmpty(String value) {
 		return ((value == null) || (value.length() <= 0));
@@ -127,7 +128,20 @@ public class LwjgFontUtil {
 
 		return file;
 	}
-	public static final Charset			CHARSET_UTF8 = Charset.forName("utf-8");
+
+	public static String toDirectoryPath(String directoryPath) {
+		if (LwjgFontUtil.isEmpty(directoryPath)) {
+			return "";
+		}
+		
+		if (directoryPath.endsWith("\\")) {
+			directoryPath = directoryPath.substring(0, directoryPath.length() - 1) + "/";
+		} else if (!directoryPath.endsWith("/")) {
+			directoryPath += File.separator;
+		}
+
+		return directoryPath;
+	}
 
 
 }
