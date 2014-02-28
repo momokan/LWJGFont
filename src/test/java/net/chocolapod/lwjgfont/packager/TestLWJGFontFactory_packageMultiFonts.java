@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
@@ -62,7 +63,7 @@ import org.junit.Test;
 public class TestLWJGFontFactory_packageMultiFonts {
 	
 	@BeforeClass
-	public static void prepareJar() throws IOException, FontFormatException {
+	public static void prepareJar() throws IOException, FontFormatException, URISyntaxException {
 		TestLWJGFontFactory.ceateJar(
 			new FontSetting(FILE_MOSAMOSAFONT, 8),
 			new FontSetting(FILE_MOSAMOSAFONT, 9),

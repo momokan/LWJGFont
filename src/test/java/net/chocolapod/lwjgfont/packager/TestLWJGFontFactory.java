@@ -40,6 +40,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -56,10 +57,10 @@ import org.junit.Test;
 public class TestLWJGFontFactory {
 
 	@BeforeClass
-	public static void prepareJar() throws IOException, FontFormatException {
+	public static void prepareJar() throws IOException, FontFormatException, URISyntaxException {
 		ceateJar(new FontSetting(FILE_MOSAMOSAFONT, 8));
 	}
-	public static void ceateJar(FontSetting ...fontSettings) throws IOException, FontFormatException {
+	public static void ceateJar(FontSetting ...fontSettings) throws IOException, FontFormatException, URISyntaxException {
 		File	jar = new File(TEST_JAR_PATH);
 		
 		jar.delete();
@@ -70,6 +71,7 @@ public class TestLWJGFontFactory {
 		//	create jar
 		LwjgFontFactory		lwjgFont = new LwjgFontFactory(FILE_TEST_PROPERTIES);
 
+		lwjgFont.extractCharacterFiles();
 		for (FontSetting fontSetting: fontSettings) {
 			lwjgFont.create(fontSetting);
 		}

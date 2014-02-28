@@ -23,47 +23,17 @@
  */
 package net.chocolapod.lwjgfont.exception;
 
-import java.io.InputStreamReader;
-import java.util.Locale;
-import java.util.Properties;
-
-import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
-
-import static net.chocolapod.lwjgfont.packager.LwjgFontUtil.CHARSET_UTF8;
+import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
 
 public enum LwjgFontErrorMessage {
 	DEFAULT_ERROR,
 	SYSTEM_COMPILER_NOT_FOUND,
 	CHARACTERS_DIR_NOT_FOUND;
 
-	private static final Properties		properties = new Properties();
-	static {
-		if (!loadProperties(Locale.getDefault())) {
-			loadProperties(Locale.ENGLISH);
-		}
-	}
-	
-	private static boolean loadProperties(Locale locale) {
-		String		resourceName = String.format("error.%s.properties", locale.getLanguage());
-
-		try {
-			properties.clear();
-			properties.load(new InputStreamReader(LwjgFontErrorMessage.class.getResourceAsStream(resourceName), CHARSET_UTF8));
-		} catch (Exception e) {
-			System.err.println(resourceName + " is not found.");
-			return false;
-		}
-		return true;
-	}
+	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(LwjgFontErrorMessage.class, "error");
 
 	public String getMessage() {
-		String		message = properties.getProperty(this.name());
-		
-		if (LwjgFontUtil.isEmpty(message)) {
-			message = this.name();
-		}
-
-		return message;
+		return properties.getMessage(this.name());
 	}
 	
 }

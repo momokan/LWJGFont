@@ -38,6 +38,7 @@ import java.awt.FontFormatException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
@@ -52,7 +53,7 @@ import org.junit.Test;
 public class TestLWJGFontFactory_packageDuplicateFonts {
 	
 	@BeforeClass
-	public static void prepareJar() throws IOException, FontFormatException {
+	public static void prepareJar() throws IOException, FontFormatException, URISyntaxException {
 		TestLWJGFontFactory.ceateJar(
 			new FontSetting(FILE_MOSAMOSAFONT, 8),
 			new FontSetting(FILE_MOSAMOSAFONT_ALIAS01, 8),

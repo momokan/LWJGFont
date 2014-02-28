@@ -21,46 +21,26 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package net.chocolapod.lwjgfont.exception;
+package net.chocolapod.lwjgfont.cli;
 
-import static net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage.DEFAULT_ERROR;
+import net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage;
+import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
 
-public class LwjgFontException extends RuntimeException {
-	
-	private LwjgFontErrorMessage message;
+public enum CliMessage {
+	GENERATED_JAR_FORMAT,
+	HEADER_LIST_CLASSES,
+	HEADER_INSTALL_JAR,
+	HEADER_HOW_TO_USE_IN_MAVEN,
+	NOTE_JAR_DEPENDS_LWJGFONT;
 
-	public LwjgFontException() {
-		this(DEFAULT_ERROR);
+	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(CliMessage.class, "cli");
+
+	@Override
+	public String toString() {
+		return properties.getMessage(this.name());
 	}
 
-	public LwjgFontException(LwjgFontErrorMessage message, Object... args) {
-		super(String.format(message.getMessage(), args));
-		this.message = message;
+	public String format(Object ...args) {
+		return properties.format(this.name(), args);
 	}
-
-	public LwjgFontException(LwjgFontErrorMessage message, Throwable cause) {
-		super(message.getMessage(), cause);
-		this.message = message;
-	}
-
-	public LwjgFontException(String message, Object... args) {
-		super(String.format(message, args));
-	}
-
-	public LwjgFontException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	public static LwjgFontException as(Throwable cause) {
-		if (cause instanceof LwjgFontException) {
-			return (LwjgFontException)cause;
-		} else {
-			return new LwjgFontException(cause.getMessage(), cause);
-		}
-	}
-
-	public LwjgFontErrorMessage getMessageCode() {
-		return message;
-	}
-
 }
