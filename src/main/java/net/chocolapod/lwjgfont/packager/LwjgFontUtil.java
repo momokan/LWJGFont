@@ -134,9 +134,7 @@ public class LwjgFontUtil {
 			return "";
 		}
 		
-		if (directoryPath.endsWith("\\")) {
-			directoryPath = directoryPath.substring(0, directoryPath.length() - 1) + "/";
-		} else if (!directoryPath.endsWith("/")) {
+		if (!directoryPath.endsWith(File.separator)) {
 			directoryPath += File.separator;
 		}
 

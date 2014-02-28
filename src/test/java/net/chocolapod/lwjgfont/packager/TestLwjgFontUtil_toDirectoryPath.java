@@ -25,58 +25,34 @@ package net.chocolapod.lwjgfont.packager;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+
 import org.junit.Test;
 
 public class TestLwjgFontUtil_toDirectoryPath {
 
 	@Test
-	public void linuxStyle() {
-		assertEquals("hoge/", LwjgFontUtil.toDirectoryPath("hoge"));
+	public void fileStyle() {
+		assertEquals("hoge" + File.separator, LwjgFontUtil.toDirectoryPath("hoge"));
 	}
 
 	@Test
-	public void linuxStyle2() {
-		assertEquals("hoge/fuga/", LwjgFontUtil.toDirectoryPath("hoge/fuga"));
+	public void fileInDirectoryStyle() {
+		assertEquals("hoge" + File.separator + "fuga" + File.separator, LwjgFontUtil.toDirectoryPath("hoge" + File.separator + "fuga"));
 	}
 	
 	@Test
-	public void linuxStyleDirectory() {
-		assertEquals("hoge/", LwjgFontUtil.toDirectoryPath("hoge/"));
+	public void directoryStyle() {
+		assertEquals("hoge" + File.separator, LwjgFontUtil.toDirectoryPath("hoge" + File.separator));
 	}
 
 	@Test
-	public void linuxStyleEmpty() {
+	public void emptyStyle() {
 		assertEquals("", LwjgFontUtil.toDirectoryPath(""));
 	}
 
 	@Test
-	public void linuxStyleNull() {
-		assertEquals("", LwjgFontUtil.toDirectoryPath(null));
-	}
-
-
-	@Test
-	public void windowsStyle() {
-		assertEquals("hoge/", LwjgFontUtil.toDirectoryPath("hoge\\"));
-	}
-
-	@Test
-	public void windowsStyle2() {
-		assertEquals("hoge\\fuga/", LwjgFontUtil.toDirectoryPath("hoge\\fuga"));
-	}
-	
-	@Test
-	public void windowsStyleDirectory() {
-		assertEquals("hoge/", LwjgFontUtil.toDirectoryPath("hoge\\"));
-	}
-
-	@Test
-	public void windowsStyleEmpty() {
-		assertEquals("", LwjgFontUtil.toDirectoryPath(""));
-	}
-
-	@Test
-	public void windowsStyleNull() {
+	public void nullStyle() {
 		assertEquals("", LwjgFontUtil.toDirectoryPath(null));
 	}
 
