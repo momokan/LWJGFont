@@ -82,6 +82,9 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
             </manifest>
+            <manifestEntries>
+              <Built-By>momokan</Built-By>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>

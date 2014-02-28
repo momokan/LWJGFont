@@ -15,7 +15,7 @@ First of all, pre-compile your font file to use as texture on LWJGL.
     $ java -jar target/lwjgfont-1.0.jar sample/migu-1p-regular.ttf:35  
 
 So myfont-1.0-SNAPSHOT.jar will be generated on current directory.  
-This jar file contains subclass off net.chocolapod.lwjgfont.AbstractFont to use the specified font: migu-1p-regular.ttf (its size is 35.)  
+This jar file contains subclass off net.chocolapod.lwjgfont.LWJGFont to use the specified font: migu-1p-regular.ttf (its size is 35.)  
 
 ### Install generated jar to local repository
 
@@ -40,13 +40,13 @@ Add the dependencies of the generated jar and LWJGFont into pom.xml.
 Now, draw a string on Java.  
 
     //  Load the font with LWJGFont.
-    AbstractFont    font = new Migu1pRegularH35Font();
+    LWJGFont    font = new Migu1pRegularH35Font();
  
     //  Draw a string on the specified location.
     font.drawString("いろはにほへと ちりぬるを", 100, 50, 0);
 
-All generated classes by LWJGFont are subclass of AbstractFont.  
-AbstractFont has many utility methods to render strings on LWJGL.  
+All generated classes by LWJGFont are subclass of LWJGFont.  
+LWJGFont has many utility methods to render strings on LWJGL.  
 
 These classes are included in net.chocolapod.lwjgfont package.  
 
