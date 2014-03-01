@@ -99,8 +99,12 @@ public class CliArgumentParser {
 	public String get(CliArgument argument) {
 		return parsedArguments.get(argument);
 	}
-	
+
 	public FontSetting[] listFontSettings() {
 		return fontSettings.toArray(new FontSetting[] {});
+	}
+
+	public boolean hasFontSettings() {
+		return ((fontSettings != null) && (0 < fontSettings.size()));
 	}
 }

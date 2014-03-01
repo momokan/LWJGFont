@@ -59,7 +59,7 @@ public class Main {
 		} else if (parser.hasArgument(_l)) {
 			//	システムが認識しているフォント名を一覧表示する
 			SystemFont.listLogicalFont();
-		} else {
+		} else if (parser.hasFontSettings()) {
 			//	フォントマップを作成する
 			for (FontSetting fontSetting: parser.listFontSettings()) {
 				lwjgFont.create(fontSetting);
