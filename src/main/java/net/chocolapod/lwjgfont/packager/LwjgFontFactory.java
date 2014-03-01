@@ -335,6 +335,11 @@ public class LwjgFontFactory {
 		String					pathMask = urlCharacters.getPath();
 		ResourceExtractor	resourceExtractor = new ResourceExtractor();
 
+		//	Windows 環境では絶対パスの先頭に / がつかないので、取り除く 
+		if ((File.separator.equals("\\")) && (pathMask.startsWith("/"))) {
+			pathMask = pathMask.substring(1);
+		}
+
 		for (File nextFile: dir.listFiles()) {
 			String				filePath = nextFile.getPath();
 			
@@ -380,11 +385,11 @@ public class LwjgFontFactory {
 					try {
 						in.closeEntry();
 					} catch (IOException e2) {}
-					try {
-						if (out != null) {
+					if (out != null) {
+						try {
 							out.close();
-						}
-					} catch (IOException e2) {}
+						} catch (IOException e2) {}
+					}
 				}
 			}
 		} finally {

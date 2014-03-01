@@ -29,11 +29,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.chocolapod.lwjgfont.exception.LwjgFontException;
+
+import static net.chocolapod.lwjgfont.packager.LwjgFontUtil.CHARSET_UTF8;
 
 public class ResourceExtractor {
 
@@ -51,7 +54,7 @@ public class ResourceExtractor {
 		for (String resource: resourcePaths.keySet()) {
 			File	file = new File(resourcePaths.get(resource));
 			File	dstDir = LwjgFontUtil.prepareDirectory(resourcesDir, file.getParent());
-				
+
 			copyResource(resource, LwjgFontUtil.toDirectoryPath(dstDir.getPath()) + file.getName());
 		}
 	}
@@ -69,8 +72,8 @@ public class ResourceExtractor {
 				throw new LwjgFontException("Resource not found: " + resource);
 			}
 			
-			br = new BufferedReader(new InputStreamReader(in));
-			pw = new PrintWriter(new FileOutputStream(dstPath));
+			br = new BufferedReader(new InputStreamReader(in, CHARSET_UTF8));
+			pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(dstPath), CHARSET_UTF8));
 			
 			while ((line = br.readLine()) != null) {
 				for (String pattern: resourceReplaces.keySet()) {
