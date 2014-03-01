@@ -17,20 +17,8 @@
     <dependency>
       <groupId>net.chocolapod</groupId>
       <artifactId>lwjgfont</artifactId>
-      <version>0.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.lwjgl.lwjgl</groupId>
-      <artifactId>lwjgl</artifactId>
-      <version>2.9.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.7</version>
-      <scope>test</scope>
+      <version>%lwjgfontVersion%</version>
     </dependency>
   </dependencies>
+
 </project>

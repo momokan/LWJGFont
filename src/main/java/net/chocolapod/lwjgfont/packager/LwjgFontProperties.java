@@ -26,6 +26,7 @@ package net.chocolapod.lwjgfont.packager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class LwjgFontProperties {
@@ -66,11 +67,28 @@ public class LwjgFontProperties {
 		
 		return (T)converter.convert(key.getDefaultValue());
 	}
+	
+	public void appendProerties(Class clazz, String resourcePath) throws IOException {
+		InputStream		in = null;
+		
+		try{
+			in = clazz.getResourceAsStream(resourcePath);
+			if (in == null) {
+				System.err.println(resourcePath + " not found.");
+			} else {
+				properties.load(in);
+			}
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
+	}
 
 	public static LwjgFontProperties load(String filePath) throws IOException {
 		return new LwjgFontProperties(filePath);
 	}
-
+	
 	interface ValueConverter<T> {
 		
 		public T convert(String value);

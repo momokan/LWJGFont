@@ -14,23 +14,18 @@ First of all, pre-compile your font file to use as texture on LWJGL.
     $ java -jar target/lwjgfont-1.0.jar -x  
     $ java -jar target/lwjgfont-1.0.jar sample/migu-1p-regular.ttf:35  
 
-So myfont-1.0-SNAPSHOT.jar will be generated on current directory.  
+So myfont-1.0-SNAPSHOT.jar and myfont-1.0-SNAPSHOT.pom.xml will be generated on current directory.  
 This jar file contains subclass off net.chocolapod.lwjgfont.LWJGFont to use the specified font: migu-1p-regular.ttf (its size is 35.)  
 
 ### Install generated jar to local repository
 
-    $ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DgroupId=net.chocolapod.lwjgfont \ 
-       -DartifactId=myfont -Dversion=1.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
+    $ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DpomFile=myfont-1.0-SNAPSHOT.pom.xml \  
+	   -DgroupId=net.chocolapod.lwjgfont -DartifactId=myfont -Dversion=1.0-SNAPSHOT -Dpackaging=jar
 
 ### Draw any string on your LWJGL game project.
 
 Add the dependencies of the generated jar and LWJGFont into pom.xml.  
 
-    <dependency>
-        <groupId>net.chocolapod</groupId>
-        <artifactId>lwjgfont</artifactId>
-        <version>1.0</version>
-    </dependency>
     <dependency>
         <groupId>net.chocolapod.lwjgfont</groupId>
         <artifactId>myfont</artifactId>

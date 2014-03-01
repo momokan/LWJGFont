@@ -38,7 +38,8 @@ public enum LwjgFontPropertyKey {
 	TEMP_DIR(DEFAULT_TEMP_DIR),
 	DIST_DIR(DEFAULT_DIST_DIR),
 	ARTIFACT_NAME("myfont"),
-	ARTIFACT_VERSION("1.0-SNAPSHOT");
+	ARTIFACT_VERSION("1.0-SNAPSHOT"),
+	LWJGFONT_VERSION("<unknown>");
 
 	private final String	defaultValue;
 

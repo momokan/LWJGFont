@@ -34,6 +34,7 @@ import java.util.Map;
 import net.chocolapod.lwjgfont.LWJGFont;
 
 import static net.chocolapod.lwjgfont.cli.CliMessage.GENERATED_JAR_FORMAT;
+import static net.chocolapod.lwjgfont.cli.CliMessage.GENERATED_POM_FORMAT;
 import static net.chocolapod.lwjgfont.cli.CliMessage.HEADER_LIST_CLASSES;
 import static net.chocolapod.lwjgfont.cli.CliMessage.HEADER_INSTALL_JAR;
 import static net.chocolapod.lwjgfont.cli.CliMessage.HEADER_HOW_TO_USE_IN_MAVEN;
@@ -43,6 +44,7 @@ public class ProcessLog {
 	private static final String		LOG_FILE_NAME = "lwjgfont.log"; 
 
 	private final String			jarName;
+	private final String			pomName;
 	private final String			groupId;
 	private final String			artifactId;
 	private final String			version;
@@ -50,8 +52,9 @@ public class ProcessLog {
 	private Map<String, String>	classMap;
 	private int						classLength;
 
-	public ProcessLog(String jarName, String groupId, String artifactId, String version) {
+	public ProcessLog(String jarName, String pomName, String groupId, String artifactId, String version) {
 		this.jarName = jarName;
+		this.pomName = pomName;
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
@@ -94,7 +97,9 @@ public class ProcessLog {
 	@Override
 	public String toString() {
 		String		buff = GENERATED_JAR_FORMAT.format(jarName) + "\n";
-		
+
+		buff += GENERATED_POM_FORMAT.format(pomName) + "\n";
+
 		buff += "\n";
 		buff += HEADER_LIST_CLASSES + "\n";
 
@@ -105,9 +110,9 @@ public class ProcessLog {
 		buff += "\n";
 		buff += HEADER_INSTALL_JAR + "\n";
 		buff += String.format(
-					"    > mvn install:install-file -Dfile=%s -DgroupId=%s" + 
-					" -DartifactId=%s -Dversion=%s -Dpackaging=jar -DgeneratePom=true\n",
-					jarName, groupId, artifactId, version
+					"    > mvn install:install-file -Dfile=%s -DpomFile=%s -DgroupId=%s" +
+					" -DartifactId=%s -Dversion=%s -Dpackaging=jar\n",
+					jarName, pomName, groupId, artifactId, version
 				);
 
 		buff += "\n";
@@ -119,8 +124,8 @@ public class ProcessLog {
 					"        <artifactId>%s</artifactId>\n" +
 					"        <version>%s</version>\n" +
 					"    </dependency>\n" +
-					"    --------------------------------------------------------------------\n" +
-					"    " + NOTE_JAR_DEPENDS_LWJGFONT.format(LWJGFont.class.getPackage().getName()) + "\n",
+					"    --------------------------------------------------------------------\n",
+//					"    " + NOTE_JAR_DEPENDS_LWJGFONT.format(LWJGFont.class.getPackage().getName()) + "\n",
 					groupId, artifactId, version
 				);
 
@@ -129,6 +134,5 @@ public class ProcessLog {
 
 		return buff;
 	}
-
 
 }

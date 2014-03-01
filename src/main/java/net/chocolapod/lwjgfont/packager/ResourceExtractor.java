@@ -27,10 +27,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import net.chocolapod.lwjgfont.exception.LwjgFontException;
 
 public class ResourceExtractor {
 
@@ -49,17 +52,24 @@ public class ResourceExtractor {
 			File	file = new File(resourcePaths.get(resource));
 			File	dstDir = LwjgFontUtil.prepareDirectory(resourcesDir, file.getParent());
 				
-			copyResource(resource, dstDir.getPath() + File.separator + file.getName());
+			copyResource(resource, LwjgFontUtil.toDirectoryPath(dstDir.getPath()) + file.getName());
 		}
 	}
 
 	private void copyResource(String resource, String dstPath) throws IOException {
 		BufferedReader		br = null;
+		InputStream			in = null;
 		PrintWriter			pw = null;
 		String				line;
 
 		try {
-			br = new BufferedReader(new InputStreamReader(ResourceExtractor.class.getResourceAsStream(resource)));
+			in = ResourceExtractor.class.getResourceAsStream(resource);
+			
+			if (in == null) {
+				throw new LwjgFontException("Resource not found: " + resource);
+			}
+			
+			br = new BufferedReader(new InputStreamReader(in));
 			pw = new PrintWriter(new FileOutputStream(dstPath));
 			
 			while ((line = br.readLine()) != null) {
@@ -69,6 +79,14 @@ public class ResourceExtractor {
 				pw.println(line);
 			}
 		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if (br != null) {
 				try {
 					br.close();

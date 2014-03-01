@@ -8,3 +8,5 @@
 /lwjgfont.properties
 /lwjgfont.log
 /*.jar
+/*.pom.xml
+/src/main/resources/net/chocolapod/lwjgfont/version.properties

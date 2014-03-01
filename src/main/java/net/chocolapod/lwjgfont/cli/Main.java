@@ -36,7 +36,7 @@ import static net.chocolapod.lwjgfont.cli.CliArgument._x;
 import static net.chocolapod.lwjgfont.cli.CliArgument._l;
 import static net.chocolapod.lwjgfont.cli.CliArgument._v;
 
-import static net.chocolapod.lwjgfont.cli.CliMessage.LWJGFONT_VERSION;
+import static net.chocolapod.lwjgfont.cli.CliMessage.LWJGFONT_VERSION_FORMAT;
 
 /**
  * Main logic of LWJGFont in command line mode.

@@ -51,7 +51,7 @@ import net.chocolapod.lwjgfont.MappedCharacter;
 import net.chocolapod.lwjgfont.cli.Main;
 
 
-import static net.chocolapod.lwjgfont.cli.CliMessage.LWJGFONT_VERSION;
+import static net.chocolapod.lwjgfont.cli.CliMessage.LWJGFONT_VERSION_FORMAT;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_NAME;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.ARTIFACT_VERSION;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.CHARACTER_FILE_DIR;
@@ -60,6 +60,7 @@ import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.IMAGE_DRAW_FRAME;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.TEMP_DIR;
 import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.DIST_DIR;
+import static net.chocolapod.lwjgfont.packager.LwjgFontPropertyKey.LWJGFONT_VERSION;
 import static net.chocolapod.lwjgfont.packager.LwjgFontUtil.CHARSET_UTF8;
 
 public class LwjgFontFactory {
@@ -68,6 +69,7 @@ public class LwjgFontFactory {
 	private static final String			SOURCE_DIR = "src";
 	public static final String			RESOURCE_DIR = "resources";
 	private static final String			COMPILES_DIR = "target";
+	private static final String			VERSION_PROPERTIES = "version.properties";
 	
 	private LwjgFontProperties	properties;
 	private ProcessLog			classMapLog;
@@ -77,11 +79,13 @@ public class LwjgFontFactory {
 	private String				resourceDir;
 	private String				targetDir;
 	private String				packageName;
+	private String				pomName;
 
 	private int					maxCharacterRegistration = 500;
 	
 	public LwjgFontFactory(String propertiesPath) throws IOException {
 		properties = LwjgFontProperties.load(propertiesPath);
+		properties.appendProerties(LWJGFont.class, VERSION_PROPERTIES);
 
 		tempDir = properties.getAsString(TEMP_DIR);
 		LwjgFontUtil.deleteFile(tempDir);
@@ -96,7 +100,8 @@ public class LwjgFontFactory {
 		String		dstDir = LwjgFontUtil.prepareDirectory(properties.getAsString(DIST_DIR)).getPath();
 		
 		packageName = LwjgFontUtil.toDirectoryPath(dstDir) + artifactId + "-" + version + ".jar";
-		classMapLog = new ProcessLog(packageName, groupId, artifactId, version);
+		pomName = LwjgFontUtil.toDirectoryPath(dstDir) + artifactId + "-" + version + ".pom.xml";
+		classMapLog = new ProcessLog(packageName, pomName, groupId, artifactId, version);
 	}
 
 	public void create(FontSetting fontSetting) throws IOException, FontFormatException {
@@ -108,6 +113,7 @@ public class LwjgFontFactory {
 	}
 	
 	public void makePackage() throws IOException {
+		//	生成した Java ソースコードをコンパイルする
 		SourceCompiler	sourceCompiler = new SourceCompiler();
 		
 		sourceCompiler.setSourceDir(srcDir);
@@ -117,11 +123,20 @@ public class LwjgFontFactory {
 		
 		extractStaticResources(resourceDir);
 
+		//	Jar ファイルにアーカイブする
 		Packager		packager = new Packager();
 
 		packager.setResourceDir(resourceDir);
 		packager.setTargetDir(targetDir);
 		packager.process(packageName);
+		
+		//	pom.xml を展開する
+		ResourceExtractor	resourceExtractor = prepareResourceExtractor();
+
+		resourceExtractor.addResourcePath(
+				"packagedResources/META-INF/maven/net/chocolapod/lwjgfont/lwjgfont/pom.xml",
+				pomName);
+		resourceExtractor.copy();
 	}
 
 	private SourceBuffer processClass(FontSetting fontSetting, String resourceDir) throws IOException, FontFormatException {
@@ -271,8 +286,8 @@ public class LwjgFontFactory {
 	}
 
 	private void extractStaticResources(String resourceDir) throws IOException {
-		ResourceExtractor	resourceExtractor = new ResourceExtractor();
-		String					artifactName = properties.getAsString(ARTIFACT_NAME);
+		ResourceExtractor	resourceExtractor = prepareResourceExtractor();
+		String				artifactName = properties.getAsString(ARTIFACT_NAME);
 
 		resourceExtractor.addResourcePath(
 				"packagedResources/META-INF/maven/net/chocolapod/lwjgfont/lwjgfont/pom.properties",
@@ -284,9 +299,17 @@ public class LwjgFontFactory {
 				"packagedResources/META-INF/MANIFEST.MF",
 				"META-INF/MANIFEST.MF");
 
-		resourceExtractor.addReplacePatterns(properties, ARTIFACT_NAME, ARTIFACT_VERSION);
+//		resourceExtractor.addReplacePatterns(properties, ARTIFACT_NAME, ARTIFACT_VERSION);
 		resourceExtractor.setResourcesDir(resourceDir);
 		resourceExtractor.copy();
+	}
+	
+	private ResourceExtractor prepareResourceExtractor() {
+		ResourceExtractor	resourceExtractor = new ResourceExtractor();
+
+		resourceExtractor.addReplacePatterns(properties, ARTIFACT_NAME, ARTIFACT_VERSION, LWJGFONT_VERSION);
+		
+		return resourceExtractor;
 	}
 	
 	public void writeProcessLog() throws IOException {
@@ -374,13 +397,7 @@ public class LwjgFontFactory {
 	}
 
 	public void printVersion() {
-		String	version = Main.class.getPackage().getImplementationVersion();
-
-		if (LwjgFontUtil.isEmpty(version)) {
-			version = "Development";
-		}
-
-		System.out.println(LWJGFONT_VERSION.format(version));
+		System.out.println(LWJGFONT_VERSION_FORMAT.format(properties.getAsString(LWJGFONT_VERSION)));
 	}
 	
 }

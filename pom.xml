@@ -72,6 +72,32 @@
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>java</executable>
+          <!-- optional -->
+          <!-- workingDirectory>/tmp</workingDirectory -->
+          <arguments>
+		    <argument>-cp</argument>
+		    <argument>lib</argument>
+			<argument>net.chocolapod.lwjgfont.cli.VersionStamp</argument>
+            <argument>${project.version}</argument>
+            <argument>src/main/resources/net/chocolapod/lwjgfont/version.properties</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>

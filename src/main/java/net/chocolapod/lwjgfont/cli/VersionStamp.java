@@ -23,26 +23,32 @@
  */
 package net.chocolapod.lwjgfont.cli;
 
-import net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage;
-import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
-public enum CliMessage {
-	LWJGFONT_VERSION_FORMAT,
-	GENERATED_JAR_FORMAT,
-	GENERATED_POM_FORMAT,
-	HEADER_LIST_CLASSES,
-	HEADER_INSTALL_JAR,
-	HEADER_HOW_TO_USE_IN_MAVEN,
-	NOTE_JAR_DEPENDS_LWJGFONT;
+public class VersionStamp {
 
-	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(CliMessage.class, "cli");
-
-	@Override
-	public String toString() {
-		return properties.getMessage(this.name());
+	public static void main(String[] args) throws IOException {
+		if (args.length != 2) {
+			throw new IllegalArgumentException("VersionStamp args missing.");
+		}
+		
+		PrintWriter		pw = null;
+		
+		try {
+			pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(args[1])));
+			pw.println(String.format("lwjgfont.version=%s", args[0]));
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+		
+		System.out.println("[LWJGFont] VersionStamp: " + args[0]);
 	}
 
-	public String format(Object ...args) {
-		return properties.format(this.name(), args);
-	}
 }
