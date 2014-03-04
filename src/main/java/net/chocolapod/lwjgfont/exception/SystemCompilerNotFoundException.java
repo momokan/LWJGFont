@@ -23,17 +23,10 @@
  */
 package net.chocolapod.lwjgfont.exception;
 
-import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
+public class SystemCompilerNotFoundException extends LwjgFontException {
 
-public enum LwjgFontErrorMessage {
-	DEFAULT_ERROR,
-	SYSTEM_COMPILER_NOT_FOUND,
-	CHARACTERS_DIR_NOT_FOUND;
-
-	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(LwjgFontErrorMessage.class, "error");
-
-	public String getMessage() {
-		return properties.getMessage(this.name());
+	public SystemCompilerNotFoundException() {
+		super(SystemCompilerNotFoundException.class);
 	}
-	
+
 }

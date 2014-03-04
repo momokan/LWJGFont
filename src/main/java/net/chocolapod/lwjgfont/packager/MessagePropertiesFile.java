@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.util.Locale;
 import java.util.Properties;
 
-import net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage;
-
 public class MessagePropertiesFile {
 	private final Properties		properties;
 

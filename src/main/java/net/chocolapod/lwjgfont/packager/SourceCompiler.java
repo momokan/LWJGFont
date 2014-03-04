@@ -50,8 +50,7 @@ import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
 
 import net.chocolapod.lwjgfont.exception.LwjgFontException;
-
-import static net.chocolapod.lwjgfont.exception.LwjgFontErrorMessage.SYSTEM_COMPILER_NOT_FOUND;
+import net.chocolapod.lwjgfont.exception.SystemCompilerNotFoundException;
 
 public class SourceCompiler {
 	
@@ -67,7 +66,7 @@ public class SourceCompiler {
 		JavaCompiler					compiler = ToolProvider.getSystemJavaCompiler();
 
 		if (compiler == null) {
-			throw new LwjgFontException(SYSTEM_COMPILER_NOT_FOUND);
+			throw new SystemCompilerNotFoundException();
 		}
 
 		StandardJavaFileManager		fileManager = compiler.getStandardFileManager(null, Locale.getDefault(), CHARSET_UTF8);

@@ -23,37 +23,10 @@
  */
 package net.chocolapod.lwjgfont.exception;
 
-import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
+public class CharactersDirectoryNotFoundException extends LwjgFontException {
 
-public class LwjgFontException extends RuntimeException {
-	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(LwjgFontException.class, "error");
-
-	public LwjgFontException(String message, Object... args) {
-		super(String.format(message, args));
-	}
-
-	public LwjgFontException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	protected LwjgFontException(Class<? extends LwjgFontException> clazz, Object... args) {
-		super(String.format(getMessageResource(clazz), args));
-	}
-
-	protected LwjgFontException(Class<? extends LwjgFontException> clazz, Throwable cause, Object... args) {
-		super(String.format(getMessageResource(clazz), args));
-	}
-	
-	public static LwjgFontException as(Throwable cause) {
-		if (cause instanceof LwjgFontException) {
-			return (LwjgFontException)cause;
-		} else {
-			return new LwjgFontException(cause.getMessage(), cause);
-		}
-	}
-
-	private static String getMessageResource(Class<? extends LwjgFontException> clazz) {
-		return properties.getMessage(clazz.getSimpleName());
+	public CharactersDirectoryNotFoundException(Object ...args) {
+		super(CharactersDirectoryNotFoundException.class, args);
 	}
 
 }
