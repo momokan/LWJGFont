@@ -46,7 +46,7 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
  * <pre>
  * {@code
  * // Create font a class.
- * ClassicTrueTypeH20Font font = new ClassicTrueTypeH20Font();
+ * LWJGFont font = new ClassicTrueTypeH20Font();
  * // Set foreground color.
  * font.setColor(1f, 0f, 0f);
  * // Draw a string on the location.
@@ -55,13 +55,23 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
  * </pre>
  */
 public abstract class LWJGFont {
+
+	/**
+	 * Enumeration of the possible ways LWJGFont can align texts on rendering.
+	 */
 	public enum ALIGN {
+		/**
+		 * Indicates that each line of texts should be left-justified.
+		 */
 		LEGT {
 			@Override
 			protected DrawPoint calcDrawPoint(float paragraphWidth, float lineWidth, DrawPoint originalDrawPoint) {
 				return new DrawPoint(originalDrawPoint.dstX, originalDrawPoint.dstY, originalDrawPoint.dstZ);
 			}
 		},
+		/**
+		 * Indicates that each line of texts should be right-justified.
+		 */
 		RIGHT {
 			@Override
 			protected DrawPoint calcDrawPoint(float paragraphWidth, float lineWidth, DrawPoint originalDrawPoint) {
@@ -71,6 +81,9 @@ public abstract class LWJGFont {
 						originalDrawPoint.dstZ);
 			}
 		},
+		/**
+		 * Indicates that each line of texts should be centered.
+		 */
 		CENTER {
 			@Override
 			protected DrawPoint calcDrawPoint(float paragraphWidth, float lineWidth, DrawPoint originalDrawPoint) {

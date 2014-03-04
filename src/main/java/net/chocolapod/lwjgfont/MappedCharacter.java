@@ -24,7 +24,7 @@
 package net.chocolapod.lwjgfont;
 
 /**
- * The MappedCharacter class represents how each characters of the font are mapped on textures by LWJGFont.
+ * The MappedCharacter class represents how each characters of the font are mapped on textures by LWJGFont.<br>
  * To drawing the character, this class has these informations.
  * <ul>
  * <li>a index of the image that the character is mapped onto.</li>
@@ -45,6 +45,17 @@ public class MappedCharacter {
 	private final int		advance;
 	private final int		padding;
 
+	/**
+	 * Constructs a new MappedCharacter object that represents how the specified character of the font are mapped on textures by LWJGFont.
+	 * @param character the character value mapped by this object.
+	 * @param imageIndex the index of source image which contains this character.
+	 * @param srcX the x coordinate of the base point on source image.
+	 * @param srcY the y coordinate of the base point on source image.
+	 * @param ascent this character's ascent of the font
+	 * @param descent this character's descent of the font
+	 * @param advance this character's advance of the font
+	 * @param padding this character's padding distance.
+	 */
 	public MappedCharacter(char character, int imageIndex, int srcX, int srcY, int ascent, int descent, int advance, int padding) {
 		this.character = character;
 		this.imageIndex = imageIndex;
@@ -56,56 +67,76 @@ public class MappedCharacter {
 		this.padding = padding;
 	}
 
+	/**
+	 * Returns the character value of this MappedCharacter object.
+	 * @return the character value mapped by this object.
+	 */
 	public char getCharacter() {
 		return character;
 	}
 
+	/**
+	 * Returns the index of source image which contains this character.<br>
+	 * LWJGFont pre-renders all characters on some images as PNG format
+	 * and this method returns its index.
+	 * @return the index of source image which contains this character.
+	 */
 	public int getImageIndex() {
 		return imageIndex;
 	}
 
+	/**
+	 * Returns the x coordinate of the base point on source image.<br>
+	 * This base point is mapped to the character's left point on its base line.
+	 * @return the x coordinate of the base point on source image.
+	 */
 	public int getSrcX() {
 		return srcX;
 	}
 
+	/**
+	 * Returns the y coordinate of the base point on source image.<br>
+	 * This base point is mapped to the character's left point on its base line.
+	 * @return the y coordinate of the base point on source image.
+	 */
 	public int getSrcY() {
 		return srcY;
 	}
 
 	/**
-	 * Returns the character's ascent of the font which this MappedCharacter instance is mapped on.<br>
+	 * Returns this character's ascent of the font which this MappedCharacter instance is mapped on.<br>
 	 * The font ascent is the distance from the font's baseline to the top of most alphanumeric characters.
 	 * Some characters in the Font might extend above the font ascent line.
-	 * @return the character's ascent of the font
+	 * @return this character's ascent of the font
 	 */
 	public int getAscent() {
 		return ascent;
 	}
 
 	/**
-	 * Returns the character's descent of the font which this MappedCharacter instance is mapped on.<br>
+	 * Returns this character's descent of the font which this MappedCharacter instance is mapped on.<br>
 	 * The font descent is the distance from the font's baseline to the bottom of most alphanumeric characters.
 	 * Some characters in the Font might extend below the font descent line.
-	 * @return the character's descent of the font
+	 * @return this character's descent of the font
 	 */
 	public int getDescent() {
 		return descent;
 	}
 
 	/**
-	 * Returns the character's advance of the font which this MappedCharacter instance is mapped on.<br>
+	 * Returns this character's advance of the font which this MappedCharacter instance is mapped on.<br>
 	 * The advance is the distance from the leftmost point to the rightmost point on the string's baseline.
 	 * The advance of any String is the sum of the advances of its characters.
-	 * @return the character's advance of the font
+	 * @return this character's advance of the font
 	 */
 	public int getAdvance() {
 		return advance;
 	}
 
 	/**
-	 * Returns the character's padding distance around rectangle which the ascent, the descent, and the advance shape.<br>
-	 * Some characters might extend over ascent, descent, advance. So each characters are mapped with paddings around it.
-	 * @return the character's padding distance.
+	 * Returns this character's padding distance around rectangle which the ascent, the descent, and the advance shape.<br>
+	 * Some characters might extend over its ascent, descent and advance. So each characters are mapped with paddings around it.
+	 * @return this character's padding distance.
 	 */
 	public int getPadding() {
 		return padding;
