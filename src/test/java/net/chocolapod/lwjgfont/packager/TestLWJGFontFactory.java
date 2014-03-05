@@ -156,7 +156,7 @@ public class TestLWJGFontFactory {
 
 			Class				clazz = classLoader.loadClass(CLASS_MOSAMOSAFONT_8);
 			LWJGFont			font = (LWJGFont)clazz.newInstance();
-			List<CharacterFile>	files = CharacterFile.listStreams(FILE_MAIN_PACKAGER_BASE);
+			List<CharacterFile>	files = CharacterFile.listCharacterFiles(FILE_MAIN_PACKAGER_BASE);
 
 			for (CharacterFile file: files) {
 				Character			c;

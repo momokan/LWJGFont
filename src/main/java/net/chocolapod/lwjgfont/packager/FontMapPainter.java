@@ -91,7 +91,7 @@ public class FontMapPainter {
 		 *	だが、次の字を描く座標については、この範囲を元に計算してよい。
 		 *	参考: http://docs.oracle.com/javase/tutorial/2d/text/measuringtext.html
 		 */
-		files = CharacterFile.listStreams(charactersDir);
+		files = CharacterFile.listCharacterFiles(charactersDir);
 		files.add(new BuiltinCharacterFile());
 		imageHeightExponent = defaultImageHeightExponent;
 		bufferedImage = null;

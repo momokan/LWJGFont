@@ -109,7 +109,7 @@ public class ResourceExtractor {
 	}
 	
 	public void addReplacePattern(LwjgFontProperties properties, LwjgFontPropertyKey key) {
-		String		pattern = LwjgFontPropertyKey.toResourceReplacePattern(key);
+		String		pattern = key.toResourceReplacePattern();
 		String		replacement = properties.getAsString(key);
 		
 		resourceReplaces.put(pattern, replacement);

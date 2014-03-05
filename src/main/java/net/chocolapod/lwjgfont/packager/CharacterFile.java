@@ -79,7 +79,7 @@ public class CharacterFile {
 		}
 	}
 
-	public static List<CharacterFile> listStreams(String directory) {
+	public static List<CharacterFile> listCharacterFiles(String directory) {
 		List<CharacterFile>	streams = new ArrayList<>();
 		File				fileDir = new File(directory);
 		File[]				files = fileDir.listFiles();

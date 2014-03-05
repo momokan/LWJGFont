@@ -319,7 +319,6 @@ public class LwjgFontFactory {
 
 	//	TODO リファクタ
 	public void extractCharacterFiles() throws IOException, URISyntaxException {
-		String		charactersDir = LwjgFontUtil.prepareDirectory("characters").getPath();
 		URL			urlCharacters = this.getClass().getClassLoader().getResource(this.getClass().getPackage().getName().replaceAll("\\.", "/") + "/characters/");
 
 		if (urlCharacters.toURI().getScheme().equals("file")) {
@@ -349,18 +348,22 @@ public class LwjgFontFactory {
 			resourceExtractor.addResourcePath(filePath, nextFile.getName());
 		}
 
-		resourceExtractor.setResourcesDir("characters");
+		resourceExtractor.setResourcesDir(properties.getAsString(CHARACTER_FILE_DIR));
 		resourceExtractor.copy();
 	}
 
 	//	TODO リファクタ
 	private void extractCharacterFilesFromJar(URL urlCharacters) throws IOException {
 		JarURLConnection		connection = (JarURLConnection)urlCharacters.openConnection();
+		String					charactersDir = properties.getAsString(CHARACTER_FILE_DIR);
 		ZipInputStream		in = null;
 		ZipEntry				zipEntry = null;
 		String					basePath = connection.getJarEntry().getName();
 		byte[]					buff = new byte[1024 * 1024];
 		int						size;
+		
+		charactersDir = LwjgFontUtil.prepareDirectory(charactersDir).getPath();
+		charactersDir = LwjgFontUtil.toDirectoryPath(charactersDir);
 		
 		try {
 			in = new ZipInputStream(new FileInputStream(connection.getJarFile().getName()));
@@ -374,7 +377,7 @@ public class LwjgFontFactory {
 				String					fileName = zipEntry.getName().substring(basePath.length());
 				
 				try {
-					out = new FileOutputStream("characters/" + fileName);
+					out = new FileOutputStream(charactersDir + fileName);
 					
 					while (0 < (size = in.read(buff))) {
 						out.write(buff, 0, size);
