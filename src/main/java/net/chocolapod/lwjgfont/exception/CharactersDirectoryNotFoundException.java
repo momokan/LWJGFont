@@ -23,6 +23,9 @@
  */
 package net.chocolapod.lwjgfont.exception;
 
+/**
+ * Thrown to indicate that there are no characters directory which contains text file including characters to render.
+ */
 public class CharactersDirectoryNotFoundException extends LwjgFontException {
 
 	public CharactersDirectoryNotFoundException(Object ...args) {

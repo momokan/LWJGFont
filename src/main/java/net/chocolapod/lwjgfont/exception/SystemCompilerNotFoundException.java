@@ -23,6 +23,11 @@
  */
 package net.chocolapod.lwjgfont.exception;
 
+/**
+ * Thrown to indicate that a system java compiler is not found.
+ * When LWJGFont is executed with java command of Java Runtime Environment, this exception will occur.
+ * So execute LWJGFont with java command of Java SE Development Kit.
+ */
 public class SystemCompilerNotFoundException extends LwjgFontException {
 
 	public SystemCompilerNotFoundException() {
