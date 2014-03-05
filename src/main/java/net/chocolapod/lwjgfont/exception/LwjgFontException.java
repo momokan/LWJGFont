@@ -23,19 +23,36 @@
  */
 package net.chocolapod.lwjgfont.exception;
 
+import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
 
+/**
+ * LwjgFontException is the superclass of some specific exceptions that can be thrown during the jar-generation of LWJGFont.
+ * Note that LwjgFontException and its subclasses are unchecked exceptions.
+ */
 public class LwjgFontException extends RuntimeException {
 	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(LwjgFontException.class, "error");
 
+	/**
+	 * Constructs a new LwjgFontException with a formatted detail message using the specified format string, and arguments.
+	 * Note that the detail message associated with cause is not automatically incorporated in this runtime exception's detail message.
+	 * @param message A format string defined by {@link java.util.Formatter}. This formating is processed with {@link java.lang.String#format}.
+	 * @param args Arguments referenced by the format specifiers in the format string.
+	 */
 	public LwjgFontException(String message, Object... args) {
 		super(String.format(message, args));
 	}
 
+	/**
+	 * Constructs a new LwjgFontException with the specified detail message and cause.
+	 * Note that the detail message associated with cause is not automatically incorporated in this runtime exception's detail message.
+	 * @param message The detail message (which is saved for later retrieval by the Throwable.getMessage() method).
+	 * @param cause The cause (which is saved for later retrieval by the Throwable.getCause() method). (A null value is permitted, and indicates that the cause is nonexistent or unknown.)
+	 */
 	public LwjgFontException(String message, Throwable cause) {
 		super(message, cause);
 	}
-	
+
 	protected LwjgFontException(Class<? extends LwjgFontException> clazz, Object... args) {
 		super(String.format(getMessageResource(clazz), args));
 	}
@@ -43,17 +60,15 @@ public class LwjgFontException extends RuntimeException {
 	protected LwjgFontException(Class<? extends LwjgFontException> clazz, Throwable cause, Object... args) {
 		super(String.format(getMessageResource(clazz), args));
 	}
-	
-	public static LwjgFontException as(Throwable cause) {
-		if (cause instanceof LwjgFontException) {
-			return (LwjgFontException)cause;
-		} else {
-			return new LwjgFontException(cause.getMessage(), cause);
-		}
-	}
 
 	private static String getMessageResource(Class<? extends LwjgFontException> clazz) {
-		return properties.getMessage(clazz.getSimpleName());
+		String		message = properties.getMessage(clazz.getSimpleName());
+
+		if (LwjgFontUtil.isEmpty(message)) {
+			message = properties.getMessage(LwjgFontException.class.getSimpleName());
+		}
+
+		return message;
 	}
 
 }
