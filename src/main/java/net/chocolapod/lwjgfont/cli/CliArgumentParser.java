@@ -32,6 +32,8 @@ import java.util.Map;
 
 import net.chocolapod.lwjgfont.packager.FontSetting;
 
+import static net.chocolapod.lwjgfont.cli.CliMessage.WARNING_INVALID_CLI_ARGUMENT;
+
 public class CliArgumentParser {
 	private Map<CliArgument, String>		parsedArguments;
 	private List<FontSetting>		fontSettings;
@@ -53,7 +55,7 @@ public class CliArgumentParser {
 			}
 			
 			//	無効なオプションとして処理する
-			System.err.println("Invalid argument: " + arg);
+			System.err.println(WARNING_INVALID_CLI_ARGUMENT.format(arg));
 		}
 	}
 	

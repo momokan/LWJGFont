@@ -32,7 +32,8 @@ public enum CliMessage {
 	HEADER_LIST_CLASSES,
 	HEADER_INSTALL_JAR,
 	HEADER_HOW_TO_USE_IN_MAVEN,
-	NOTE_JAR_DEPENDS_LWJGFONT;
+	NOTE_JAR_DEPENDS_LWJGFONT,
+	WARNING_INVALID_CLI_ARGUMENT;
 
 	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(CliMessage.class, "cli");
 
