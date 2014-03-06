@@ -46,7 +46,7 @@ public class FontSetting implements CliArgument {
 		this.fontAlias = null;
 		this.isSystemFont = false;
 	}
-	private FontSetting(String fontPath, int fontSize, String fontAlias) {
+	protected FontSetting(String fontPath, int fontSize, String fontAlias) {
 		this.fontPath = fontPath;
 		this.fontSize = fontSize;
 		this.fontAlias = fontAlias;

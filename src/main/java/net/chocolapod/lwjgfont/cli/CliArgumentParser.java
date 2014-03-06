@@ -30,9 +30,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lwjgl.LWJGLUtil;
+
 import net.chocolapod.lwjgfont.exception.cli.MissingOptionValueException;
 import net.chocolapod.lwjgfont.exception.cli.UnknownArgumentException;
 import net.chocolapod.lwjgfont.packager.FontSetting;
+import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 
 public class CliArgumentParser {
 	private List<CliArgument>				cliArguments;
@@ -70,11 +73,13 @@ public class CliArgumentParser {
 			if (tokens.length == 2) {
 				FontSetting	fontSetting = FontSetting.asSystemFont(tokens[0], Integer.parseInt(tokens[1]));
 
-				if (fontSetting != null) {
-					fontSettings.add(fontSetting);
-				} else {
-					fontSettings.add(new FontSetting(tokens[0], Integer.parseInt(tokens[1])));
+				if (fontSetting == null) {
+					if (LwjgFontUtil.isEmpty(tokens[0])) {
+						throw new NullPointerException();
+					}
+					fontSetting = new FontSetting(tokens[0], Integer.parseInt(tokens[1]));
 				}
+				fontSettings.add(fontSetting);
 				return fontSetting;
 			}
 		} catch (Exception e) {}

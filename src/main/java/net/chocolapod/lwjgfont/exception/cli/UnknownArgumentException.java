@@ -23,11 +23,6 @@
  */
 package net.chocolapod.lwjgfont.exception.cli;
 
-import net.chocolapod.lwjgfont.cli.CliArgument;
-import net.chocolapod.lwjgfont.cli.CliMessage;
-import net.chocolapod.lwjgfont.cli.CliOption;
-import net.chocolapod.lwjgfont.exception.LwjgFontException;
-
 public class UnknownArgumentException extends CliArgumentException {
 
 	public UnknownArgumentException(String argument) {

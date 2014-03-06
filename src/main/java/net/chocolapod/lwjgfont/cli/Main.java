@@ -27,6 +27,10 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.lwjgl.Sys;
+
+import net.chocolapod.lwjgfont.exception.LwjgFontException;
+import net.chocolapod.lwjgfont.exception.cli.CliArgumentException;
 import net.chocolapod.lwjgfont.logicalfont.SystemFont;
 import net.chocolapod.lwjgfont.packager.FontSetting;
 import net.chocolapod.lwjgfont.packager.LwjgFontFactory;
@@ -50,7 +54,14 @@ public class Main {
 		CliArgumentParser	parser;	
 		LwjgFontFactory		lwjgFont;
 
-		parser = new CliArgumentParser(args);	//	TODO CliArgumentException が発生した場合は使い方を表示する
+		try {
+			parser = new CliArgumentParser(args);
+		} catch(CliArgumentException e) {
+			//	TODO CliArgumentException が発生した場合は使い方を表示する
+			System.err.println(e.getMessage());
+			return;
+		}
+
 		lwjgFont = new LwjgFontFactory(parser.get(_p));
 
 		if (parser.hasOption(_x)) {
