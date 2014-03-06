@@ -30,36 +30,39 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.chocolapod.lwjgfont.exception.cli.MissingOptionValueException;
+import net.chocolapod.lwjgfont.exception.cli.UnknownArgumentException;
 import net.chocolapod.lwjgfont.packager.FontSetting;
 
-import static net.chocolapod.lwjgfont.cli.CliMessage.WARNING_INVALID_CLI_ARGUMENT;
-
 public class CliArgumentParser {
-	private Map<CliArgument, String>		parsedArguments;
-	private List<FontSetting>		fontSettings;
+	private List<CliArgument>				cliArguments;
+	private Map<CliOption, String>		optionsValueMap;
+	private List<FontSetting>				fontSettings;
 
 	public CliArgumentParser(String[] args) {
 		List<String>		arguments = new ArrayList<>(Arrays.asList(args));
 		
-		parsedArguments = new HashMap<>();
+		cliArguments = new ArrayList<CliArgument>();
+		optionsValueMap = new HashMap<>();
 		fontSettings = new ArrayList<>();
 		while (0 < arguments.size()) {
 			String			arg = arguments.remove(0);
-			
-			if (isArgument(arg, arguments)) {
-				continue;
-			}
-			
-			if (isFontArgument(arg)) {
+			CliArgument	cliArgument;
+
+			if (
+					((cliArgument = parseOption(arg, arguments)) != null) ||
+					((cliArgument = parseFontArgument(arg)) != null)
+			) {
+				cliArguments.add(cliArgument);
 				continue;
 			}
 			
 			//	無効なオプションとして処理する
-			System.err.println(WARNING_INVALID_CLI_ARGUMENT.format(arg));
+			throw new UnknownArgumentException(arg);
 		}
 	}
-	
-	private boolean isFontArgument(String arg) {
+
+	private CliArgument parseFontArgument(String arg) {
 		//	フォントの設定として解釈する
 		String[]	tokens = arg.split(":");
 
@@ -72,34 +75,51 @@ public class CliArgumentParser {
 				} else {
 					fontSettings.add(new FontSetting(tokens[0], Integer.parseInt(tokens[1])));
 				}
-				return true;
+				return fontSetting;
 			}
 		} catch (Exception e) {}
 
-		return false;
+		return null;
 	}
 
-	private boolean isArgument(String arg, List<String> arguments) {
-		for (CliArgument cliArgument: CliArgument.values()) {
+	private CliArgument parseOption(String arg, List<String> arguments) {
+		for (CliOption cliArgument: CliOption.values()) {
 			if (cliArgument.toArgument().equals(arg)) {
 				if (cliArgument.hasValue()) {
-					parsedArguments.put(cliArgument, arguments.remove(0));
+					if (arguments.size() <= 0) {
+						throw new MissingOptionValueException(cliArgument);
+					}
+					optionsValueMap.put(cliArgument, arguments.remove(0));
 				} else {
-					parsedArguments.put(cliArgument, null);
+					optionsValueMap.put(cliArgument, null);
 				}
-				return true;
+				return cliArgument;
 			}
 		}
 
-		return false;
+		return null;
 	}
 	
-	public boolean hasArgument(CliArgument argument) {
-		return (parsedArguments.containsKey(argument));
+	public boolean hasOption(CliOption option) {
+		return (optionsValueMap.containsKey(option));
 	}
 
-	public String get(CliArgument argument) {
-		return parsedArguments.get(argument);
+	public String get(CliOption option) {
+		return optionsValueMap.get(option);
+	}
+
+	public CliArgument[] listArguments() {
+		return cliArguments.toArray(new CliArgument[] {});
+	}
+
+	public CliArgument getBeforeArgument(CliArgument cliArgument) {
+		int		index = cliArguments.indexOf(cliArgument);
+
+		if (0 < index) {
+			return cliArguments.get(index);
+		}
+
+		return null;
 	}
 
 	public FontSetting[] listFontSettings() {

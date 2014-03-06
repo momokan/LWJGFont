@@ -25,8 +25,10 @@ package net.chocolapod.lwjgfont.packager;
 
 import java.io.File;
 
+import net.chocolapod.lwjgfont.cli.CliArgument;
 
-public class FontSetting {
+
+public class FontSetting implements CliArgument {
 	private static final String	SYSTEM_FONT_ALIAS = "System Font";
 	
 	private static int		systemFontNumber = 0;

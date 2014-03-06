@@ -21,37 +21,23 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package net.chocolapod.lwjgfont.cli;
+package net.chocolapod.lwjgfont.exception.cli;
 
-import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
+import net.chocolapod.lwjgfont.cli.CliArgument;
+import net.chocolapod.lwjgfont.cli.CliMessage;
+import net.chocolapod.lwjgfont.cli.CliOption;
+import net.chocolapod.lwjgfont.exception.LwjgFontException;
 
-public enum CliMessage {
-	LWJGFONT_VERSION_FORMAT,
-	GENERATED_JAR_FORMAT,
-	GENERATED_POM_FORMAT,
-	HEADER_LIST_CLASSES,
-	HEADER_INSTALL_JAR,
-	HEADER_HOW_TO_USE_IN_MAVEN,
-	NOTE_JAR_DEPENDS_LWJGFONT,
-	ARGUMENT_P_VALUE_NAME;
+public class MissingOptionValueException extends CliArgumentException {
 
-	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(CliMessage.class, "cli");
-
-	@Override
-	public String toString() {
-		return properties.getMessage(this.name());
+	public MissingOptionValueException(CliOption cliOption) {
+		super(MissingOptionValueException.class, cliOption.toArgument(), toOptionValueName(cliOption));
 	}
 
-	public String format(Object ...args) {
-		return properties.format(this.name(), args);
+	private static String toOptionValueName(CliOption cliOption) {
+		String		name = String.format("ARGUMENT%s_VALUE_NAME", cliOption.name().toUpperCase());
+
+		return CliMessage.toCliMessage(name).toString();
 	}
-	
-	public static CliMessage toCliMessage(String name) {
-		for (CliMessage cliMessage: CliMessage.values()) {
-			if (cliMessage.name().equals(name)) {
-				return cliMessage;
-			}
-		}
-		return null;
-	}
+
 }

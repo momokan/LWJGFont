@@ -23,35 +23,23 @@
  */
 package net.chocolapod.lwjgfont.cli;
 
-import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
+public enum CliOption implements CliArgument {
+	_p(true),
+	_x(false),
+	_v(false),
+	_l(false),
+	_h(false);
 
-public enum CliMessage {
-	LWJGFONT_VERSION_FORMAT,
-	GENERATED_JAR_FORMAT,
-	GENERATED_POM_FORMAT,
-	HEADER_LIST_CLASSES,
-	HEADER_INSTALL_JAR,
-	HEADER_HOW_TO_USE_IN_MAVEN,
-	NOTE_JAR_DEPENDS_LWJGFONT,
-	ARGUMENT_P_VALUE_NAME;
+	private final boolean hasValue;
 
-	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(CliMessage.class, "cli");
-
-	@Override
-	public String toString() {
-		return properties.getMessage(this.name());
+	private CliOption(boolean hasValue) {
+		this.hasValue = hasValue;
 	}
 
-	public String format(Object ...args) {
-		return properties.format(this.name(), args);
+	public String toArgument() {
+		return name().replace('_', '-');
 	}
-	
-	public static CliMessage toCliMessage(String name) {
-		for (CliMessage cliMessage: CliMessage.values()) {
-			if (cliMessage.name().equals(name)) {
-				return cliMessage;
-			}
-		}
-		return null;
+	public boolean hasValue() {
+		return hasValue;
 	}
 }

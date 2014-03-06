@@ -23,22 +23,4 @@
  */
 package net.chocolapod.lwjgfont.cli;
 
-public enum CliArgument {
-	_p(true),
-	_x(false),
-	_v(false),
-	_l(false);
-	
-	private final boolean hasValue;
-	
-	private CliArgument(boolean hasValue) {
-		this.hasValue = hasValue;
-	}
-	
-	public String toArgument() {
-		return name().replace('_', '-');
-	}
-	public boolean hasValue() {
-		return hasValue;
-	}
-}
+public interface CliArgument {}
