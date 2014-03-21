@@ -114,9 +114,10 @@ public abstract class LWJGFont {
 	 * @param dstZ the z coordinate to render the string.
 	 * @throws IOException Indicates a failure to read font images as textures.
 	 */
-	public final void drawString(String text, float dstX, float dstY, float dstZ) throws IOException {
+	public final Region drawString(String text, float dstX, float dstY, float dstZ) throws IOException {
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
 		MappedCharacter	character;
+		Region			region = new Region(0, getLineHeight());
 		
 		if (!LwjgFontUtil.isEmpty(text)) {
 			for (int i = 0; i < text.length(); i++) {
@@ -124,6 +125,7 @@ public abstract class LWJGFont {
 
 				if (ch == LineFeed.getCharacter()) {
 					//	LF は改行扱いにする
+					region.extendHeight(getLineHeight() + getLineMargin());
 					drawPoint.dstX = dstX;
 					drawPoint.dstY -= getLineHeight();
 					drawPoint.dstY -= getLineMargin();
@@ -135,8 +137,11 @@ public abstract class LWJGFont {
 
 				character = retreiveCharacter(ch);
 				drawCharacter(drawPoint, character);
+				region.updateWidth((int)drawPoint.dstX);
 			}
 		}
+
+		return region;
 	}
 
 	private MappedCharacter retreiveCharacter(char ch) {
