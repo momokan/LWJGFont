@@ -25,6 +25,7 @@ package net.chocolapod.lwjgfont.packager;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import static net.chocolapod.lwjgfont.cli.CliMessage.HEADER_LIST_CLASSES;
 import static net.chocolapod.lwjgfont.cli.CliMessage.HEADER_INSTALL_JAR;
 import static net.chocolapod.lwjgfont.cli.CliMessage.HEADER_HOW_TO_USE_IN_MAVEN;
 import static net.chocolapod.lwjgfont.cli.CliMessage.NOTE_JAR_DEPENDS_LWJGFONT;
+import static net.chocolapod.lwjgfont.packager.LwjgFontUtil.CHARSET_UTF8;
 
 public class ProcessLog {
 	private static final String		LOG_FILE_NAME = "lwjgfont.log"; 
@@ -49,7 +51,7 @@ public class ProcessLog {
 	private final String			artifactId;
 	private final String			version;
 
-	private Map<String, String>	classMap;
+	private Map<String, String>		classMap;
 	private int						classLength;
 
 	public ProcessLog(String jarName, String pomName, String groupId, String artifactId, String version) {
@@ -83,7 +85,7 @@ public class ProcessLog {
 		PrintWriter		pw = null;
 		
 		try {
-			pw = new PrintWriter(new FileOutputStream(LOG_FILE_NAME));
+			pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOG_FILE_NAME), CHARSET_UTF8));
 			pw.println(toString());
 		} catch (IOException e) {
 			throw e;
