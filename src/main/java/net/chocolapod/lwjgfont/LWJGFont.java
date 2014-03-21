@@ -103,6 +103,7 @@ public abstract class LWJGFont {
 	private float alpha = 1f;
 
 	private int lineHeight = getDefaultLineHeight();
+	private int	lineMargin = 0;
 	
 	/**
 	 * Draws the text given by the specified string, using this font instance's current color.<br>
@@ -125,6 +126,7 @@ public abstract class LWJGFont {
 					//	LF は改行扱いにする
 					drawPoint.dstX = dstX;
 					drawPoint.dstY -= getLineHeight();
+					drawPoint.dstY -= getLineMargin();
 					continue;
 				} else if (ch == CarriageReturn.getCharacter()) {
 					//	CR は無視する
@@ -229,8 +231,8 @@ public abstract class LWJGFont {
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
 		DrawPoint		tmpDrawPoint;
 		MappedCharacter	character;
-		String				line = "";
-		float				lineWidth = 0;
+		String			line = "";
+		float			lineWidth = 0;
 		
 		if (!LwjgFontUtil.isEmpty(text)) {
 			for (int i = 0; i < text.length(); i++) {
@@ -246,6 +248,7 @@ public abstract class LWJGFont {
 					line = "";
 					lineWidth = 0;
 					drawPoint.dstY -= getLineHeight();
+					drawPoint.dstY -= getLineMargin();
 					continue;
 				} else if (ch == CarriageReturn.getCharacter()) {
 					//	CR は無視する
@@ -375,8 +378,17 @@ public abstract class LWJGFont {
 	 * Set the distance from one line's baseline to next line's baseline.<br>
 	 * @param lineHeight the distance from one line's baseline to next line's baseline.
 	 */
+	@Deprecated
 	public void setLineHeight(int lineHeight) {
 		this.lineHeight = lineHeight;
+	}
+
+	public int getLineMargin() {
+		return lineMargin;
+	}
+
+	public void setLineMargin(int lineMargin) {
+		this.lineMargin = lineMargin;
 	}
 
 	/**
