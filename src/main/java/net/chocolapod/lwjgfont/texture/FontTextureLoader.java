@@ -161,8 +161,10 @@ public class FontTextureLoader {
 		byteBuffer.flip();
 
 		//	画像の拡大・縮小時の補間方法を設定する
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	//	適当にぼかして拡大する
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);	//	等倍で拡大する
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 		//	バイト配列と色情報のフォーマットからテクスチャーを生成する
 		glTexImage2D(target,
