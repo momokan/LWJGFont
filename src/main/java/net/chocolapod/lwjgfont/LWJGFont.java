@@ -112,6 +112,7 @@ public abstract class LWJGFont {
 	 * @param dstX the x coordinate to render the string.
 	 * @param dstY the y coordinate to render the string.
 	 * @param dstZ the z coordinate to render the string.
+	 * @return Region instance which has the width and the height of text to be drawn
 	 * @throws IOException Indicates a failure to read font images as textures.
 	 */
 	public final Region drawString(String text, float dstX, float dstY, float dstZ) throws IOException {
@@ -125,7 +126,7 @@ public abstract class LWJGFont {
 
 				if (ch == LineFeed.getCharacter()) {
 					//	LF は改行扱いにする
-					region.extendHeight(getLineHeight() + getLineMargin());
+					region.extendHeight(getLineHeight(), getLineMargin());
 					drawPoint.dstX = dstX;
 					drawPoint.dstY -= getLineHeight();
 					drawPoint.dstY -= getLineMargin();
@@ -186,10 +187,11 @@ public abstract class LWJGFont {
 	 * @param dstY the y coordinate to render the string.
 	 * @param dstZ the z coordinate to render the string.
 	 * @param paragraphWidth the max width to draw the paragraph.
+	 * @return Region instance which has the width and the height of text to be drawn
 	 * @throws IOException Indicates a failure to read font images as textures.
 	 */
-	public final void drawParagraph(String text, float dstX, float dstY, float dstZ, float paragraphWidth) throws IOException {
-		this.drawParagraph(text, dstX, dstY, dstZ, paragraphWidth, ALIGN.LEGT);
+	public final Region drawParagraph(String text, float dstX, float dstY, float dstZ, float paragraphWidth) throws IOException {
+		return this.drawParagraph(text, dstX, dstY, dstZ, paragraphWidth, ALIGN.LEGT);
 	}
 
 	/**
@@ -202,11 +204,12 @@ public abstract class LWJGFont {
 	 * @param dstZ the z coordinate to render the string.
 	 * @param paragraphWidth the max width to draw the paragraph.
 	 * @param align the horizontal align to render the string.
+	 * @return Region instance which has the width and the height of text to be drawn
 	 * @throws IOException Indicates a failure to read font images as textures.
 	 */
-	public final void drawParagraph(String[] texts, float dstX, float dstY, float dstZ, float paragraphWidth, ALIGN align) throws IOException {
+	public final Region drawParagraph(String[] texts, float dstX, float dstY, float dstZ, float paragraphWidth, ALIGN align) throws IOException {
 		if (LwjgFontUtil.isEmpty(texts)) {
-			return;
+			return new Region();
 		}
 
 		String	buff = "";
@@ -217,7 +220,7 @@ public abstract class LWJGFont {
 			buff += text;
 		}
 
-		drawParagraph(buff, dstX, dstY, dstZ, paragraphWidth, align);
+		return drawParagraph(buff, dstX, dstY, dstZ, paragraphWidth, align);
 	}
 
 	/**
@@ -230,9 +233,11 @@ public abstract class LWJGFont {
 	 * @param dstZ the z coordinate to render the string.
 	 * @param paragraphWidth the max width to draw the paragraph.
 	 * @param align the horizontal align to render the string.
+	 * @return Region instance which has the width and the height of text to be drawn
 	 * @throws IOException Indicates a failure to read font images as textures.
 	 */
-	public final void drawParagraph(String text, float dstX, float dstY, float dstZ, float paragraphWidth, ALIGN align) throws IOException {
+	public final Region drawParagraph(String text, float dstX, float dstY, float dstZ, float paragraphWidth, ALIGN align) throws IOException {
+		Region			region = new Region();
 		DrawPoint		drawPoint = new DrawPoint(dstX, dstY, dstZ);
 		DrawPoint		tmpDrawPoint;
 		MappedCharacter	character;
@@ -249,7 +254,7 @@ public abstract class LWJGFont {
 //					drawPoint.dstY -= getLineHeight();
 					//	ここまでの文字を表示する
 					tmpDrawPoint = align.calcDrawPoint(paragraphWidth, lineWidth, drawPoint);
-					drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ);
+					region.updateRegion(drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ), getLineMargin());
 					line = "";
 					lineWidth = 0;
 					drawPoint.dstY -= getLineHeight();
@@ -269,7 +274,7 @@ public abstract class LWJGFont {
 //					drawPoint.dstX = dstX;
 					//	ここまでの文字を表示する
 					tmpDrawPoint = align.calcDrawPoint(paragraphWidth, lineWidth, drawPoint);
-					drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ);
+					region.updateRegion(drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ), getLineMargin());
 					line = "";
 					lineWidth = 0;
 					drawPoint.dstY -= getLineHeight();
@@ -282,9 +287,11 @@ public abstract class LWJGFont {
 			//	残った文字を表示する
 			if (!LwjgFontUtil.isEmpty(line)) {
 				tmpDrawPoint = align.calcDrawPoint(paragraphWidth, lineWidth, drawPoint);
-				drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ);
+				region.updateRegion(drawString(line, tmpDrawPoint.dstX, tmpDrawPoint.dstY, tmpDrawPoint.dstZ), getLineMargin());
 			}
 		}
+		
+		return region;
 	}
 
 	/**

@@ -27,18 +27,29 @@ public class Region {
 	private int		width;
 	private int		height;
 	
+	public Region() {
+		this(0, 0);
+	}
 	public Region(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
-	
+
+	void updateRegion(Region region, int lineMargin) {
+		updateWidth(region.getWidth());
+		extendHeight(region.getHeight(), lineMargin);
+	}
+
 	void updateWidth(int width) {
 		if (this.width < width) {
 			this.width = width;
 		}
 	}
 	
-	void extendHeight(int extension) {
+	void extendHeight(int extension, int lineMargin) {
+		if (0 < this.height) {
+			this.height += lineMargin;
+		}
 		this.height += extension;
 	}
 
@@ -49,5 +60,6 @@ public class Region {
 	public int getHeight() {
 		return height;
 	}
+
 
 }
