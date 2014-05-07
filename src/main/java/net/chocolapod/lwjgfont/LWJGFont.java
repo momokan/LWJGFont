@@ -106,6 +106,18 @@ public abstract class LWJGFont {
 	private int	lineMargin = 0;
 	
 	/**
+	 *	Load all images of this font to textures.
+	 *	If images of this font has not been loaded, load the images when draw some characters.
+	 */
+	public final void load() throws IOException {
+		for (int index: getFontMap().listImageIndexes()) {
+			String		imagePath = getFontMap().getImageFile(index);
+			
+			FontTextureLoader.loadTexture(this.getClass(), imagePath);
+		}
+	}
+	
+	/**
 	 * Draws the text given by the specified string, using this font instance's current color.<br>
 	 * Note that the specified destination coordinates is a left point of the rendered string's baseline.
 	 * @param text the string to be drawn.
