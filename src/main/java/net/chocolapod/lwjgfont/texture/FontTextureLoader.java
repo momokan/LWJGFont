@@ -73,18 +73,22 @@ public class FontTextureLoader {
 		FontTexture		texture = texturesMap.get(imagePath);
 		
 		if (texture == null) {
+//			texture = makeTextureOld(clazz, imagePath);
 			texture = makeTexture(clazz, imagePath);
 			texturesMap.put(imagePath, texture);
 		}
 		
 		return texture;
 	}
-
-	private static FontTexture makeTexture(Class clazz, String imagePath) throws IOException {
+	
+	private static FontTexture makeTextureOld(Class clazz, String imagePath) throws IOException {
+		Profiler		debug = new Profiler("makeTexture");
+		
 		BufferedImage	srcImage;
 		int				srcImageType;
 
 		srcImage = ImageIO.read(clazz.getResourceAsStream(imagePath));
+		debug.mark("ImageIO.read()");
 		srcImageType = srcImage.getType();
 		
 		
@@ -94,7 +98,7 @@ public class FontTextureLoader {
 
 		//	テクスチャー ID を生成する
 		int				textureID = GL11.glGenTextures();
-		FontTexture			texture = new FontTexture(target, textureID);
+		FontTexture		texture = new FontTexture(target, textureID);
 
 		//	glTexImage2D() の対象となるテクスチャー ID をバインドする
 		glBindTexture(target, textureID);
@@ -182,6 +186,65 @@ public class FontTextureLoader {
 
 		byteBuffer.clear();
 
+		debug.mark("glTexImage2D()");
+		return texture;
+	}
+	
+	private static FontTexture makeTexture(Class clazz, String imagePath) throws IOException {
+		Profiler		debug = new Profiler("png");
+		
+		PNGImage		image = PNGImage.decode(clazz.getResourceAsStream(imagePath));
+		int				srcImageType;
+
+//		srcImage = ImageIO.read(clazz.getResourceAsStream(imagePath));
+		debug.mark("ImageIO.read()");
+//		srcImageType = srcImage.getType();
+		
+		
+		int				target = GL_TEXTURE_2D;			// target
+		int				dstPixelFormat = GL_RGBA;		// dst pixel format
+		int				format = GL_UNSIGNED_BYTE;		// data type
+
+		//	テクスチャー ID を生成する
+		int				textureID = GL11.glGenTextures();
+		FontTexture		texture = new FontTexture(target, textureID);
+
+		//	glTexImage2D() の対象となるテクスチャー ID をバインドする
+		glBindTexture(target, textureID);
+
+		// All RGB bytes are aligned to each other and each component is 1 byte
+//		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+
+		int				width = image.getWidth();
+		int				height = image.getHeight();
+
+		texture.setWidth(width);
+		texture.setHeight(height);
+		texture.setTextureWidth(width);
+		texture.setTextureHeight(height);
+		texture.setAlphaPremultiplied(false);
+
+		//	画像の拡大・縮小時の補間方法を設定する
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	//	適当にぼかして拡大する
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);	//	等倍で拡大する
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		//	バイト配列と色情報のフォーマットからテクスチャーを生成する
+		glTexImage2D(target,
+					0,
+					dstPixelFormat,	//	テクスチャ内のカラー要素数
+					width,
+					height,
+					0,			//	テクスチャの境界幅。境界が存在しない場合は 0、存在する場合は 1
+					GL_RGBA,	//	ピクセル内の色の順序。 参考 http://wisdom.sakura.ne.jp/system/opengl/gl22.html
+					format,		//	各チャネル（色）のデータ型。　参考 http://wisdom.sakura.ne.jp/system/opengl/gl22.html
+					image.getImageData());
+
+		//	ミップマップの自動生成
+//		GL30.glGenerateMipmap(GL_TEXTURE_2D);
+
+		debug.mark("glTexImage2D()");
 		return texture;
 	}
 	
