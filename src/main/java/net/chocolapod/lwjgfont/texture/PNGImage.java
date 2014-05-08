@@ -215,7 +215,7 @@ public class PNGImage {
 
 	@SuppressWarnings("unchecked")
 	private static PNGChunk loadPNGChunk(byte[] typeBytes, byte[] dataBytes) {
-		String			chunkType = new String(typeBytes);
+		String			chunkType = new String(typeBytes).toUpperCase();
 
 		try {
 //			String				className = PNGChunk.class.getPackage().getName() + "." + chunkType + "Chunk";
@@ -453,10 +453,16 @@ public class PNGImage {
 			}
 		}
 	}
-	
+
+	/**
+	 *	Marker interface for all PNG chunk classes.
+	 */
 	interface PNGChunk {
 	}
 
+	/**
+	 *	The chunk represents image header.
+	 */
 	class IHDRChunk implements PNGChunk {
 		private int				width;
 		private int				height;
@@ -502,6 +508,9 @@ public class PNGImage {
 
 	}
 	
+	/**
+	 *	The chunk represents image data
+	 */
 	class IDATChunk implements PNGChunk {
 		private byte[] dataBytes;
 
@@ -522,13 +531,39 @@ public class PNGImage {
 		}
 	}
 
+	/**
+	 *	The chunk represents image trailer
+	 */
 	class IENDChunk implements PNGChunk {
 
 		IENDChunk(byte[] dataBytes) {
+			//	The byte data is ignored.
 		}
 
 	}
-	
+
+	/**
+	 *	The chunk represents physical pixel dimensions
+	 */
+	class PHYSChunk implements PNGChunk {
+
+		PHYSChunk(byte[] dataBytes) {
+			//	The byte data is ignored.
+		}
+
+	}
+
+	/**
+	 *	The chunk represents image last-modification time
+	 */
+	class TIMEChunk implements PNGChunk {
+
+		TIMEChunk(byte[] dataBytes) {
+			//	The byte data is ignored.
+		}
+
+	}
+
 	class PNGFilterProcessor {
 		private final byte[]	srcBytes;
 		private final IHDRChunk	ihdrChunk;
