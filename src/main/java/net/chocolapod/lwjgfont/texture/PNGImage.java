@@ -563,6 +563,22 @@ public class PNGImage {
 		}
 
 	}
+	
+	class ICCPChunk implements PNGChunk {
+
+		ICCPChunk(byte[] dataBytes) {
+			//	The byte data is ignored.
+		}
+
+	}
+	
+	class CHRMChunk implements PNGChunk {
+
+		CHRMChunk(byte[] dataBytes) {
+			//	The byte data is ignored.
+		}
+
+	}
 
 	class PNGFilterProcessor {
 		private final byte[]	srcBytes;

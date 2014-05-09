@@ -22,6 +22,11 @@ public class TestPNGImage {
 	public void decode8bitRGB_nonInterlaced() throws IOException {
 		testImage("8bitRGB_nonInterlaced.png");
 	}
+	
+	@Test
+	public void decode8bitRGBA_nonInterlaced() throws IOException {
+		testImage("8bitRGBA_nonInterlaced.png");
+	}
 
 	private void testImage(String filePath) throws IOException {
 		BufferedImage	imageSDK = ImageIO.read(TestPNGImage.class.getResourceAsStream(filePath));
