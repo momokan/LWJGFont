@@ -40,7 +40,6 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
@@ -90,7 +89,7 @@ public class FontTexture {
 		bind();
 
 		// translate to the right location and prepare to draw
-		glTranslatef(dstX1 + halfWidth, dstY1 - halfHeight, dstZ * -1);
+		glTranslatef(dstX1 + halfWidth, dstY1 - halfHeight, dstZ);
 //		glTranslatef(dstX, dstY, 0);
 		
 		glEnable(GL_BLEND);
