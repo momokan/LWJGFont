@@ -421,6 +421,12 @@ public abstract class LWJGFont {
 	public void resetLineHeight() {
 		this.lineHeight = getDefaultLineHeight();
 	}
+	
+	/**
+	 * Returns the maximum ascent of the Font described by this LWJGFont object.<br>
+	 * @return the maximum ascent of the Font described by this LWJGFont object
+	 */
+	public abstract int getMaxAscent();
 
 	/**
 	 *	Returns a FontMap instance which has informations that how to render any character with the font represented by this class.<br>

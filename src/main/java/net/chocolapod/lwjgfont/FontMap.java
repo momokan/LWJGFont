@@ -33,6 +33,7 @@ public class FontMap {
 	private final Map<Integer, String>				imageFiles;
 	private final Map<Character, MappedCharacter>	mappedCharacters;
 	private int										lineHeight;
+	private int										maxAscent;
 
 	public FontMap() {
 		this.imageFiles = new HashMap<Integer, String>();
@@ -66,5 +67,12 @@ public class FontMap {
 	}
 	public void setLineHeight(int lineHeight) {
 		this.lineHeight = lineHeight;
+	}
+
+	public int getMaxAscent() {
+		return maxAscent;
+	}
+	public void setMaxAscent(int maxAscent) {
+		this.maxAscent = maxAscent;
 	}
 }

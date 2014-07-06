@@ -168,6 +168,7 @@ public class LwjgFontFactory {
 		printPrepareFontMap(source, fontMap);
 		printMethodGetFontMap(source);
 		printMethodGetDefaultLineHieght(source, fontMap.getLineHeight());
+		printMethodGetMaxAscent(source, fontMap.getMaxAscent());
 		
 		source.closeClass();
 		
@@ -266,6 +267,13 @@ public class LwjgFontFactory {
 		source.println("@Override");
 		source.openMethod("getDefaultLineHeight", "int", new HashMap<String, Class>(), false);
 		source.println("return " + lineHeight + ";");
+		source.closeMethod();
+	}
+	private void printMethodGetMaxAscent(SourceBuffer source, int maxAscent) {
+		source.println("/* @see %s#getMaxAscent() */", LWJGFont.class.getCanonicalName());
+		source.println("@Override");
+		source.openMethod("getMaxAscent", "int", new HashMap<String, Class>(), false);
+		source.println("return " + maxAscent + ";");
 		source.closeMethod();
 	}
 	

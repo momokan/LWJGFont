@@ -63,7 +63,7 @@ public class SourceCompiler {
 	private String	targetDir = "";
 
 	public void compile(List<String> classCanonicalNames) throws IOException {
-		JavaCompiler					compiler = ToolProvider.getSystemJavaCompiler();
+		JavaCompiler				compiler = ToolProvider.getSystemJavaCompiler();
 
 		if (compiler == null) {
 			throw new SystemCompilerNotFoundException();
