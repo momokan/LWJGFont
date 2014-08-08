@@ -15,7 +15,7 @@ First of all, pre-compile your font file to use as texture on LWJGL.
     $ java -jar target/lwjgfont-1.0.jar sample/migu-1p-regular.ttf:35  
 
 So myfont-1.0-SNAPSHOT.jar and myfont-1.0-SNAPSHOT.pom.xml will be generated on current directory.  
-This jar file contains subclass off net.chocolapod.lwjgfont.LWJGFont to use the specified font: migu-1p-regular.ttf (its size is 35.)  
+This jar file contains subclass of net.chocolapod.lwjgfont.LWJGFont to use the specified font: migu-1p-regular.ttf (its size is 35.)  
 
 ### Install generated jar to local repository
 
