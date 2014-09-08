@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import org.lwjgl.LWJGLUtil;
 
+import net.chocolapod.lwjgfont.exception.LwjgFontException;
 import net.chocolapod.lwjgfont.packager.ControlCharacter;
 import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 import net.chocolapod.lwjgfont.texture.FontTexture;
@@ -55,7 +56,6 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
  * </pre>
  */
 public abstract class LWJGFont {
-
 	/**
 	 * Enumeration of the possible ways LWJGFont can align texts on rendering.
 	 */
@@ -104,7 +104,9 @@ public abstract class LWJGFont {
 
 	private int lineHeight = getDefaultLineHeight();
 	private int	lineMargin = 0;
-	
+
+	private MissingCharacterLogger	missingslogger = null;
+
 	/**
 	 *	Load all images of this font to textures.
 	 *	If images of this font has not been loaded, load the images when draw some characters.
@@ -163,6 +165,15 @@ public abstract class LWJGFont {
 		if (character == null) {
 			//	指定の文字が描画対象でなければ、豆腐を表示する
 			character = getMappedCharacter(NotMatchedSign.getCharacter());
+			
+			//	ログが有効なら、書けなかった文字をログ出力する
+			if (missingslogger != null) {
+				try {
+					missingslogger.log(ch);
+				} catch (IOException e) {
+					throw new LwjgFontException("Failed to write missing characters file: " + missingslogger.getLogFile(), e);
+				}
+			}
 		}
 		
 		return character;
@@ -352,6 +363,23 @@ public abstract class LWJGFont {
 		return getFontMap().getMappedCharacter(character);
 	}
 	
+	public void setMissingCharacterLogEnable(boolean isMissingCharacterLogEnable) {
+		if (isMissingCharacterLogEnable) {
+			if (missingslogger == null) {
+				//	不足している文字のログを有効化する
+				missingslogger = new MissingCharacterLogger();
+
+				try {
+					missingslogger.load();
+				} catch (IOException e) {
+					throw new LwjgFontException("Failed to read missing characters file: " + missingslogger.getLogFile(), e);
+				}
+			}
+		} else {
+			missingslogger = null;
+		}
+	}
+	
 	private String getImagePath(int index) {
 		return getFontMap().getImageFile(index);
 	}
@@ -452,4 +480,5 @@ public abstract class LWJGFont {
 			this.dstZ = dstZ;
 		}
 	}
+
 }

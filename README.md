@@ -20,7 +20,7 @@ This jar file contains subclass of net.chocolapod.lwjgfont.LWJGFont to use the s
 ### Install generated jar to local repository
 
     $ mvn install:install-file -Dfile=myfont-1.0-SNAPSHOT.jar -DpomFile=myfont-1.0-SNAPSHOT.pom.xml \
-	   -DgroupId=net.chocolapod.lwjgfont -DartifactId=myfont -Dversion=1.0-SNAPSHOT -Dpackaging=jar
+       -DgroupId=net.chocolapod.lwjgfont -DartifactId=myfont -Dversion=1.0-SNAPSHOT -Dpackaging=jar
 
 ### Draw any string on your LWJGL game project.
 
