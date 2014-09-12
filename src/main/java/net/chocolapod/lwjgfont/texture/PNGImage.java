@@ -47,7 +47,7 @@ public class PNGImage {
 		try {
 			while (decompresser.needsInput()) {
 				if ((idatChunks.size() <= 0) || ((chunk = idatChunks.remove(0)) == null)) {
-					System.out.println(decompresser.finished());
+//					System.out.println(decompresser.finished());
 					break;
 				}
 
@@ -615,10 +615,12 @@ public class PNGImage {
 
 						getColorType().arrange(dstColor);
 						srcOffset += readCount;
-						
+
+						/*
 						if (y == 1) {
 							System.out.print("");
 						}
+						*/
 
 						//	RGBA の順に 1 byte ずつ書き込む
 						dstBytes[dstOffset + 0] = (byte)dstColor[0];

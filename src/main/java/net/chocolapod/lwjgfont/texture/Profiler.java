@@ -1,7 +1,7 @@
 package net.chocolapod.lwjgfont.texture;
 
 public class Profiler {
-	private static final boolean	isActive = true;
+	private static final boolean	isActive = false;
 	
 	private String	prefix;
 	private	long	startTime;

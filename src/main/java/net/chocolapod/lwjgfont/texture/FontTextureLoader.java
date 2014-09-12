@@ -192,10 +192,10 @@ public class FontTextureLoader {
 	
 	private static FontTexture makeTexture(Class clazz, String imagePath) throws IOException {
 		Profiler		debug = new Profiler("png");
-		
+
 		PNGImage		image = PNGImage.decode(clazz.getResourceAsStream(imagePath));
 		int				srcImageType;
-
+		
 //		srcImage = ImageIO.read(clazz.getResourceAsStream(imagePath));
 		debug.mark("ImageIO.read()");
 //		srcImageType = srcImage.getType();
