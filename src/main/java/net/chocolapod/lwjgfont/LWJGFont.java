@@ -42,15 +42,17 @@ import static net.chocolapod.lwjgfont.packager.BuiltinCharacter.NotMatchedSign;
  * Each subclasses of this class represent a font and its size to render strings on LWJGL.<br>
  *	This class provide some utility methods for text rendering.<br>
  *	<br>
- *	Example with ClassicTrueTypeH20Font (Let This class be a subclass of LWJGFont).<br>
+ *	Example with ClassicTrueTypeH20Font (Let this class be a subclass of LWJGFont).<br>
  * <br>
  * <pre>
  * {@code
- * // Create font a class.
+ * // Create a font class.
  * LWJGFont font = new ClassicTrueTypeH20Font();
+ * 
  * // Set foreground color.
  * font.setColor(1f, 0f, 0f);
- * // Draw a string on the location.
+ * 
+ * // Draw a string on any location.
  * font.drawString("Hello, LWJGFont.", 100f, 100f, 0f);
  * }
  * </pre>
@@ -106,6 +108,12 @@ public abstract class LWJGFont {
 	private int	lineMargin = 0;
 
 	private MissingCharacterLogger	missingslogger = null;
+
+	/**
+	 *	Create new LWJGFont object so that it represents a font which is drawn as texture on LWJGL.
+	 */
+	public LWJGFont() {
+	}
 
 	/**
 	 *	Load all images of this font to textures.
@@ -362,12 +370,22 @@ public abstract class LWJGFont {
 	public final MappedCharacter getMappedCharacter(char character) {
 		return getFontMap().getMappedCharacter(character);
 	}
-	
+
+	/**
+	 * Enables or disables logging of missing characters.<br>
+	 * Default value is false.<br>
+	 * <br>
+	 * If Logging is enabled, LWJGfont logs characters which have not been drawn.<br>
+	 * And you want to draw the missing characters, put the log file on characters directory when you pre-compile your font file.<br>
+	 * <br>
+	 * This log file is named as format: missing-characters-{LWJGFont class name}.txt<br> 
+	 * @param isMissingCharacterLogEnable If true, logging of missing characters is enabled; otherwise it is disabled.
+	 */
 	public void setMissingCharacterLogEnable(boolean isMissingCharacterLogEnable) {
 		if (isMissingCharacterLogEnable) {
 			if (missingslogger == null) {
 				//	不足している文字のログを有効化する
-				missingslogger = new MissingCharacterLogger();
+				missingslogger = new MissingCharacterLogger(this.getClass());
 
 				try {
 					missingslogger.load();
@@ -428,6 +446,9 @@ public abstract class LWJGFont {
 
 	/**
 	 * Set the distance from one line's baseline to next line's baseline.<br>
+	 * <br>
+	 * This method is deprecated.<br>
+	 * If you want to change the distance of lines, call {@link net.chocolapod.lwjgfont.LWJGFont#setLineMargin setLineMargin()} instead of this method.<br> 
 	 * @param lineHeight the distance from one line's baseline to next line's baseline.
 	 */
 	@Deprecated
@@ -435,17 +456,32 @@ public abstract class LWJGFont {
 		this.lineHeight = lineHeight;
 	}
 
+	/**
+	 * Returns the distance from one line's bottom to next line's top.<br>
+	 * @return the distance from one line's bottom to next line's top.
+	 */
 	public int getLineMargin() {
 		return lineMargin;
 	}
 
+	/**
+	 * Set the distance from one line's bottom to next line's top.<br>
+	 * Default value is 0.<br>
+	 * 
+	 * Note that LWJGFont can not detect original font's margin. Maybe you adjust line margin with this method.<br> 
+	 * @param lineMargin the distance from one line's bottom to next line's top.
+	 */
 	public void setLineMargin(int lineMargin) {
 		this.lineMargin = lineMargin;
 	}
 
 	/**
 	 * Reset the each line's distance to the default value.<br>
+	 * <br>
+	 * This method is deprecated.<br>
+	 * If you want to change the distance of lines, call {@link net.chocolapod.lwjgfont.LWJGFont#setLineMargin setLineMargin()} instead of this method.<br> 
 	 */
+	@Deprecated
 	public void resetLineHeight() {
 		this.lineHeight = getDefaultLineHeight();
 	}
