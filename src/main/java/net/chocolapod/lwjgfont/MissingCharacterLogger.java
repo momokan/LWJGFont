@@ -24,6 +24,7 @@
 package net.chocolapod.lwjgfont;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,8 +34,10 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
+
 class MissingCharacterLogger {
-	private static final String		LOG_FILE_NAME_FORMAT = "missing-characters-%s.txt";
+	static final String				LOG_FILE_NAME_FORMAT = "missing-characters-%s.txt";
 	private static final int		DEFAULT_CHAT_COUNT_PER_LINE = 4;
 
 	private final String	logFile;
@@ -44,7 +47,11 @@ class MissingCharacterLogger {
 	private Set<Character>	set;
 
 	MissingCharacterLogger(Class<? extends LWJGFont> fontClass) {
-		logFile = String.format(LOG_FILE_NAME_FORMAT, fontClass.getCanonicalName());
+		this(fontClass, null);
+	}
+	MissingCharacterLogger(Class<? extends LWJGFont> fontClass, String targetDir) {
+		//	出力先ディレクトリが指定されていなければ、カレントディレクトリに出力する
+		logFile = LwjgFontUtil.toDirectoryPath(targetDir) + String.format(LOG_FILE_NAME_FORMAT, fontClass.getCanonicalName());
 		charCountPerLine = DEFAULT_CHAT_COUNT_PER_LINE;
 		set = new HashSet<>();
 	}

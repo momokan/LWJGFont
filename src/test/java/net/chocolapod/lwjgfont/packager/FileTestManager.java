@@ -23,16 +23,20 @@
  */
 package net.chocolapod.lwjgfont.packager;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import net.chocolapod.lwjgfont.packager.LwjgFontUtil;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-class FileTestManager {
+public class FileTestManager {
 	static final String		TEST_DIR = "test-" + LwjgFontUtil.class.getSimpleName();
 	static final String		TEST_BASE_DIR = "target/" + TEST_DIR;
 	
@@ -89,5 +93,32 @@ class FileTestManager {
 		String	actualPath = actualFile.getCanonicalPath();
 
 		assertEquals(expectedPath, actualPath);
+	}
+	
+	public static String getFileContent(String path) throws IOException {
+		String			buff = "";
+		BufferedReader	br = null;
+		String			line;
+
+		try {
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			
+			while ((line = br.readLine()) != null) {
+				buff += line;
+			}
+		} catch (FileNotFoundException e) {
+			//	ignore.
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return buff;
 	}
 }
