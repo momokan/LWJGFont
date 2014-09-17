@@ -27,12 +27,12 @@ import net.chocolapod.lwjgfont.packager.MessagePropertiesFile;
 
 public enum CliMessage {
 	LWJGFONT_VERSION_FORMAT,
+	GUIDE_GENERATED_BY,
 	GENERATED_JAR_FORMAT,
 	GENERATED_POM_FORMAT,
 	HEADER_LIST_CLASSES,
 	HEADER_INSTALL_JAR,
 	HEADER_HOW_TO_USE_IN_MAVEN,
-	NOTE_JAR_DEPENDS_LWJGFONT,
 	ARGUMENT_P_VALUE_NAME;
 
 	private static final MessagePropertiesFile		properties = MessagePropertiesFile.loadProperties(CliMessage.class, "cli");

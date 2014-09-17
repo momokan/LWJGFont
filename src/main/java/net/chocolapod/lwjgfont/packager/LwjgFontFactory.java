@@ -98,10 +98,11 @@ public class LwjgFontFactory {
 		String		artifactId = properties.getAsString(ARTIFACT_NAME); 
 		String		version = properties.getAsString(ARTIFACT_VERSION);
 		String		dstDir = LwjgFontUtil.prepareDirectory(properties.getAsString(DIST_DIR)).getPath();
+		String		lwjgFontVersion = properties.getAsString(LWJGFONT_VERSION);
 		
 		packageName = LwjgFontUtil.toDirectoryPath(dstDir) + artifactId + "-" + version + ".jar";
 		pomName = LwjgFontUtil.toDirectoryPath(dstDir) + artifactId + "-" + version + ".pom.xml";
-		classMapLog = new ProcessLog(packageName, pomName, groupId, artifactId, version);
+		classMapLog = new ProcessLog(lwjgFontVersion, packageName, pomName, groupId, artifactId, version);
 	}
 
 	public void create(FontSetting fontSetting) throws IOException, FontFormatException {

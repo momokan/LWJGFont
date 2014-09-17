@@ -39,6 +39,7 @@ import static net.chocolapod.lwjgfont.cli.CliOption._p;
 import static net.chocolapod.lwjgfont.cli.CliOption._x;
 import static net.chocolapod.lwjgfont.cli.CliOption._l;
 import static net.chocolapod.lwjgfont.cli.CliOption._v;
+import static net.chocolapod.lwjgfont.cli.CliOption._h;
 
 import static net.chocolapod.lwjgfont.cli.CliMessage.LWJGFONT_VERSION_FORMAT;
 
@@ -64,7 +65,9 @@ public class Main {
 
 		lwjgFont = new LwjgFontFactory(parser.get(_p));
 
-		if (parser.hasOption(_x)) {
+		if (parser.hasOption(_h)) {
+			//	TODO 使い方を表示する
+		} else if (parser.hasOption(_x)) {
 			//	キャラクターファイルを展開する
 			lwjgFont.extractCharacterFiles();
 		} else if (parser.hasOption(_v)) {
@@ -80,6 +83,8 @@ public class Main {
 			}
 			lwjgFont.makePackage();
 			lwjgFont.writeProcessLog();
+		} else {
+			//	TODO 使い方を表示する
 		}
 	}
 
